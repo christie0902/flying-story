@@ -7,7 +7,13 @@
     <title>Flying Story</title>
 </head>
 <body>
+    <a href="#">Calendar</a>
 
+    @can('admin')
+    <a href="#">Class Management</a>
+    <a href="#">Student Management</a>
+    @endcan
+    
     @auth 
     <form action="{{ route('logout') }}" method="post">
         @csrf
@@ -17,6 +23,9 @@
         <a href="{{ route('register') }}">Register</a>
         <a href="{{ route('login')}}">Login</a>
     @endauth
+
+
+    </body>
 
      <!-- Page Content -->
      <div id="content">

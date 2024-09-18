@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\AuthServiceProvider;
 
 return [
 
@@ -135,6 +136,6 @@ return [
         App\Providers\AppServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
-
+        App\Providers\AuthServiceProvider::class,
     ])->toArray(),
 ];
