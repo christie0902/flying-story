@@ -1,4 +1,4 @@
-@if (count($error) > 0)
+@if (count($errors) > 0)
 <div class="alert alert-danger">
    <ul>
     @foreach ($errors->all() as $error)
@@ -6,6 +6,7 @@
     @endforeach
    </ul>
 </div>
+@endif
 
 <form method="POST" action="{{ route('register') }}">
     @csrf
@@ -35,7 +36,7 @@
     </div>
 
     <div>
-        <label for="phone">Phone (optional) </label>
+        <label for="phone">Phone (Optional) </label>
         <input id="phone" type="text" name="phone" value="{{ old('phone') }}">
     </div>
 
