@@ -13,8 +13,9 @@
     <a href="#">Class Management</a>
     <a href="#">Student Management</a>
     @endcan
-    
-    @auth 
+
+    @auth
+    <a href="{{ route('profile.load') }}">Profile</a>
     <form action="{{ route('logout') }}" method="post">
         @csrf
         <button>Logout</button>
