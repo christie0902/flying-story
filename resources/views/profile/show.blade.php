@@ -1,9 +1,14 @@
 @extends('layout.layout')
 
 @section('content')
+@if(session('success_message'))
+<div class="alert alert-success">
+    {{ session('success_message') }}
+</div>
+@endif
 
 <h1>Profile</h1>
-
+<a href="{{ route('profile.editForm') }}">Edit</a>
 <p><strong>First Name:</strong> {{ $profile->first_name }}</p>
 <p><strong>Last Name:</strong> {{ $profile->last_name }}</p>
 <p><strong>Email:</strong> {{ $profile->email }}</p>
