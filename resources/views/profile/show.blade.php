@@ -21,4 +21,6 @@
 
 <p><strong>Payment Variable:</strong> {{ $profile->payment_variable }}</p>
 
+{{-- Change password --}}
+<a href="{{ route('password.changeForm') }}">Change Password</a>
 @endsection

@@ -45,6 +45,11 @@ class ProfileController extends Controller
 
         $profile->save();
 
-        return redirect()->route('profile.load')->with('success_message', 'Profile updated successfully');
+        return redirect()->route('profile.load')->with('success_message', 'Your profile is updated successfully');
+    }
+
+    public function showChangePasswordForm()
+    {
+        return view('profile.change_password');
     }
 }
