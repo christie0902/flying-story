@@ -1,4 +1,7 @@
 @extends('layout.layout')
+{{-- @push('style')
+    <link rel="stylesheet" href="{{ asset('css/product.css') }}">
+@endpush --}}
 
 @section('content')
 @if (count($errors) > 0)

@@ -12,6 +12,7 @@
     @can('admin')
     <a href="#">Class Management</a>
     <a href="#">Student Management</a>
+    <a href="#">Payment Management</a>
     @endcan
 
     @auth
