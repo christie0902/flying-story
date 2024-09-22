@@ -11,6 +11,7 @@
                 <th>Description</th>
                 <th>Schedule</th>
                 <th>Capacity</th>
+                <th>Registered Students</th>
                 <th>Status</th>
                 <th>Recurrence</th>
                 <th>Actions</th>
@@ -23,8 +24,9 @@
                     <td>{{ $lesson->description }}</td>
                     <td>{{ $lesson->schedule }}</td>
                     <td>{{ $lesson->capacity }}</td>
+                    <td>{{ $lesson->registered_students }}</td>
                     <td>{{ $lesson->status }}</td>
-                    <td>{{ $lesson->recurrence ? $lesson->recurrence->name : 'None' }}</td>
+                    <td>{{ $lesson->recurrence ? $lesson->recurrence->frequency : 'None' }}</td>
                     <td>
                         <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-secondary">Edit</a>
                         <a href="{{ route('lessons.cancel', $lesson->id) }}" class="btn btn-warning">Cancel</a>

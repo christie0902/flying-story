@@ -10,7 +10,7 @@
     <a href="#">Calendar</a>
 
     @can('admin')
-    <a href="#">Class Management</a>
+    <a href="{{route('lesson.list')}}">Class Management</a>
     <a href="#">Student Management</a>
     <a href="#">Payment Management</a>
     @endcan

@@ -14,6 +14,7 @@ class LessonController extends Controller
     public function loadLessons()
     {
         $lessons = Lesson::with('recurrence')->get();
+        // dd($lessons);
         return view('lessons.lessonList', compact('lessons'));
     }
 
