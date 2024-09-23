@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,6 +51,7 @@ class Lesson extends Model
     }
 
     //Accessors
+    // Format price
     public function getFormattedPriceAttribute()
     {
         return intval($this->price) == $this->price
@@ -57,6 +59,7 @@ class Lesson extends Model
             : number_format($this->price, 2) . ' CZK';
     }
 
+    // Format duration
     public function getFormattedDurationAttribute()
     {
         $hours = intdiv($this->duration, 60);
@@ -73,5 +76,11 @@ class Lesson extends Model
         }
 
         return $formatted;
+    }
+
+    //Format schedule
+    public function getFormattedScheduleAttribute()
+    {
+        return Carbon::parse($this->schedule)->setTimezone('Europe/Prague')->format('ga M j, Y');
     }
 }

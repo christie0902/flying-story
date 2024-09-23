@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ $lesson->category }}</td>
                     <td>{{ $lesson->description }}</td>
-                    <td>{{ $lesson->schedule }}</td>
+                    <td>{{ $lesson->formatted_schedule }}</td>
                     <td>{{ $lesson->formatted_duration }}</td>
                     <td>{{ $lesson->capacity }}</td>
                     <td>{{ $lesson->registered_students }}</td>

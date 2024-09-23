@@ -15,6 +15,8 @@ class LessonController extends Controller
     {
         $lessons = Lesson::with('recurrence')->get();
         // dd($lessons);
+        // $lesson = Lesson::find(1);
+        // dd($lesson->schedule); 
         return view('lessons.lessonList', compact('lessons'));
     }
 
