@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\Recurrence;
 use App\Models\LessonRegistration;
+use App\Models\LessonOccurrence;
 use App\Models\User;
+use Carbon\Carbon;
 
 class LessonController extends Controller
 {
@@ -15,8 +17,6 @@ class LessonController extends Controller
     {
         $lessons = Lesson::with('recurrence')->get();
         // dd($lessons);
-        // $lesson = Lesson::find(1);
-        // dd($lesson->schedule); 
         return view('lessons.lessonList', compact('lessons'));
     }
 
@@ -28,12 +28,60 @@ class LessonController extends Controller
     }
 
     // Store a new lesson
-    public function storeLesson(Request $request)
+    public function store(Request $request)
     {
-        $lesson = Lesson::create($request->all());
-      //Add logic to recurrence
-        return redirect()->route('lessons.lessonList')->with('success', 'Lesson created successfully.');
+        $request->validate([
+            'category' => 'required|string',
+            'description' => 'required|string',
+            'schedule' => 'required|date',
+            'capacity' => 'required|integer',
+            'recurrence_id' => 'nullable|string',
+            'end_date' => 'nullable|date',
+        ]);
+
+        $category = $request->input('category');
+        if ($category === 'Other') {
+            $category = $request->input('other_category');
+        }
+
+        $lesson = Lesson::create([
+            'category' => $category,
+            'description' => $request->description,
+            'schedule' => $request->schedule,
+            'capacity' => $request->capacity,
+            // Add other fields as necessary
+        ]);
+
+        // Handle recurrence if selected
+        if ($request->recurrence_id && $request->end_date) {
+            $this->createRecurrences($lesson, $request->recurrence_id, $request->end_date);
+        }
+
+        return redirect()->route('lessons.lessonList')->with('success', 'Lesson created successfully!');
     }
+
+    //create recurrence function
+    private function createRecurrences($lesson, $recurrenceType, $endDate)
+    {
+        $currentDate = Carbon::parse($lesson->schedule);
+        $endDate = Carbon::parse($endDate);
+
+        while ($currentDate->lessThanOrEqualTo($endDate)) {
+            LessonOccurrence::create([
+                'lesson_id' => $lesson->id,
+                'scheduled_at' => $currentDate,
+            ]);
+
+            if ($recurrenceType === 'weekly') {
+                $currentDate->addWeek();
+            } elseif ($recurrenceType === 'bi-weekly') {
+                $currentDate->addWeeks(2);
+            } elseif ($recurrenceType === 'monthly') {
+                $currentDate->addMonth();
+            }
+        }
+    }
+
 
     // Show edit form
     public function editLesson(Lesson $lesson, $id)
@@ -78,8 +126,8 @@ class LessonController extends Controller
     public function details(Lesson $lesson, $id)
     {
         $registrations = LessonRegistration::with('user.profile')
-                        ->where('lesson_id', $lesson->id)
-                        ->get();
+            ->where('lesson_id', $lesson->id)
+            ->get();
 
         return view('lessons.registrations', compact('lesson', 'registrations'));
     }
