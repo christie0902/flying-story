@@ -12,12 +12,30 @@ use Carbon\Carbon;
 
 class LessonController extends Controller
 {
-    // Show all lessons
-    public function loadLessons()
+    // Show lessons
+    public function loadLessons(Request $request)
     {
-        $lessons = Lesson::with('recurrence')->get();
-        // dd($lessons);
-        return view('lessons.lessonList', compact('lessons'));
+        $status = $request->query('status', 'all');
+    $month = $request->query('month', '');
+    $category = $request->query('category', '');
+
+    $lessons = Lesson::with('recurrence');
+
+         if ($status !== 'all') {
+        $lessons->where('status', $status);
+    }
+    
+    if ($month) {
+        $lessons->whereMonth('schedule', $month);
+    }
+    
+    if ($category) {
+        $lessons->where('category', $category);
+    }
+
+    $lessons = $lessons->orderBy('schedule', 'desc')->get();
+    
+    return view('lessons.lessonList', compact('lessons', 'status', 'month', 'category'));
     }
 
     // Show form to create a new lesson

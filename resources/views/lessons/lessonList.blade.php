@@ -4,6 +4,43 @@
 <div class="container">
     <h1>Lessons</h1>
     <a href="{{ route('lessons.create') }}" class="btn btn-primary">Add New Class</a>
+
+     <!-- Filter Form -->
+     <form method="GET" action="{{ route('lesson.list') }}" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="status">Status</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="all" {{ $status == 'all' ? 'selected' : '' }}>All</option>
+                    <option value="active" {{ $status == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ $status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="month">Month</label>
+                <select name="month" id="month" class="form-control">
+                    <option value="">Select Month</option>
+                    @for ($m = 1; $m <= 12; $m++)
+                        <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="category">Category</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">Select Category</option>
+                    <option value="Aerial Yoga">Aerial Yoga</option>
+                    <option value="Aerial Sling">Aerial Sling</option>
+                    <option value="Aerial Hoop">Aerial Hoop</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3 align-self-end">
+                <button type="submit" class="btn btn-success">Filter</button>
+                <a href="{{ route('lesson.list') }}" class="btn btn-secondary">Refresh Filter</a>
+            </div>
+        </div>
+    </form>
+
     <table class="table mt-4">
         <thead>
             <tr>
@@ -20,6 +57,11 @@
             </tr>
         </thead>
         <tbody>
+            @if ($lessons->isEmpty())
+                <tr>
+                    <td colspan="10" class="text-center">No results found for this filter</td>
+                </tr>
+            @else
             @foreach($lessons as $lesson)
                 <tr>
                     <td>{{ $lesson->category }}</td>
@@ -41,7 +83,8 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+                @endforeach
+            @endif
         </tbody>
     </table>
 </div>
