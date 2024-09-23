@@ -16,6 +16,8 @@ class Lesson extends Model
         'category',
         'description',
         'schedule',
+        'price',
+        'duration',
         'capacity',
         'registered_students',
         'status',
@@ -45,5 +47,31 @@ class Lesson extends Model
     public function registrations(): HasMany
     {
         return $this->hasMany(LessonRegistration::class);
+    }
+
+    //Accessors
+    public function getFormattedPriceAttribute()
+    {
+        return intval($this->price) == $this->price
+            ? number_format($this->price, 0) . ' CZK'
+            : number_format($this->price, 2) . ' CZK';
+    }
+
+    public function getFormattedDurationAttribute()
+    {
+        $hours = intdiv($this->duration, 60);
+        $minutes = $this->duration % 60;
+
+        $formatted = '';
+
+        if ($hours > 0) {
+            $formatted .= $hours . 'h';
+        }
+
+        if ($minutes > 0) {
+            $formatted .= $minutes . 'm';
+        }
+
+        return $formatted;
     }
 }
