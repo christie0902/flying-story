@@ -4,34 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <title>Flying Story</title>
 </head>
 <body>
-    <a href="#">Calendar</a>
 
-    @can('admin')
-    <a href="{{route('lesson.list')}}">Class Management</a>
-    <a href="#">Student Management</a>
-    <a href="#">Payment Management</a>
-    @endcan
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Flying Story</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Calendar</a>
+                    </li>
 
-    @auth
-    <a href="{{ route('profile.load') }}">Profile</a>
-    <form action="{{ route('logout') }}" method="post">
-        @csrf
-        <button>Logout</button>
-    </form>
-    @else
-        <a href="{{ route('register') }}">Register</a>
-        <a href="{{ route('login')}}">Login</a>
-    @endauth
+                    @can('admin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('lesson.list') }}">Class Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Student Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Payment Management</a>
+                    </li>
+                    @endcan
 
+                    @auth
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('profile.load') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ route('logout') }}" method="post" class="d-inline">
+                            @csrf
+                            <button class="btn btn-link nav-link" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    </li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    </body>
-
-     <!-- Page Content -->
-     <div id="content">
+    <!-- Page Content -->
+    <div class="container mt-4">
         @yield('content')
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
+
+    @yield('scripts')
+
 </body>
 </html>

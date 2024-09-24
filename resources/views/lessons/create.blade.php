@@ -57,6 +57,7 @@
         <button type="submit" class="btn btn-success">Save</button>
     </form>
 </div>
+@endsection
 
 @section('scripts')
 <script>
@@ -81,6 +82,4 @@
         }
     });
 </script>
-@endsection
-
 @endsection
