@@ -1,6 +1,16 @@
 @extends('layout.layout')
 
 @section('content')
+@if (count($errors) > 0)
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 <div class="container">
     <h1>Add New Lesson</h1>
 
@@ -14,9 +24,15 @@
                 <option value="Aerial Yoga">Aerial Yoga</option>
                 <option value="Aerial Sling">Aerial Sling</option>
                 <option value="Aerial Hoop">Aerial Hoop</option>
+                <option value="Workshop">Workshop</option>
                 <option value="Other">Other</option>
             </select>
             <input type="text" id="other-category" name="other_category" class="form-control mt-2 d-none" placeholder="Enter new category">
+        </div>
+
+        <div class="form-group" id="price-group" style="display: none;">
+            <label>Price (in CZK)</label>
+            <input type="number" name="price" class="form-control">
         </div>
 
         <div class="form-group">
@@ -32,6 +48,16 @@
         <div class="form-group">
             <label>Duration (in minutes)</label>
             <input type="number" name="duration" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="level">Level</label>
+            <select name="level" id="level" class="form-control" required>
+                <option value="beginner">Beginner</option>
+                <option value="lower-intermediate">Lower Intermediate</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="upper-intermediate">Upper Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
         </div>
         
         <div class="form-group">
@@ -63,6 +89,8 @@
 <script>
     document.getElementById('category-select').addEventListener('change', function() {
         const otherCategoryInput = document.getElementById('other-category');
+        const priceGroup = document.getElementById('price-group');
+
         if (this.value === 'Other') {
             otherCategoryInput.classList.remove('d-none');
             otherCategoryInput.required = true;
@@ -70,6 +98,12 @@
             otherCategoryInput.classList.add('d-none');
             otherCategoryInput.required = false;
             otherCategoryInput.value = '';
+        }
+
+        if (this.value === 'Workshop') {
+            priceGroup.style.display = 'block';
+        } else {
+            priceGroup.style.display = 'none';
         }
     });
 
@@ -81,5 +115,6 @@
             endDateGroup.style.display = 'none';
         }
     });
+
 </script>
 @endsection

@@ -48,6 +48,7 @@
                 <th>Description</th>
                 <th>Schedule</th>
                 <th>Duration (mins)</th>
+                <th>Level</th>
                 <th>Capacity</th>
                 <th>Registered Students</th>
                 <th>Price</th>
@@ -68,6 +69,7 @@
                     <td>{{ $lesson->description }}</td>
                     <td>{{ $lesson->formatted_schedule }}</td>
                     <td>{{ $lesson->formatted_duration }}</td>
+                    <td>{{ $lesson->level }}</td>
                     <td>{{ $lesson->capacity }}</td>
                     <td>{{ $lesson->registered_students }}</td>
                     <td>{{ $lesson->formatted_price }}</td>
