@@ -20,7 +20,7 @@ class LessonController extends Controller
         $month = $request->query('month', '');
         $category = $request->query('category', '');
 
-        $lessons = Lesson::with('recurrence');
+        $lessons = Lesson::with('recurrence', 'occurrences');
 
         if ($status !== 'all') {
             $lessons->where('status', $status);
@@ -34,9 +34,30 @@ class LessonController extends Controller
             $lessons->where('category', $category);
         }
 
-        $lessons = $lessons->orderBy('schedule', 'desc')->get();
+        $lessons = $lessons->get();
 
-        return view('lessons.lessonList', compact('lessons', 'status', 'month', 'category'));
+        // Create a collection to store both lessons and occurrences
+        $allLessons = collect();
+
+        foreach ($lessons as $lesson) {
+            $allLessons->push($lesson);
+
+            // If the lesson has occurrences, push them into the collection
+            foreach ($lesson->occurrences as $occurrence) {
+                // Clone the original lesson and modify schedule
+                $occurrenceLesson = clone $lesson;
+                $occurrenceLesson->schedule = $occurrence->scheduled_at;
+
+                $allLessons->push($occurrenceLesson);
+            }
+        }
+        $sortedLessons = $allLessons->sortByDesc('schedule');
+        return view('lessons.lessonList', [
+            'lessons' => $sortedLessons,
+            'status' => $status,
+            'month' => $month,
+            'category' => $category,
+        ]);
     }
 
     // SHOW ADD LESSON FORM
@@ -64,36 +85,36 @@ class LessonController extends Controller
             'category.required' => 'The category field is required.',
             'category.string' => 'The category must be a string.',
             'category.max' => 'The category may not be greater than 255 characters.',
-            
+
             'other_category.string' => 'The other category must be a string.',
-        
+
             'description.string' => 'The description must be a string.',
-        
+
             'schedule.required' => 'The schedule field is required.',
             'schedule.date' => 'The schedule must be a valid date.',
-        
+
             'price.required_if' => 'The price field is required when the category is Workshop.',
             'price.numeric' => 'The price must be a number.',
-        
+
             'duration.required' => 'The duration field is required.',
             'duration.integer' => 'The duration must be an integer.',
-        
+
             'level.required' => 'The level field is required.',
             'level.in' => 'The selected level is invalid.',
 
             'capacity.required' => 'The capacity field is required.',
             'capacity.integer' => 'The capacity must be an integer.',
-        
+
             'end_date.date' => 'The end date must be a valid date.',
             'end_date.after_or_equal' => 'The end date must be a date after or equal to the schedule date.',
         ]);
 
         DB::beginTransaction();
-        
+
         try {
             // Handle custom category input
-            $category = $validated['category'] === 'Other' && isset($validated['other_category']) 
-                ? $validated['other_category'] 
+            $category = $validated['category'] === 'Other' && isset($validated['other_category'])
+                ? $validated['other_category']
                 : $validated['category'];
 
             // Create the lesson
@@ -134,7 +155,6 @@ class LessonController extends Controller
             DB::commit();
 
             return redirect()->route('lesson.list')->with('success', 'Lesson created successfully.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
