@@ -75,7 +75,24 @@
                     <td>{{ $lesson->recurrence ? $lesson->recurrence->frequency : 'None' }}</td>
                     <td>
                         <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-secondary">Edit</a>
-                        <a href="{{ route('lessons.cancel', $lesson->id) }}" class="btn btn-warning">Cancel</a>
+
+                    {{-- Activate & cancel lesson --}}
+                        @if($lesson->status == "active")
+                        <!-- Cancel Button -->
+                            <form action="{{ route('lessons.cancel', $lesson->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this lesson?')">Cancel</button>
+                            </form>
+                        @elseif($lesson->status == "canceled")
+                        <!-- Activate Button -->
+                            <form action="{{ route('lessons.activate', $lesson->id) }}"method="POST" style="display:inline;">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to activate this lesson?')">Activate</button>
+                            </form>
+                        @endif
+
                         <form action="{{ route('lessons.delete', $lesson->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')

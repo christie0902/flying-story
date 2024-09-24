@@ -16,26 +16,26 @@ class LessonController extends Controller
     public function loadLessons(Request $request)
     {
         $status = $request->query('status', 'all');
-    $month = $request->query('month', '');
-    $category = $request->query('category', '');
+        $month = $request->query('month', '');
+        $category = $request->query('category', '');
 
-    $lessons = Lesson::with('recurrence');
+        $lessons = Lesson::with('recurrence');
 
-         if ($status !== 'all') {
-        $lessons->where('status', $status);
-    }
-    
-    if ($month) {
-        $lessons->whereMonth('schedule', $month);
-    }
-    
-    if ($category) {
-        $lessons->where('category', $category);
-    }
+        if ($status !== 'all') {
+            $lessons->where('status', $status);
+        }
 
-    $lessons = $lessons->orderBy('schedule', 'desc')->get();
-    
-    return view('lessons.lessonList', compact('lessons', 'status', 'month', 'category'));
+        if ($month) {
+            $lessons->whereMonth('schedule', $month);
+        }
+
+        if ($category) {
+            $lessons->where('category', $category);
+        }
+
+        $lessons = $lessons->orderBy('schedule', 'desc')->get();
+
+        return view('lessons.lessonList', compact('lessons', 'status', 'month', 'category'));
     }
 
     // Show form to create a new lesson
@@ -148,5 +148,24 @@ class LessonController extends Controller
             ->get();
 
         return view('lessons.registrations', compact('lesson', 'registrations'));
+    }
+
+    //Cancel lesson
+    public function cancel($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+        $lesson->status = 'canceled';
+        $lesson->save();
+
+        return redirect()->route('lesson.list')->with('success', 'Lesson canceled successfully.');
+    }
+
+    public function activate($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+        $lesson->status = 'active';
+        $lesson->save();
+
+        return redirect()->route('lesson.list')->with('success', 'Lesson activated successfully.');
     }
 }
