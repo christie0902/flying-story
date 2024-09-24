@@ -48,7 +48,15 @@ class LessonController extends Controller
                 $occurrenceLesson = clone $lesson;
                 $occurrenceLesson->schedule = $occurrence->scheduled_at;
 
-                $allLessons->push($occurrenceLesson);
+                // Check if a lesson with the same schedule already exists
+                $exists = $allLessons->contains(function ($existingLesson) use ($occurrenceLesson) {
+                    return $existingLesson->schedule === $occurrenceLesson->schedule;
+                });
+
+                // Only push the lesson if it doesn't already exist
+                if (!$exists) {
+                    $allLessons->push($occurrenceLesson);
+                }
             }
         }
         $sortedLessons = $allLessons->sortByDesc('schedule');
