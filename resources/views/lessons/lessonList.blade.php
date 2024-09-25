@@ -29,9 +29,9 @@
                 <label for="category">Category</label>
                 <select name="category" id="category" class="form-control">
                     <option value="">Select Category</option>
-                    <option value="Aerial Yoga">Aerial Yoga</option>
-                    <option value="Aerial Sling">Aerial Sling</option>
-                    <option value="Aerial Hoop">Aerial Hoop</option>
+                    <option value="Aerial Yoga" {{ $category == 'Aerial Yoga' ? 'selected' : '' }}>Aerial Yoga</option>
+                    <option value="Aerial Sling" {{ $category == 'Aerial Sling' ? 'selected' : '' }}>Aerial Sling</option>
+                    <option value="Aerial Hoop" {{ $category == 'Aerial Hoop' ? 'selected' : '' }}>Aerial Hoop</option>
                 </select>
             </div>
             <div class="form-group col-md-3 align-self-end">
@@ -95,16 +95,66 @@
                             </form>
                         @endif
 
-                        <form action="{{ route('lessons.delete', $lesson->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('lessons.delete', $lesson->id) }}" method="POST" onsubmit="return confirmDelete(event, '{{ $lesson->recurrence_id }}')">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button class="btn btn-danger" type="submit">Delete</button>
                         </form>
                     </td>
+                    <!-- Modal for cancel confirmation -->
+                    <div class="modal fade" id="cancelModal-{{ $lesson->id }}" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="cancelModalLabel">Cancel Lesson</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to cancel this lesson?
+
+                                    @if($lesson->recurrence_id)
+                                        <div class="form-group mt-3">
+                                            <label>
+                                                <input type="checkbox" id="deleteAllRecurrence-{{ $lesson->id }}">
+                                                Also delete all lessons in this recurrence
+                                            </label>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                    <button type="button" class="btn btn-warning" onclick="submitCancelForm({{ $lesson->id }})">Yes, Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </tr>
                 @endforeach
             @endif
         </tbody>
     </table>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+   function confirmDelete(event, recurrenceId) {
+    if (recurrenceId) {
+        let confirmMessage = 'This lesson is part of a recurring series. Are you sure you want to delete all lessons in this series?';
+        if (!confirm(confirmMessage)) {
+            event.preventDefault();
+            return false;
+        }
+    } else {
+        let singleConfirmMessage = 'Are you sure you want to delete this lesson?';
+        if (!confirm(singleConfirmMessage)) {
+            event.preventDefault();
+            return false;
+        }
+    }
+    return true;
+}
+</script>
 @endsection

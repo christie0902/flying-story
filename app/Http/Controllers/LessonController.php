@@ -44,7 +44,6 @@ class LessonController extends Controller
 
             // If the lesson has occurrences, push them into the collection
             foreach ($lesson->occurrences as $occurrence) {
-                // Clone the original lesson and modify schedule
                 $occurrenceLesson = clone $lesson;
                 $occurrenceLesson->schedule = $occurrence->scheduled_at;
 
@@ -53,7 +52,6 @@ class LessonController extends Controller
                     return $existingLesson->schedule === $occurrenceLesson->schedule;
                 });
 
-                // Only push the lesson if it doesn't already exist
                 if (!$exists) {
                     $allLessons->push($occurrenceLesson);
                 }
@@ -210,8 +208,8 @@ class LessonController extends Controller
      */
     private function createWeeklyOccurrences(Lesson $lesson, Carbon $startDate, ?Carbon $endDate, int $interval)
     {
-        $currentDate = $startDate;
-        $occurrences = [];
+        $currentDate = $startDate->copy();
+        $endDate = $endDate ? $endDate->copy()->endOfDay() : null;
 
         while (!$endDate || $currentDate->lessThanOrEqualTo($endDate)) {
             // Create an occurrence for each valid date
@@ -280,11 +278,20 @@ class LessonController extends Controller
     //     return redirect()->route('lessons.lessonList')->with('success', 'Lesson updated along with future occurrences.');
     // }
 
-    // Delete a lesson
-    public function deleteLesson(Lesson $lesson)
+    // DELETE LESSON
+    public function deleteLesson(Request $request, $id)
     {
+        $lesson = Lesson::findOrFail($id);
+
+        if ($lesson->recurrence_id) {
+            Lesson::where('recurrence_id', $lesson->recurrence_id)->delete();
+
+            return redirect()->route('lesson.list')->with('success', 'All lessons in the recurrence have been deleted.');
+        }
+
         $lesson->delete();
-        return redirect()->route('lessons.lessonList')->with('success', 'Lesson deleted successfully.');
+
+        return redirect()->route('lesson.list')->with('success', 'Lesson deleted successfully.');
     }
 
     // Show students registered for a lesson
@@ -297,7 +304,7 @@ class LessonController extends Controller
         return view('lessons.registrations', compact('lesson', 'registrations'));
     }
 
-    //Cancel lesson
+    //CANCEL & ACTIVATE LESSON
     public function cancel($id)
     {
         $lesson = Lesson::findOrFail($id);
