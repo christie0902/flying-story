@@ -328,15 +328,16 @@ class LessonController extends Controller
     public function deleteLesson(Request $request, $id)
     {
         $lesson = Lesson::findOrFail($id);
-
-        if ($lesson->recurrence_id) {
+    
+        $deleteAll = $request->input('delete_all_recurrence', false);
+    
+        if ($lesson->recurrence_id && $deleteAll) {
             Lesson::where('recurrence_id', $lesson->recurrence_id)->delete();
-
+    
             return redirect()->route('lesson.list')->with('success', 'All lessons in the recurrence have been deleted.');
         }
-
         $lesson->delete();
-
+    
         return redirect()->route('lesson.list')->with('success', 'Lesson deleted successfully.');
     }
 
