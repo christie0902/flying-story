@@ -14,7 +14,8 @@ class Lesson extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category',
+        'title',
+        'category_id',
         'description',
         'schedule',
         'price',
@@ -22,26 +23,19 @@ class Lesson extends Model
         'capacity',
         'registered_students',
         'status',
+        'recurrence_option',
         'recurrence_id',
         'level',
     ];
 
     /**
-     * Get the recurrence associated with the class.
+     * Define the relationship with Category.
      */
-    public function recurrence(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Recurrence::class);
+        return $this->belongsTo(Category::class);
     }
-
-    /**
-     * Get the class occurrences.
-     */
-    public function occurrences(): HasMany
-    {
-        return $this->hasMany(LessonOccurrence::class);
-    }
-
+    
     /**
      * Get the registrations for the class.
      */

@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lesson;
-use App\Models\Recurrence;
 use App\Models\LessonRegistration;
-use App\Models\LessonOccurrence;
+use App\Models\Category;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,50 +18,31 @@ class LessonController extends Controller
         $status = $request->query('status', 'all');
         $month = $request->query('month', '');
         $category = $request->query('category', '');
-
-        $lessons = Lesson::with('recurrence', 'occurrences');
-
+    
+        $query = Lesson::query();
+    
         if ($status !== 'all') {
-            $lessons->where('status', $status);
+            $query->where('status', $status);
         }
-
+    
         if ($month) {
-            $lessons->whereMonth('schedule', $month);
+            $query->whereMonth('schedule', $month);
         }
-
+    
         if ($category) {
-            $lessons->where('category', $category);
+            $query->where('category_id', $category);;
         }
+    
+        $lessons = $query->orderByDesc('schedule')->get();
 
-        $lessons = $lessons->get();
-
-        // Create a collection to store both lessons and occurrences
-        $allLessons = collect();
-
-        foreach ($lessons as $lesson) {
-            $allLessons->push($lesson);
-
-            // If the lesson has occurrences, push them into the collection
-            foreach ($lesson->occurrences as $occurrence) {
-                $occurrenceLesson = clone $lesson;
-                $occurrenceLesson->schedule = $occurrence->scheduled_at;
-
-                // Check if a lesson with the same schedule already exists
-                $exists = $allLessons->contains(function ($existingLesson) use ($occurrenceLesson) {
-                    return $existingLesson->schedule === $occurrenceLesson->schedule;
-                });
-
-                if (!$exists) {
-                    $allLessons->push($occurrenceLesson);
-                }
-            }
-        }
-        $sortedLessons = $allLessons->sortByDesc('schedule');
+        $categories = Category::all();
+    
         return view('lessons.lessonList', [
-            'lessons' => $sortedLessons,
+            'lessons' => $lessons,
             'status' => $status,
             'month' => $month,
-            'category' => $category,
+            'category' => $category, 
+            'categories' => $categories,
         ]);
     }
 
@@ -253,31 +233,60 @@ class LessonController extends Controller
         return view('lessons.edit', compact('lesson', 'recurrences'));
     }
 
-    // Update a lesson
-    public function updateLesson(Request $request, Lesson $lesson, $id)
-    {
-        $lesson->update($request->all());
+    // UPDATE LESSON
+    public function updateLesson(Request $request, $id)
+{
+    $validated = $request->validate([
+        'category' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'scheduled_at' => 'required|date',
+        'price' => 'nullable|numeric',
+        'duration' => 'required|integer',
+        'level' => 'required|in:beginner,lower-intermediate,intermediate,upper-intermediate,advanced',
+        'capacity' => 'required|integer',
+        'apply_recurrence' => 'nullable|in:current,future',
+    ]);
 
-        // If the lesson is part of a recurrence, ask if the user wants to update future lessons
-        // if ($lesson->recurrence_id) {
-        //     return view('lessons.update-recurrence', compact('lesson'));
-        // }
+    DB::beginTransaction();
 
-        return redirect()->route('lessons.lessonList')->with('success', 'Lesson updated successfully.');
+    try {
+        $lessonOccurrence = LessonOccurrence::findOrFail($id);
+        $lesson = $lessonOccurrence->lesson;
+
+        $lessonOccurrence->update([
+            'scheduled_at' => $validated['scheduled_at'],
+        ]);
+
+        $lesson->update([
+            'category' => $validated['category'],
+            'price' => $validated['price'] ?? $lesson->price,
+            'duration' => $validated['duration'],
+            'level' => $validated['level'],
+            'capacity' => $validated['capacity'],
+        ]);
+
+        if ($lesson->recurrence_id && $request->apply_recurrence === 'future') {
+            // Fetch all future occurrences in the recurrence that are after the current lesson's scheduled_at
+            $futureOccurrences = LessonOccurrence::where('lesson_id', $lesson->id)
+                ->where('scheduled_at', '>', $lessonOccurrence->scheduled_at)
+                ->get();
+
+            // Update all future occurrences with the new scheduled time and other details
+            foreach ($futureOccurrences as $futureOccurrence) {
+                $futureOccurrence->update([
+                    'scheduled_at' => $lessonOccurrence->scheduled_at,
+                ]);
+            }
+        }
+
+        DB::commit();
+
+        return redirect()->route('lesson.list')->with('success', 'Lesson occurrence updated successfully.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['error' => $e->getMessage()], 500);
     }
-
-    // Apply updates to future lessons
-    // public function updateRecurrence(Request $request, Lesson $lesson)
-    // {
-    //     if ($request->input('apply_to_future')) {
-    //         Lesson::where('recurrence_id', $lesson->recurrence_id)
-    //               ->where('id', '>', $lesson->id)
-    //               ->update($request->except('apply_to_future'));
-    //     }
-
-    //     return redirect()->route('lessons.lessonList')->with('success', 'Lesson updated along with future occurrences.');
-    // }
-
+}
     // DELETE LESSON
     public function deleteLesson(Request $request, $id)
     {

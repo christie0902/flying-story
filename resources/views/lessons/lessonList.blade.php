@@ -25,13 +25,15 @@
                     @endfor
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group">
                 <label for="category">Category</label>
                 <select name="category" id="category" class="form-control">
-                    <option value="">Select Category</option>
-                    <option value="Aerial Yoga" {{ $category == 'Aerial Yoga' ? 'selected' : '' }}>Aerial Yoga</option>
-                    <option value="Aerial Sling" {{ $category == 'Aerial Sling' ? 'selected' : '' }}>Aerial Sling</option>
-                    <option value="Aerial Hoop" {{ $category == 'Aerial Hoop' ? 'selected' : '' }}>Aerial Hoop</option>
+                    <option value="">All Categories</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ $cat->id == $category ? 'selected' : '' }}>
+                            {{ $cat->name }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group col-md-3 align-self-end">
@@ -44,6 +46,7 @@
     <table class="table mt-4">
         <thead>
             <tr>
+                <th>Title</th>
                 <th>Category</th>
                 <th>Description</th>
                 <th>Schedule</th>
@@ -65,7 +68,8 @@
             @else
             @foreach($lessons as $lesson)
                 <tr>
-                    <td>{{ $lesson->category }}</td>
+                    <td>{{ $lesson->title }}</td>
+                    <td>{{ $lesson->category->name ?? 'No Category' }}</td>
                     <td>{{ $lesson->description }}</td>
                     <td>{{ $lesson->formatted_schedule }}</td>
                     <td>{{ $lesson->formatted_duration }}</td>
@@ -74,7 +78,7 @@
                     <td>{{ $lesson->registered_students }}</td>
                     <td>{{ $lesson->formatted_price }}</td>
                     <td>{{ $lesson->status }}</td>
-                    <td>{{ $lesson->recurrence ? $lesson->recurrence->frequency : 'None' }}</td>
+                    <td>{{ $lesson->recurrence_option ?? 'None' }}</td>
                     <td>
                         <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-secondary">Edit</a>
 
