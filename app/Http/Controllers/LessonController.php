@@ -57,7 +57,7 @@ class LessonController extends Controller
     public function storeLesson(Request $request)
     {
         $validated = $request->validate([
-            'category' => 'required|integer',
+            'category' => 'required|integer|exists:categories,id',
             'other_category' => 'nullable|string',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -114,7 +114,7 @@ class LessonController extends Controller
                     throw new \Exception('Category ID is invalid and no new category name provided.');
                 }
             }
-            
+ 
             // Create the lesson
             $lesson = Lesson::create([
                 'category_id' => $categoryId,
@@ -201,10 +201,10 @@ class LessonController extends Controller
             $existingLesson = Lesson::where('title', $lesson->title)
             ->where('schedule', $currentDate->format('Y-m-d H:i:s'))
             ->first();
-
+            // dd($lesson->category);
         if (!$existingLesson) {
             Lesson::create([
-                'category_id' => $lesson->category,
+                'category_id' => $lesson->category->id,
                 'title' => $lesson->title,
                 'description' => $lesson->description,
                 'schedule' => $currentDate->format('Y-m-d H:i:s'),
@@ -244,7 +244,7 @@ class LessonController extends Controller
 
         if (!$existingLesson) {
             Lesson::create([
-                'category_id' => $lesson->category,
+                'category_id' => $lesson->category->id,
                 'title' => $lesson->title,
                 'description' => $lesson->description,
                 'schedule' => $currentDate->format('Y-m-d H:i:s'),
