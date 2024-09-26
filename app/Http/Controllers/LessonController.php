@@ -57,7 +57,7 @@ class LessonController extends Controller
     public function storeLesson(Request $request)
     {
         $validated = $request->validate([
-            'category' => 'required|string|max:255',
+            'category' => 'required|integer',
             'other_category' => 'nullable|string',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -103,16 +103,21 @@ class LessonController extends Controller
 
         try {
             // Handle custom category input
-            if ($validated['category'] === 'Other' && isset($validated['other_category'])) {
-                $category = Category::firstOrCreate(['name' => $request->input('other_category')]);
-                $categoryId = $category->id;
-            } else {
-                $categoryId = $validated['category'];
+            $categoryId = $validated['category'];
+            $category = Category::find($categoryId);
+            if (!$category) {
+                if (!empty($validated['other_category'])) {
+                    // Create the new category
+                    $newCategory = Category::create(['name' => $validated['other_category']]);
+                    $categoryId = $newCategory->id;
+                } else {
+                    throw new \Exception('Category ID is invalid and no new category name provided.');
+                }
             }
-
+            
             // Create the lesson
             $lesson = Lesson::create([
-                'category' => $categoryId,
+                'category_id' => $categoryId,
                 'title' => $validated['title'],
                 'description' => $validated['description'],
                 'schedule' => $validated['schedule'],
@@ -199,7 +204,7 @@ class LessonController extends Controller
 
         if (!$existingLesson) {
             Lesson::create([
-                'category' => $lesson->category,
+                'category_id' => $lesson->category,
                 'title' => $lesson->title,
                 'description' => $lesson->description,
                 'schedule' => $currentDate->format('Y-m-d H:i:s'),
@@ -239,7 +244,7 @@ class LessonController extends Controller
 
         if (!$existingLesson) {
             Lesson::create([
-                'category' => $lesson->category,
+                'category_id' => $lesson->category,
                 'title' => $lesson->title,
                 'description' => $lesson->description,
                 'schedule' => $currentDate->format('Y-m-d H:i:s'),

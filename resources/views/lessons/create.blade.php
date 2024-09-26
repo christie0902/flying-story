@@ -21,7 +21,7 @@
             <label>Category</label>
             <select id="category-select" name="category" class="form-control" required>
                 @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : '' }}>
+                    <option value={{ $category->id }} {{ old('category') == $category->id ? 'selected' : '' }}>
                     {{ $category->name }}
                     </option>
                 @endforeach
@@ -105,7 +105,7 @@
             otherCategoryInput.value = '';
         }
 
-        if (this.value === '4') {
+        if (this.value === 4) {
             priceGroup.style.display = 'block';
         } else {
             priceGroup.style.display = 'none';
