@@ -12,7 +12,7 @@
 @endif
 
 <div class="container">
-    <h1>Add New Lesson</h1>
+    <h1>Add New Class</h1>
 
     <form action="{{ route('lessons.store') }}" method="POST">
         @csrf
@@ -20,12 +20,12 @@
         <div class="form-group">
             <label>Category</label>
             <select id="category-select" name="category" class="form-control" required>
-                <option value="">Select a Category</option>
-                <option value="Aerial Yoga">Aerial Yoga</option>
-                <option value="Aerial Sling">Aerial Sling</option>
-                <option value="Aerial Hoop">Aerial Hoop</option>
-                <option value="Workshop">Workshop</option>
-                <option value="Other">Other</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                    </option>
+                @endforeach
+                    <option value="Other">Other</option>
             </select>
             <input type="text" id="other-category" name="other_category" class="form-control mt-2 d-none" placeholder="Enter new category">
         </div>
@@ -33,6 +33,11 @@
         <div class="form-group" id="price-group" style="display: none;">
             <label>Price (in CZK)</label>
             <input type="number" name="price" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Title</label>
+            <textarea name="title" class="form-control" required></textarea>
         </div>
 
         <div class="form-group">
@@ -67,7 +72,7 @@
         
         <div class="form-group">
             <label>Recurrence</label>
-            <select id="recurrence-select" name="recurrence_id" class="form-control">
+            <select id="recurrence-select" name="recurrence_option" class="form-control">
                 <option value="">None</option>
                 <option value="weekly">Weekly</option>
                 <option value="bi-weekly">Bi-Weekly</option>
@@ -100,7 +105,7 @@
             otherCategoryInput.value = '';
         }
 
-        if (this.value === 'Workshop') {
+        if (this.value === '4') {
             priceGroup.style.display = 'block';
         } else {
             priceGroup.style.display = 'none';
