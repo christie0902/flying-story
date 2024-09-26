@@ -137,5 +137,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
     ])->toArray(),
 ];

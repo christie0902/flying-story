@@ -300,31 +300,39 @@ class LessonController extends Controller
         $dateTime = new \DateTime($newSchedule);
         $newTime = $dateTime->format('H:i');
 
-        $updateData = [
+        $lesson->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
+            'schedule' => $newSchedule,
             'price' => $validated['price'],
-            'schedule' => $validated['schedule'],
             'duration' => $validated['duration'],
             'level' => $validated['level'],
             'capacity' => $validated['capacity'],
             'updated_at' => now(),
-        ];
+        ]);
 
         if ($applyToAll && $lesson->recurrence_id) {
-            $currentDateTime = new \DateTime($lesson->schedule);
-            $currentDate = $currentDateTime->format('Y-m-d');
+            Lesson::where('recurrence_id', $lesson->recurrence_id)->get()->each(function ($relatedLesson) use ($validated, $newTime) {
+                $currentDateTime = new \DateTime($relatedLesson->schedule);
+                $currentDate = $currentDateTime->format('Y-m-d');
 
-            // Update all lessons in the series to the new time, keeping the existing date
-            Lesson::where('recurrence_id', $lesson->recurrence_id)->update(array_merge($updateData, [
-                'schedule' => $currentDate . ' ' . $newTime,
-                'updated_at' => now()
-            ]));
+                // Update the related lesson's schedule to the new time, keeping its original date
+                $relatedLesson->update([
+                    'title' => $validated['title'], 
+                    'description' => $validated['description'],
+                    'schedule' => $currentDate . ' ' . $newTime,
+                    'price' => $validated['price'],
+                    'duration' => $validated['duration'],
+                    'level' => $validated['level'],
+                    'capacity' => $validated['capacity'],
+                    'updated_at' => now()
+                ]);
+            });
+            
+            return redirect()->route('lesson.list')->with('success', 'All classes in the series have been updated with the new information.');
         }
-       
-        $lesson->update($updateData);
 
-        return redirect()->route('lesson.list')->with('success', ($applyToAll ? 'All classes in the series have been updated.' : 'Class updated successfully.'));
+        return redirect()->route('lesson.list')->with('success', 'Class updated successfully.');
     }
 
     // DELETE LESSON

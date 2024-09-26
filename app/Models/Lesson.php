@@ -75,6 +75,6 @@ class Lesson extends Model
     //Format schedule
     public function getFormattedScheduleAttribute()
     {
-        return Carbon::parse($this->schedule)->setTimezone('Europe/Prague')->format('ga M j, Y');
+        return Carbon::parse($this->schedule)->format('ga M j, Y');
     }
 }
