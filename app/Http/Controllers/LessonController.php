@@ -66,7 +66,7 @@ class LessonController extends Controller
             'duration' => 'required|integer|min:1',
             'level' => 'required|in:beginner,lower-intermediate,intermediate,upper-intermediate,advanced',
             'capacity' => 'required|integer',
-            'recurrence_option' => 'nullable|in:weekly,bi-weekly,monthly', 
+            'recurrence_option' => 'nullable|in:weekly,bi-weekly,monthly',
             'end_date' => 'nullable|date|after_or_equal:schedule',
         ], [
             'category.required' => 'The category field is required.',
@@ -114,7 +114,7 @@ class LessonController extends Controller
                     throw new \Exception('Category ID is invalid and no new category name provided.');
                 }
             }
- 
+
             // Create the lesson
             $lesson = Lesson::create([
                 'category_id' => $categoryId,
@@ -147,7 +147,7 @@ class LessonController extends Controller
 
             DB::commit();
 
-            return redirect()->route('lesson.list')->with('success', 'Lesson created successfully.');
+            return redirect()->route('lesson.list')->with('success', 'Class created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
@@ -171,11 +171,11 @@ class LessonController extends Controller
             case 'weekly':
                 $this->createWeeklyOccurrences($lesson, $startDate, $endDate, 1);
                 break;
-    
+
             case 'bi-weekly':
                 $this->createWeeklyOccurrences($lesson, $startDate, $endDate, 2);
                 break;
-    
+
             case 'monthly':
                 $this->createMonthlyOccurrences($lesson, $startDate, $endDate, 1);
                 break;
@@ -199,25 +199,25 @@ class LessonController extends Controller
 
         while ($currentDate->lessThanOrEqualTo($endDate)) {
             $existingLesson = Lesson::where('title', $lesson->title)
-            ->where('schedule', $currentDate->format('Y-m-d H:i:s'))
-            ->first();
+                ->where('schedule', $currentDate->format('Y-m-d H:i:s'))
+                ->first();
             // dd($lesson->category);
-        if (!$existingLesson) {
-            Lesson::create([
-                'category_id' => $lesson->category->id,
-                'title' => $lesson->title,
-                'description' => $lesson->description,
-                'schedule' => $currentDate->format('Y-m-d H:i:s'),
-                'price' => $lesson->price,
-                'duration' => $lesson->duration,
-                'level' => $lesson->level,
-                'capacity' => $lesson->capacity,
-                'recurrence_option' => $lesson->recurrence_option,
-                'recurrence_id' => $lesson->recurrence_id, // Keep the same recurrence ID
-                'registered_students' => 0,
-                'status' => 'active',
-            ]);
-        }
+            if (!$existingLesson) {
+                Lesson::create([
+                    'category_id' => $lesson->category->id,
+                    'title' => $lesson->title,
+                    'description' => $lesson->description,
+                    'schedule' => $currentDate->format('Y-m-d H:i:s'),
+                    'price' => $lesson->price,
+                    'duration' => $lesson->duration,
+                    'level' => $lesson->level,
+                    'capacity' => $lesson->capacity,
+                    'recurrence_option' => $lesson->recurrence_option,
+                    'recurrence_id' => $lesson->recurrence_id, // Keep the same recurrence ID
+                    'registered_students' => 0,
+                    'status' => 'active',
+                ]);
+            }
             // Move to the next occurrence
             $currentDate->addWeeks($interval);
         }
@@ -239,25 +239,25 @@ class LessonController extends Controller
 
         while ($currentDate->lessThanOrEqualTo($endDate)) {
             $existingLesson = Lesson::where('title', $lesson->title)
-            ->where('schedule', $currentDate->format('Y-m-d H:i:s'))
-            ->first();
+                ->where('schedule', $currentDate->format('Y-m-d H:i:s'))
+                ->first();
 
-        if (!$existingLesson) {
-            Lesson::create([
-                'category_id' => $lesson->category->id,
-                'title' => $lesson->title,
-                'description' => $lesson->description,
-                'schedule' => $currentDate->format('Y-m-d H:i:s'),
-                'price' => $lesson->price,
-                'duration' => $lesson->duration,
-                'level' => $lesson->level,
-                'capacity' => $lesson->capacity,
-                'recurrence_option' => $lesson->recurrence_option,
-                'recurrence_id' => $lesson->recurrence_id,
-                'registered_students' => 0,
-                'status' => 'active',
-            ]);
-        }
+            if (!$existingLesson) {
+                Lesson::create([
+                    'category_id' => $lesson->category->id,
+                    'title' => $lesson->title,
+                    'description' => $lesson->description,
+                    'schedule' => $currentDate->format('Y-m-d H:i:s'),
+                    'price' => $lesson->price,
+                    'duration' => $lesson->duration,
+                    'level' => $lesson->level,
+                    'capacity' => $lesson->capacity,
+                    'recurrence_option' => $lesson->recurrence_option,
+                    'recurrence_id' => $lesson->recurrence_id,
+                    'registered_students' => 0,
+                    'status' => 'active',
+                ]);
+            }
             // Move to the next occurrence
             $currentDate->addMonths($interval);
         }
@@ -266,79 +266,82 @@ class LessonController extends Controller
     // SHOW EDIT FORM
     public function editLesson(Lesson $lesson, $id)
     {
-        $recurrences = Recurrence::all();
-        return view('lessons.edit', compact('lesson', 'recurrences'));
+        $lesson = Lesson::findOrFail($id);
+        $categories = Category::all();
+
+        $relatedLessons = Lesson::where('recurrence_id', $lesson->recurrence_id)
+            ->where('id', '!=', $lesson->id)
+            ->get();
+
+        return view('lessons.edit', compact('lesson', 'categories', 'relatedLessons'));
     }
 
     // UPDATE LESSON
     public function updateLesson(Request $request, $id)
     {
+        $lesson = Lesson::findOrFail($id);
+
+        // Validation
         $validated = $request->validate([
-            'category' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'scheduled_at' => 'required|date',
+            'schedule' => 'required|date',
             'price' => 'nullable|numeric',
-            'duration' => 'required|integer',
+            'duration' => 'required|integer|min:1',
             'level' => 'required|in:beginner,lower-intermediate,intermediate,upper-intermediate,advanced',
             'capacity' => 'required|integer',
-            'apply_recurrence' => 'nullable|in:current,future',
+            'edit_all_recurrence' => 'nullable|boolean'
         ]);
 
-        DB::beginTransaction();
+        // Check if changes should be applied to the entire series
+        $applyToAll = $request->input('edit_all_recurrence', false) == '1';
 
-        try {
-            $lessonOccurrence = LessonOccurrence::findOrFail($id);
-            $lesson = $lessonOccurrence->lesson;
+        $newSchedule = $validated['schedule'];
+        $dateTime = new \DateTime($newSchedule);
+        $newTime = $dateTime->format('H:i');
 
-            $lessonOccurrence->update([
-                'scheduled_at' => $validated['scheduled_at'],
-            ]);
+        $updateData = [
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'price' => $validated['price'],
+            'schedule' => $validated['schedule'],
+            'duration' => $validated['duration'],
+            'level' => $validated['level'],
+            'capacity' => $validated['capacity'],
+            'updated_at' => now(),
+        ];
 
-            $lesson->update([
-                'category' => $validated['category'],
-                'price' => $validated['price'] ?? $lesson->price,
-                'duration' => $validated['duration'],
-                'level' => $validated['level'],
-                'capacity' => $validated['capacity'],
-            ]);
+        if ($applyToAll && $lesson->recurrence_id) {
+            $currentDateTime = new \DateTime($lesson->schedule);
+            $currentDate = $currentDateTime->format('Y-m-d');
 
-            if ($lesson->recurrence_id && $request->apply_recurrence === 'future') {
-                // Fetch all future occurrences in the recurrence that are after the current lesson's scheduled_at
-                $futureOccurrences = LessonOccurrence::where('lesson_id', $lesson->id)
-                    ->where('scheduled_at', '>', $lessonOccurrence->scheduled_at)
-                    ->get();
-
-                // Update all future occurrences with the new scheduled time and other details
-                foreach ($futureOccurrences as $futureOccurrence) {
-                    $futureOccurrence->update([
-                        'scheduled_at' => $lessonOccurrence->scheduled_at,
-                    ]);
-                }
-            }
-
-            DB::commit();
-
-            return redirect()->route('lesson.list')->with('success', 'Lesson occurrence updated successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            // Update all lessons in the series to the new time, keeping the existing date
+            Lesson::where('recurrence_id', $lesson->recurrence_id)->update(array_merge($updateData, [
+                'schedule' => $currentDate . ' ' . $newTime,
+                'updated_at' => now()
+            ]));
         }
+       
+        $lesson->update($updateData);
+
+        return redirect()->route('lesson.list')->with('success', ($applyToAll ? 'All classes in the series have been updated.' : 'Class updated successfully.'));
     }
+
     // DELETE LESSON
     public function deleteLesson(Request $request, $id)
     {
         $lesson = Lesson::findOrFail($id);
-    
+
         $deleteAll = $request->input('delete_all_recurrence', false);
-    
+
         if ($lesson->recurrence_id && $deleteAll) {
             Lesson::where('recurrence_id', $lesson->recurrence_id)->delete();
-    
-            return redirect()->route('lesson.list')->with('success', 'All lessons in the recurrence have been deleted.');
+
+            return redirect()->route('lesson.list')->with('success', 'All classes in the recurrence have been deleted.');
         }
         $lesson->delete();
-    
-        return redirect()->route('lesson.list')->with('success', 'Lesson deleted successfully.');
+
+        return redirect()->route('lesson.list')->with('success', 'Class deleted successfully.');
     }
 
     // Show students registered for a lesson
