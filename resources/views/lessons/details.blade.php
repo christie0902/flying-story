@@ -92,19 +92,7 @@
                             </span>
                         </td>
                         <td>
-                            @if ($registration->user->profile->valid_date)
-                                @php
-                                    $validDate = \Carbon\Carbon::parse($registration->user->profile->valid_date);
-                                    $isExpired = $validDate->lt(\Carbon\Carbon::now());
-                                @endphp
-                        
-                                <span style="{{ $isExpired ? 'color: red;' : '' }}">
-                                    {{ $validDate->format('Y-m-d') }}
-                                    {{ $isExpired ? "(expired)":"" }}
-                                </span>
-                            @else
-                                N/A
-                            @endif
+                            {{ $registration->user->profile->valid_date ? \Carbon\Carbon::parse($registration->user->profile->valid_date)->format('Y-m-d') : 'N/A' }}
                         </td>
                         <td>{{ $registration->user->profile->credits_purchased_date ? \Carbon\Carbon::parse($registration->user->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($registration->registration_date)->format('Y-m-d') }}</td>
@@ -112,12 +100,15 @@
                             <form action="{{ route('lessons.registration.update', $registration->id) }}" method="POST" class="confirmation-form">
                                 @csrf
                                 @method('PUT')
-                                <select name="confirmation_status" onchange="confirmStatusChange(this)">
-                                    <option value="Confirmed" {{ $registration->confirmation_status == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
-                                    <option value="Pending" {{ $registration->confirmation_status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="Canceled" {{ $registration->confirmation_status == 'Canceled' ? 'selected' : '' }}>Canceled</option>
-                                </select>
-                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                <select name="confirmation_status" onchange="confirmStatusChange(this)" 
+                                @if ($registration->user->profile->credits <= 0) disabled @endif>
+                                <option value="Confirmed" {{ $registration->confirmation_status == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                <option value="Pending" {{ $registration->confirmation_status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="Canceled" {{ $registration->confirmation_status == 'Canceled' ? 'selected' : '' }}>Canceled</option>
+                            </select>
+                    
+                            <button type="submit" class="btn btn-sm btn-primary" 
+                                @if ($registration->user->profile->credits <= 0) disabled @endif>Update</button>
                             </form>
                         </td>
                         @else
@@ -137,7 +128,7 @@
         const form = select.closest('.confirmation-form');
         const selectedValue = select.value;
 
-        if (confirm(`Are you sure you want to change the confirmation status to ${selectedValue}?`)) {
+        f (!select.disabled && confirm(`Are you sure you want to change the confirmation status to ${selectedValue}?`)) {
             form.submit();
         } else {
             select.value = select.options[0].value;
