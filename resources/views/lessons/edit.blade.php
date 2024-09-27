@@ -52,11 +52,11 @@
         <div class="form-group">
             <label for="level">Level</label>
             <select name="level" id="level" class="form-control" required>
-                <option value="beginner" {{ old('level') == 'beginner' ? 'selected' : '' }}>Beginner</option>
-                <option value="lower-intermediate" {{ old('level') == 'lower-intermediate' ? 'selected' : '' }}>Lower Intermediate</option>
-                <option value="intermediate" {{ old('level') == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
-                <option value="upper-intermediate" {{ old('level') == 'upper-intermediate' ? 'selected' : '' }}>Upper Intermediate</option>
-                <option value="advanced" {{ old('level') == 'advanced' ? 'selected' : '' }}>Advanced</option>
+                <option value="beginner" {{ $lesson->level == 'beginner' ? 'selected' : '' }}>Beginner</option>
+                <option value="lower-intermediate" {{ $lesson->level == 'lower-intermediate' ? 'selected' : '' }}>Lower Intermediate</option>
+                <option value="intermediate" {{ $lesson->level == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                <option value="upper-intermediate" {{ $lesson->level == 'upper-intermediate' ? 'selected' : '' }}>Upper Intermediate</option>
+                <option value="advanced" {{ $lesson->level == 'advanced' ? 'selected' : '' }}>Advanced</option>
             </select>
         </div>
 
