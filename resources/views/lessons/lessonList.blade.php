@@ -8,7 +8,7 @@
 @endif
 
 <div class="container">
-    <h1>Lessons</h1>
+    <h1>Classes Management</h1>
     <a href="{{ route('lessons.create') }}" class="btn btn-primary">Add New Class</a>
 
      <!-- Filter Form -->
