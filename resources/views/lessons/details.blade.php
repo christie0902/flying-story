@@ -128,7 +128,7 @@
         const form = select.closest('.confirmation-form');
         const selectedValue = select.value;
 
-        f (!select.disabled && confirm(`Are you sure you want to change the confirmation status to ${selectedValue}?`)) {
+        if (!select.disabled && confirm(`Are you sure you want to change the confirmation status to ${selectedValue}? Student's credits will be changed accordingly!`)) {
             form.submit();
         } else {
             select.value = select.options[0].value;
