@@ -32,5 +32,6 @@ Route::group(['middleware' => 'can:admin'], function () {
 
     //Student
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    route::put('/students/update-credits/{id}', [StudentController::class, 'updateCredits'])->name('students.updateCredits');
 
 });

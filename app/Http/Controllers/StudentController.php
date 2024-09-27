@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Profile;
 
 class StudentController extends Controller
 {
@@ -18,9 +19,9 @@ class StudentController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', '%' . $search . '%')
-                  ->orWhereHas('profile', function ($query) use ($search) {
-                      $query->where('payment_variable', 'LIKE', '%' . $search . '%');
-                  });
+                    ->orWhereHas('profile', function ($query) use ($search) {
+                        $query->where('payment_variable', 'LIKE', '%' . $search . '%');
+                    });
             });
         }
 
