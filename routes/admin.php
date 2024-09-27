@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
-
+use App\Http\Controllers\RegistrationController;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -25,4 +25,7 @@ Route::group(['middleware' => 'can:admin'], function () {
 
     Route::put('/lessons/edit/{id}/cancel', [LessonController::class, 'cancel'])->name('lessons.cancel');
     Route::put('/lessons/edit/{id}/activate', [LessonController::class, 'activate'])->name('lessons.activate');
+
+    //Registration
+    Route::put('/lessons/registration/update/{id}', [RegistrationController::class, 'update'])->name('lessons.registration.update');
 });

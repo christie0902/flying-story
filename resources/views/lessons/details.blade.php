@@ -66,55 +66,82 @@
     @endif
 
     <!-- Show registered students -->
-    <h3>Registered Students</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Credits</th>
-                <th>Credits Valid Until</th>
-                <th>Credits Purchased Date</th>
-                <th>Registration Date</th>
-                <th>Payment Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($lesson->registrations as $registration)
+    @if ($lesson->registrations->count() > 0)
+        <h3>Registered Students</h3>
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>{{ $registration->user->name }}</td>
-                    <td>{{ $registration->user->email }}</td>
-                    @if($registration->user->profile)
-                    <td> 
-                        <span style="{{ ($registration->user->profile->credits ?? 0) == 0 ? 'color: red;' : '' }}">
-                            {{ $registration->user->profile->credits ?? 0 }}
-                        </span>
-                    </td>
-                    <td>
-                        @if ($registration->user->profile->valid_date)
-                            @php
-                                 $validDate = \Carbon\Carbon::parse($registration->user->profile->valid_date);
-                                 $isExpired = $validDate->lt(\Carbon\Carbon::now());
-                            @endphp
-                    
-                            <span style="{{ $isExpired ? 'color: red;' : '' }}">
-                                {{ $validDate->format('Y-m-d') }}
-                                {{ $isExpired ? "(expired)":"" }}
-                            </span>
-                        @else
-                            N/A
-                        @endif
-                    </td>
-                    <td>{{ $registration->user->profile->credits_purchased_date ? \Carbon\Carbon::parse($registration->user->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($registration->registration_date)->format('Y-m-d') }}</td>
-                    <td>{{ ucfirst($registration->payment_status) }}</td>
-                    @else
-                    <td>No profile</td>
-                    @endif
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Credits</th>
+                    <th>Credits Valid Until</th>
+                    <th>Credits Purchased Date</th>
+                    <th>Registration Date</th>
+                    <th>Confirmation Status</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                @foreach ($lesson->registrations as $registration)
+                    <tr>
+                        <td>{{ $registration->user->name }}</td>
+                        <td>{{ $registration->user->email }}</td>
+                        @if($registration->user->profile)
+                        <td> 
+                            <span style="{{ ($registration->user->profile->credits ?? 0) == 0 ? 'color: red;' : '' }}">
+                                {{ $registration->user->profile->credits ?? 0 }}
+                            </span>
+                        </td>
+                        <td>
+                            @if ($registration->user->profile->valid_date)
+                                @php
+                                    $validDate = \Carbon\Carbon::parse($registration->user->profile->valid_date);
+                                    $isExpired = $validDate->lt(\Carbon\Carbon::now());
+                                @endphp
+                        
+                                <span style="{{ $isExpired ? 'color: red;' : '' }}">
+                                    {{ $validDate->format('Y-m-d') }}
+                                    {{ $isExpired ? "(expired)":"" }}
+                                </span>
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td>{{ $registration->user->profile->credits_purchased_date ? \Carbon\Carbon::parse($registration->user->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($registration->registration_date)->format('Y-m-d') }}</td>
+                        <td> 
+                            <form action="{{ route('lessons.registration.update', $registration->id) }}" method="POST" class="confirmation-form">
+                                @csrf
+                                @method('PUT')
+                                <select name="confirmation_status" onchange="confirmStatusChange(this)">
+                                    <option value="Confirmed" {{ $registration->confirmation_status == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                    <option value="Pending" {{ $registration->confirmation_status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="Canceled" {{ $registration->confirmation_status == 'Canceled' ? 'selected' : '' }}>Canceled</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                            </form>
+                        </td>
+                        @else
+                        <td>No profile</td>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+    "No student registered yet"
+    @endif
 </div>
+
+<script>
+    function confirmStatusChange(select) {
+        const form = select.closest('.confirmation-form');
+        const selectedValue = select.value;
+
+        if (confirm(`Are you sure you want to change the confirmation status to ${selectedValue}?`)) {
+            form.submit();
+        } else {
+            select.value = select.options[0].value;
+        }
+    }
+</script>
 @endsection
