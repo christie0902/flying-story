@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\StudentController;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -28,4 +29,8 @@ Route::group(['middleware' => 'can:admin'], function () {
 
     //Registration
     Route::put('/lessons/registration/update/{id}', [RegistrationController::class, 'update'])->name('lessons.registration.update');
+
+    //Student
+    Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+
 });

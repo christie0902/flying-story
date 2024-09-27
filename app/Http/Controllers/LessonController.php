@@ -33,7 +33,7 @@ class LessonController extends Controller
             $query->where('category_id', $category);;
         }
 
-        $lessons = $query->orderByDesc('schedule')->get();
+        $lessons = $query->orderByDesc('schedule')->paginate(10);
 
         $categories = Category::all();
 

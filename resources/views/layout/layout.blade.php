@@ -30,7 +30,7 @@
                         <a class="nav-link" href="{{ route('lesson.list') }}">Class Management</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Student Management</a>
+                        <a class="nav-link" href="{{route('students.index')}}">Student Management</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Payment Management</a>

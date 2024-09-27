@@ -109,6 +109,38 @@
             @endif
         </tbody>
     </table>
+
+    <!-- Custom Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {{-- Previous Page Link --}}
+            @if ($lessons->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a class="page-link" href="{{ $lessons->previousPageUrl() }}">Previous</a>
+                </li>
+            @endif
+
+            {{-- Next Page Link --}}
+            @if ($lessons->hasMorePages())
+                <li class="page-item">
+                    <a class="page-link" href="{{ $lessons->nextPageUrl() }}">Next</a>
+                </li>
+            @else
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            @endif
+        </ul>
+    </nav>
+
+    <!-- Optional: Display current page and total -->
+    <div class="text-center mt-3">
+        Page {{ $lessons->currentPage() }} of {{ $lessons->lastPage() }}
+    </div>
 </div>
 @endsection
 
