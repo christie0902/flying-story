@@ -19,7 +19,7 @@
                 <select name="status" id="status" class="form-control">
                     <option value="all" {{ $status == 'all' ? 'selected' : '' }}>All</option>
                     <option value="active" {{ $status == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ $status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    <option value="canceled" {{ $status == 'canceled' ? 'selected' : '' }}>Canceled</option>
                 </select>
             </div>
             <div class="form-group col-md-3">
