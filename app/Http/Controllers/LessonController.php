@@ -318,7 +318,7 @@ class LessonController extends Controller
 
                 // Update the related lesson's schedule to the new time, keeping its original date
                 $relatedLesson->update([
-                    'title' => $validated['title'], 
+                    'title' => $validated['title'],
                     'description' => $validated['description'],
                     'schedule' => $currentDate . ' ' . $newTime,
                     'price' => $validated['price'],
@@ -328,7 +328,7 @@ class LessonController extends Controller
                     'updated_at' => now()
                 ]);
             });
-            
+
             return redirect()->route('lesson.list')->with('success', 'All classes in the series have been updated with the new information.');
         }
 
@@ -352,14 +352,16 @@ class LessonController extends Controller
         return redirect()->route('lesson.list')->with('success', 'Class deleted successfully.');
     }
 
-    // Show students registered for a lesson
+    // SHOW DETAILS OF A LESSON
     public function details(Lesson $lesson, $id)
     {
-        $registrations = LessonRegistration::with('user.profile')
-            ->where('lesson_id', $lesson->id)
+        $lesson = Lesson::with('registrations.user.profile')->findOrFail($id);
+        $categories = Category::all();
+        $relatedLessons = Lesson::where('recurrence_id', $lesson->recurrence_id)
+            ->where('id', '!=', $lesson->id)
             ->get();
 
-        return view('lessons.registrations', compact('lesson', 'registrations'));
+        return view('lessons.details', compact('lesson', 'categories', 'relatedLessons'));
     }
 
     //CANCEL & ACTIVATE LESSON

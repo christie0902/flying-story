@@ -54,13 +54,8 @@
             <tr>
                 <th>Title</th>
                 <th>Category</th>
-                <th>Description</th>
                 <th>Schedule</th>
-                <th>Duration (mins)</th>
-                <th>Level</th>
-                <th>Capacity</th>
                 <th>Registered Students</th>
-                <th>Price</th>
                 <th>Status</th>
                 <th>Recurrence</th>
                 <th>Actions</th>
@@ -74,15 +69,10 @@
             @else
             @foreach($lessons as $lesson)
                 <tr>
-                    <td>{{ $lesson->title }}</td>
+                    <td><a href="{{ route('lessons.details', $lesson->id) }}">{{ $lesson->title }}</a></td>
                     <td>{{ $lesson->category->name ?? 'No Category' }}</td>
-                    <td>{{ $lesson->description }}</td>
                     <td>{{ $lesson->formatted_schedule }}</td>
-                    <td>{{ $lesson->formatted_duration }}</td>
-                    <td>{{ $lesson->level }}</td>
-                    <td>{{ $lesson->capacity }}</td>
-                    <td>{{ $lesson->registered_students }}</td>
-                    <td>{{ $lesson->formatted_price }}</td>
+                    <td>{{ $lesson->registered_students }} / {{ $lesson->capacity }}</td>
                     <td>{{ $lesson->status }}</td>
                     <td>{{ $lesson->recurrence_option ?? 'None' }}</td>
                     <td>
