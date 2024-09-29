@@ -45,4 +45,47 @@ class StudentController extends Controller
 
         return view('students.list', compact('students', 'search', 'filter'));
     }
+ 
+    // public function updateCredits(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'credits' => 'required|integer|min:0'
+    //     ]);
+
+    //     $user = User::findOrFail($id);
+
+    //     $profile = $user->profile;
+
+    //     if ($profile) {
+    //         $profile->credits = $request->input('credits');
+    //         $profile->save();
+
+    //         return response()->json(['success' => true]);
+    //     }
+
+    //     return response()->json(['success' => false, 'message' => 'Profile not found'], 404);
+    // }
+    public function updateCredits(Request $request, $id)
+    {
+        // Validate the input
+        $request->validate([
+            'credits' => 'required|integer|min:0',
+        ]);
+    
+        // Find the user by ID
+        $user = User::findOrFail($id);
+        $profile = $user->profile;
+    
+        if ($profile) {
+            // Update profile credits
+            $profile->credits = $request->input('credits');
+            $profile->save(); // Save the updated credits
+    
+            // Redirect back with success message
+            return redirect()->back()->with('success', "{$user->name}'s credits have been updated to {$profile->credits}.");
+        }
+    
+        // If no profile is found, return an error
+        return redirect()->back()->with('error', 'Profile not found.');
+    }
 }

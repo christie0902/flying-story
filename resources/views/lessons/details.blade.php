@@ -124,7 +124,7 @@
 </div>
 
 <script>
-    function confirmStatusChange(select) {
+    const confirmStatusChange = (select) => {
         const form = select.closest('.confirmation-form');
         const selectedValue = select.value;
 
