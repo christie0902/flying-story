@@ -117,21 +117,29 @@
                     <strong>Credits:</strong> 
                     <span id="modal-student-credits-display"></span>
                     <button id="edit-credits-btn" type="button" class="btn btn-sm btn-secondary">Edit</button>
+
                     {{-- Credit edit form --}}
                     <form id="edit-credits-form" method="POST" action="" style="display: none;">
                         @csrf
                         @method('PUT')
-                        <input type="number" name="credits" id="modal-student-credits" class="form-control" min="0">
-                        <button type="submit" class="btn btn-primary mt-2">Update Credits</button>
+                        <div class="form-group">
+                            <label for="modal-student-credits">Credits</label>
+                            <input type="number" name="credits" id="modal-student-credits" class="form-control" min="0">
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="credits-purchased-date">Credits Purchased Date</label>
+                            <input type="date" name="credits_purchased_date" id="credits-purchased-date" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="valid-date">Valid Date</label>
+                            <input type="date" name="valid_date" id="valid-date" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3">Update Credits</button>
                     </form>
                 </p>
-
-                <!-- Input for Editing Credits -->
-                {{-- <div id="edit-credits-section" style="display: none;">
-                    <input type="number" id="edit-credits-input" class="form-control" min="0" placeholder="Enter new credits">
-                    <button id="save-credits-btn" class="btn btn-success btn-sm mt-2">Save</button>
-                    <button id="cancel-credits-btn" class="btn btn-danger btn-sm mt-2">Cancel</button>
-                </div> --}}
 
                 <p><strong>Credits Purchased Date:</strong> <span id="modal-credits-purchased"></span></p>
                 <p><strong>Valid Date:</strong> <span id="modal-valid-date"></span></p>
@@ -154,6 +162,16 @@
         const editCreditsBtn = document.getElementById('edit-credits-btn');
         const creditsDisplay = document.getElementById('modal-student-credits-display');
         const creditsInput = document.getElementById('modal-student-credits');
+        const purchaseDateInput = document.getElementById('credits-purchased-date');
+        const validDateInput = document.getElementById('valid-date');
+
+        const calculateValidDate = (purchaseDate) => {
+            const date = new Date(purchaseDate);
+            date.setDate(date.getDate() + 30);
+            
+            return date.toISOString().split('T')[0]; 
+            // Return in YYYY-MM-DD format
+        }
 
         studentNames.forEach(function(student) {
             student.addEventListener('click', (event) => {
@@ -168,12 +186,12 @@
                 const validDate = student.getAttribute('data-valid-date');
                 const paymentVariable = student.getAttribute('data-payment-variable');
 
-                // currentStudentId = id;
-
                 // Populate the modal with the student's details
                 document.getElementById('modal-student-name').textContent = name;
                 document.getElementById('modal-student-email').textContent = email;
                 creditsDisplay.textContent = credits;
+                purchaseDateInput.value = creditsPurchased;
+                validDateInput.value = validDate;
                 document.getElementById('modal-credits-purchased').textContent = creditsPurchased;
                 document.getElementById('modal-valid-date').textContent = validDate;
                 document.getElementById('modal-payment-variable').textContent = paymentVariable;
@@ -191,8 +209,22 @@
             form.style.display = 'block';
             creditsDisplay.style.display = 'none';
             editCreditsBtn.style.display = 'none';
-    });
-});
+        });
 
+        // Update the valid date when the credits purchased date is changed
+        purchaseDateInput.addEventListener('change', function() {
+        const purchaseDate = new Date(this.value);
+        const validDate = calculateValidDate(purchaseDate);
+        validDateInput.value = validDate;
+    });
+
+        // Confirm credit changes before submitting
+        form.addEventListener('submit', function(event) {
+            const confirmed = confirm("Are you sure you want to update the student's credits?");
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+    });
 </script>
 @endsection

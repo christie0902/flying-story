@@ -45,7 +45,7 @@ class StudentController extends Controller
 
         return view('students.list', compact('students', 'search', 'filter'));
     }
- 
+
     // public function updateCredits(Request $request, $id)
     // {
     //     $request->validate([
@@ -67,24 +67,25 @@ class StudentController extends Controller
     // }
     public function updateCredits(Request $request, $id)
     {
-        // Validate the input
         $request->validate([
             'credits' => 'required|integer|min:0',
+            'credits_purchased_date' => 'required|date',
+            'valid_date' => 'required|date|after_or_equal:credits_purchased_date', // Ensure valid date is after or equal to purchased date
         ]);
-    
-        // Find the user by ID
+
         $user = User::findOrFail($id);
         $profile = $user->profile;
-    
+
         if ($profile) {
-            // Update profile credits
             $profile->credits = $request->input('credits');
-            $profile->save(); // Save the updated credits
-    
-            // Redirect back with success message
-            return redirect()->back()->with('success', "{$user->name}'s credits have been updated to {$profile->credits}.");
+            $profile->credits_purchased_date = $request->input('credits_purchased_date');
+            $profile->valid_date = $request->input('valid_date');
+            $profile->save();
+
+            // Redirect back with a success message
+            return redirect()->back()->with('success', "{$user->name}'s credits has been updated to {$profile->credits}.");
         }
-    
+
         // If no profile is found, return an error
         return redirect()->back()->with('error', 'Profile not found.');
     }
