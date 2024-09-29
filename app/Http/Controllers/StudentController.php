@@ -89,4 +89,23 @@ class StudentController extends Controller
         // If no profile is found, return an error
         return redirect()->back()->with('error', 'Profile not found.');
     }
+
+    public function extendValidDate(Request $request, $id)
+    {
+        $request->validate([
+            'valid_date' => 'required|date|after_or_equal:today',
+        ]);
+
+        $user = User::findOrFail($id);
+        $profile = $user->profile;
+
+        if ($profile) {
+            $profile->valid_date = $request->input('valid_date');
+            $profile->save();
+
+            return redirect()->back()->with('success', "Valid date for {$user->name} has been extended to {$profile->valid_date}.");
+        }
+
+        return redirect()->back()->with('error', 'Profile not found.');
+    }
 }

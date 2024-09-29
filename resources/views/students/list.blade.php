@@ -35,7 +35,7 @@
                 <th>Email</th>
                 <th>Credits</th>
                 <th>Credits Purchased Date</th>
-                <th>Valid Date</th>
+                <th>Expiration Date</th>
                 <th>Payment Variable</th>
             </tr>
         </thead>
@@ -113,6 +113,8 @@
             <div class="modal-body">
                 <p><strong>Name:</strong> <span id="modal-student-name"></span></p>
                 <p><strong>Email:</strong> <span id="modal-student-email"></span></p>
+
+                {{-- Credit Management --}}
                 <p>
                     <strong>Credits:</strong> 
                     <span id="modal-student-credits-display"></span>
@@ -124,7 +126,7 @@
                         @method('PUT')
                         <div class="form-group">
                             <label for="modal-student-credits">Credits</label>
-                            <input type="number" name="credits" id="modal-student-credits" class="form-control" min="0">
+                            <input type="number" name="credits" id="modal-student-credits" class="form-control" min="0" value="">
                         </div>
 
                         <div class="form-group mt-3">
@@ -142,7 +144,20 @@
                 </p>
 
                 <p><strong>Credits Purchased Date:</strong> <span id="modal-credits-purchased"></span></p>
-                <p><strong>Valid Date:</strong> <span id="modal-valid-date"></span></p>
+
+                {{-- Valid date extension --}}
+                <p>
+                    <strong>Valid Date:</strong> 
+                    <span id="modal-valid-date"></span>
+                    <button id="edit-valid-date-btn" type="button" class="btn btn-sm btn-secondary">Extend</button>
+                
+                    <form id="edit-valid-date-form" method="POST" action="" style="display: none;">
+                        @csrf
+                        @method('PUT')
+                        <input type="date" name="valid_date" id="modal-valid-date-input" class="form-control mt-2">
+                        <button type="submit" class="btn btn-primary mt-2">Update</button>
+                    </form>
+                </p>
                 <p><strong>Payment Variable:</strong> <span id="modal-payment-variable"></span></p>
             </div>
             <div class="modal-footer">
@@ -164,6 +179,10 @@
         const creditsInput = document.getElementById('modal-student-credits');
         const purchaseDateInput = document.getElementById('credits-purchased-date');
         const validDateInput = document.getElementById('valid-date');
+        const extendValidInput=document.getElementById('modal-valid-date-input');
+        const validDateSpan = document.getElementById('modal-valid-date');
+        const editValidDateBtn = document.getElementById('edit-valid-date-btn');
+        const editValidDateForm = document.getElementById('edit-valid-date-form');
 
         const calculateValidDate = (purchaseDate) => {
             const date = new Date(purchaseDate);
@@ -174,9 +193,9 @@
         }
 
         studentNames.forEach(function(student) {
-            student.addEventListener('click', (event) => {
-                
+            student.addEventListener('click', (event) => { 
                 event.preventDefault();
+
                 // Get the data attributes from the clicked student link
                 const id = student.getAttribute('data-id');
                 const name = student.getAttribute('data-name');
@@ -190,19 +209,36 @@
                 document.getElementById('modal-student-name').textContent = name;
                 document.getElementById('modal-student-email').textContent = email;
                 creditsDisplay.textContent = credits;
-                purchaseDateInput.value = creditsPurchased;
+                validDateSpan.textContent = validDate;
                 validDateInput.value = validDate;
-                document.getElementById('modal-credits-purchased').textContent = creditsPurchased;
-                document.getElementById('modal-valid-date').textContent = validDate;
+                creditsInput.value= credits;
+                extendValidInput.value=validDate;
                 document.getElementById('modal-payment-variable').textContent = paymentVariable;
 
                 form.action = `/admin/students/${id}/update-credits`;
+                editValidDateForm.action = `/admin/students/${id}/extend-valid-date`;
+
 
                 const bootstrapModal = new bootstrap.Modal(modal);
                 bootstrapModal.show();
 
                 form.style.display = 'none';
+                editValidDateForm.style.display = 'none';
+
             });
+        });
+
+        editValidDateBtn.addEventListener('click', () => {
+            editValidDateForm.style.display = 'block';
+            editValidDateBtn.style.display = 'none';
+        });
+
+                // Confirm valid date change before submitting
+        editValidDateForm.addEventListener('submit', (event) => {
+            const confirmed = confirm("Are you sure you want to extend the student's valid date?");
+             if (!confirmed) {
+                 event.preventDefault();
+            }
         });
 
         editCreditsBtn.addEventListener('click', () => {
@@ -213,18 +249,29 @@
 
         // Update the valid date when the credits purchased date is changed
         purchaseDateInput.addEventListener('change', function() {
-        const purchaseDate = new Date(this.value);
-        const validDate = calculateValidDate(purchaseDate);
-        validDateInput.value = validDate;
-    });
+            const purchaseDate = new Date(this.value);
+            const validDate = calculateValidDate(purchaseDate);
+            validDateSpan.textContent = validDate;
+            validDateInput.value = validDate;
+        });
 
         // Confirm credit changes before submitting
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', (event) => {
             const confirmed = confirm("Are you sure you want to update the student's credits?");
             if (!confirmed) {
                 event.preventDefault();
             }
         });
+        modal.addEventListener('hidden.bs.modal', () => {      
+            form.style.display = 'none';
+            editCreditsBtn.style.display = 'block';
+            editValidDateForm.style.display = 'none';
+            editValidDateBtn.style.display = 'block';
+            creditsDisplay.style.display = 'inline';
+        });
     });
+
+       
+
 </script>
 @endsection
