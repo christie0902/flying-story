@@ -4,33 +4,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lesson;
+use App\Models\Category;
 
 class CalendarController extends Controller
 {
-    public function loadLessons()
+    public function loadLessons(Request $request)
     {
-        $lessons = Lesson::all();
+        $categoryColors = [
+            'Aerial Sling' => '#ff6666',
+            'Aerial Hoop' => '#66ccff',
+            'Aerial Silk' => '#99ff99',
+            'Workshop' => '#ffcc99'
+        ];
 
-        $events = [];
+        $selectedCategory = $request->query('category');
 
-        foreach ($lessons as $lesson) {
-            $events[] = [
+        $lessons = Lesson::with('category')
+            ->when($selectedCategory, function ($query) use ($selectedCategory) {
+                return $query->where('category_id', $selectedCategory);
+            })
+            ->get();
+
+
+        $events = $lessons->map(function ($lesson) use ($categoryColors) {
+            return [
                 'id' => $lesson->id,
-                'title' => $lesson->title,
+                'title' => $lesson->category->name,
                 'start' => $lesson->schedule,
-                'duration' => $lesson->duration,
-                'extendedProps' => [
-                    'price' => $lesson->price,
-                    'description' => $lesson->description,
-                ],
+                'color' => $categoryColors[$lesson->category->name] ?? '#cccccc',
+                'capacity' => $lesson->capacity,
+                'registered_students' => $lesson->registered_students,
             ];
-        }
+        });
 
         return response()->json($events);
     }
 
+
+
     public function showCalendar()
     {
-        return view('calendar.calendar');
+        $categories = Category::all();
+
+        return view('calendar.calendar', compact('categories'));
+    }
+
+    public function getLessonDetails($id)
+    {
+        $lesson = Lesson::with('category')->find($id);
+        if (!$lesson) {
+            return response()->json(['error' => 'Lesson not found'], 404);
+        }
+
+        return response()->json([
+            'title' => $lesson->title,
+            'category' => $lesson->category->name,
+            'schedule' => $lesson->schedule,
+            'duration' => $lesson->duration,
+            'price' => $lesson->price,
+            'capacity' => $lesson->capacity,
+            'registered_students' => $lesson->registered_students,
+            'status' => $lesson->status,
+            'description' => $lesson->description,
+        ]);
     }
 }

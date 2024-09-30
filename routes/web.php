@@ -19,3 +19,4 @@ Route::get('/profile/change-password', [ProfileController::class, 'showChangePas
 //Calendar route
 Route::get('/calendar/load-events', [CalendarController::class, 'loadLessons'])->name('calendar.load');
 Route::get('/calendar', [CalendarController::class, 'showCalendar'])->name('calendar.show');
+Route::get('/calendar/lesson/{id}', [CalendarController::class, 'getLessonDetails'])->name('calendar.lesson');
