@@ -11,10 +11,10 @@ class CalendarController extends Controller
     public function loadLessons(Request $request)
     {
         $categoryColors = [
-            'Aerial Sling' => '#ff6666',
-            'Aerial Hoop' => '#66ccff',
-            'Aerial Silk' => '#99ff99',
-            'Workshop' => '#ffcc99'
+            'Aerial Sling' => '#f6d8cf',
+            'Aerial Hoop' => '#fef1e4',
+            'Aerial Silk' => '#e1d7d7',
+            'Workshop' => '#eac2b6'
         ];
 
         $selectedCategory = $request->query('category');
@@ -29,7 +29,7 @@ class CalendarController extends Controller
             $dateTime = new \DateTime($lesson->schedule);
 
             // Format the time
-            $formattedTime = $dateTime->format('g\hia');
+            $formattedTime = $dateTime->format('g\hiA');
 
             return [
                 'id' => $lesson->id,

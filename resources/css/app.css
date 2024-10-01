@@ -19,3 +19,22 @@
   font-style: normal;
 } */
 
+.event-content {
+  display: flex;
+  flex-direction: column;
+  white-space: wrap;
+}
+
+.event-content b {
+  font-size: 1em;
+}
+
+@media (max-width: 600px) {
+  .event-content b {
+      font-size: 0.7em;
+  }
+  .capacity-info {
+      font-size: 0.7em;
+      white-space: nowrap;
+  }
+}

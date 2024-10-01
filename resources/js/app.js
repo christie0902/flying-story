@@ -5,6 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import '../css/app.css';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -61,15 +62,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 let time = info.event.extendedProps.formattedTime;
             
                 // Set inner HTML
-                info.el.innerHTML = `<b>${time} ${categoryName}</b>\u00A0(${registeredStudents}/${capacity})`;
+                info.el.innerHTML = `
+                    <div class="event-content">
+                        <b>${time} ${categoryName} ${info.event.extendedProps.status === "canceled" ? "(Canceled)" : ""}</b>
+                        <span class="capacity-info">(Spots: ${registeredStudents}/${capacity})</span>
+                    </div>
+                `;
                 if (info.event.extendedProps.status === "canceled") {
-                    info.el.style.backgroundColor = '#D3D3D3';
+                    info.el.style.backgroundColor = '#dad6d3';
                 } else {
                     
                     info.el.style.backgroundColor = info.event.extendedProps.eventBgColor || '#007bff';
                 }
                 
-                info.el.style.color = '#1a252f';
+                info.el.style.color = '#5e452a';
                 info.el.style.margin = '2px 0';
             },
             eventClick: function(info) {
