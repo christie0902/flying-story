@@ -33,6 +33,15 @@
   z-index: 99;
 }
 
+.logout-spacer {
+  padding-top: 05px;
+}
+
+.logout-btn {
+  font-size: 1.1rem;
+  font-weight: 200;
+}
+
 .event-content b {
   font-size: 1em;
 }

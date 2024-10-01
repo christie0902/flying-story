@@ -12,7 +12,6 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/list@latest/main.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/journal/bootstrap.min.css">
 
-
     <title>Flying Story</title>
 </head>
 <body>
@@ -29,7 +28,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{route ('calendar.show')}}">Calendar</a>
                     </li>
-
                     @can('admin')
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('lesson.list') }}">Class Management</a>
@@ -41,15 +39,18 @@
                         <a class="nav-link" href="#">Payment Management</a>
                     </li>
                     @endcan
+                </ul>
 
+                <!-- Right-side links (Login/Register or Profile/Logout) -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     @auth
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile.load') }}">Profile</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item logout-spacer">
                         <form action="{{ route('logout') }}" method="post" class="d-inline">
                             @csrf
-                            <button class="btn btn-link nav-link" style="border: none; background: none; padding: 0; cursor: pointer;">
+                            <button class="btn logout-btn" style="border: none; background: none; padding: 0; cursor: pointer; line-height: normal;">
                                 Logout
                             </button>
                         </form>
