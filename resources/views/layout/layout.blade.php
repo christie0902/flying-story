@@ -10,7 +10,8 @@
     {{-- FullCalendar CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/common@latest/main.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/list@latest/main.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/sketchy@latest/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/journal/bootstrap.min.css">
+
 
     <title>Flying Story</title>
 </head>

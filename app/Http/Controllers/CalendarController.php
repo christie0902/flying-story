@@ -25,13 +25,19 @@ class CalendarController extends Controller
             })
             ->get();
 
-
         $events = $lessons->map(function ($lesson) use ($categoryColors) {
+            $dateTime = new \DateTime($lesson->schedule);
+
+            // Format the time
+            $formattedTime = $dateTime->format('g\hia');
+
             return [
                 'id' => $lesson->id,
                 'title' => $lesson->category->name,
                 'start' => $lesson->schedule,
-                'color' => $categoryColors[$lesson->category->name] ?? '#cccccc',
+                'formattedTime' => $formattedTime,
+                'eventBgColor' => $categoryColors[$lesson->category->name] ?? '#cccccc',
+                'status' => $lesson->status,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,
             ];

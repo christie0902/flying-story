@@ -3,6 +3,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const calendarEl = document.getElementById('calendar');
@@ -10,8 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (calendarEl) {
         const calendar = new Calendar(calendarEl, {
-            plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
+            plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin, bootstrapPlugin],
             initialView: 'dayGridMonth',
+            height: '80vh',
             events: function(fetchInfo, successCallback, failureCallback) {
                 // Get selected category
                 let selectedCategory = categorySelect.value;
@@ -30,22 +34,43 @@ document.addEventListener('DOMContentLoaded', function() {
             editable: false,
             selectable: true,
             // eventContent: function(info) {
+            //     let schedule = info.event.start;
+            //     // let time = schedule.split(" ")[1].substring(0, 5);
             //     let categoryName = info.event.title;
             //     let capacity = info.event.extendedProps.capacity;
             //     let registeredStudents = info.event.extendedProps.registered_students;
-            //     return { html: `<b>${categoryName}</b><br>(${registeredStudents}/${capacity})` };
+            //     return { html: `<b>${schedule} ${categoryName}</b><br>(${registeredStudents}/${capacity})` };
             // },
-            eventRender: function(info) {
+            // eventRender: function(info) {
+            //     let categoryName = info.event.title;
+            //     let capacity = info.event.extendedProps.capacity;
+            //     let registeredStudents = info.event.extendedProps.registered_students;
+
+            //     // Create custom HTML element for the event
+            //     let eventElement = document.createElement('div');
+            //     eventElement.innerHTML = `<b>${categoryName}</b><br>(${registeredStudents}/${capacity})`;
+            //     eventElement.style.backgroundColor = info.event.color;
+            //     eventElement.style.color = '#fff';
+            //     return eventElement;
+            // },
+            eventDidMount: function(info) {
+                console.log('Event Object:', info.event);
                 let categoryName = info.event.title;
                 let capacity = info.event.extendedProps.capacity;
                 let registeredStudents = info.event.extendedProps.registered_students;
-
-                // Create custom HTML element for the event
-                let eventElement = document.createElement('div');
-                eventElement.innerHTML = `<b>${categoryName}</b><br>(${registeredStudents}/${capacity})`;
-                eventElement.style.backgroundColor = info.event.color;
-                eventElement.style.color = '#fff';
-                return eventElement;
+                let time = info.event.extendedProps.formattedTime;
+            
+                // Set inner HTML
+                info.el.innerHTML = `<b>${time} ${categoryName}</b>\u00A0(${registeredStudents}/${capacity})`;
+                if (info.event.extendedProps.status === "canceled") {
+                    info.el.style.backgroundColor = '#D3D3D3';
+                } else {
+                    
+                    info.el.style.backgroundColor = info.event.extendedProps.eventBgColor || '#007bff';
+                }
+                
+                info.el.style.color = '#1a252f';
+                info.el.style.margin = '2px 0';
             },
             eventClick: function(info) {
                 fetch(`/calendar/lesson/${info.event.id}`)
