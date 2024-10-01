@@ -63,6 +63,7 @@ class CalendarController extends Controller
         }
 
         return response()->json([
+            'id' => $lesson->id,
             'title' => $lesson->title,
             'category' => $lesson->category->name,
             'schedule' => $lesson->schedule,

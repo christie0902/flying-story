@@ -91,7 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('lessonRegisteredStudents').textContent = lesson.registered_students;
                         document.getElementById('lessonStatus').textContent = lesson.status;
                         document.getElementById('lessonDescription').textContent = lesson.description;
-
+                        const editBtn = document.getElementById('editButton');
+                        if(editBtn) editBtn.setAttribute('href', `/admin/lessons/edit/${lesson.id}`);
                         const modal = new bootstrap.Modal(document.getElementById('lessonDetailsModal'));
                         modal.show();
                     });
