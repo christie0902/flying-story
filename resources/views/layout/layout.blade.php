@@ -19,7 +19,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
         <div class="container-fluid p-2">
-            <a class="navbar-brand mt-1" href="/">
+            <a class="navbar-brand mt-1 ms-2" href="/">
                 <img src="{{asset('logo.svg')}}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top mx-2">
                 Flying Story
             </a>
@@ -33,19 +33,19 @@
                     </li>
                     @can('admin')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('lesson.list') }}">Class Management</a>
+                        <a class="nav-link" href="{{ route('lesson.list') }}">Classes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('students.index')}}">Student Management</a>
+                        <a class="nav-link" href="{{route('students.index')}}">Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Payment Management</a>
+                        <a class="nav-link" href="#">Payments</a>
                     </li>
                     @endcan
                 </ul>
 
                 <!-- Right-side links (Login/Register or Profile/Logout) -->
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-2">
                     @auth
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile.load') }}">Profile</a>
