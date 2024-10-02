@@ -66,7 +66,7 @@
                @endif
            @else
                {{-- User is not logged in --}}
-               <div class="mt-3 d-flex justify-content-center">
+               <div class="mt-3 d-flex align-items-center flex-column">
                     <p class="text-info">Please log in/register to join classes.</p>
                     <a href="{{ route('login') }}" class="btn btn-info px-5 ms-2">Log In</a>
                  </div>
