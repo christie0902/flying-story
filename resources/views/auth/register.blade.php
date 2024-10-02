@@ -13,7 +13,7 @@
                     </ul>
                 </div>
             @endif
-            <h1>Account Registration</h1>
+            <h2 class="page-title">Account Registration</h1>
             <form method="POST" action="{{ route('register') }}" class="needs-validation" novalidate>
                 @csrf
                 
@@ -67,6 +67,7 @@
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
             </form>
+            <p>Already have an account? <a href="{{Route('login')}}">Login here</a></p>
         </div>
     </div>
 </div>

@@ -104,6 +104,6 @@ body {
   color: black;
 }
 
-.btn-primary{
+.btn-primary, .btn-info{
   color: white;
 }

@@ -62,17 +62,27 @@ class CalendarController extends Controller
             return response()->json(['error' => 'Lesson not found'], 404);
         }
 
+        $user = auth()->check() ? auth()->user() : null;
+        $userProfile = $user ? $user->profile : null;
+
         return response()->json([
-            'id' => $lesson->id,
-            'title' => $lesson->title,
-            'category' => $lesson->category->name,
-            'schedule' => $lesson->schedule,
-            'duration' => $lesson->duration,
-            'price' => $lesson->price,
-            'capacity' => $lesson->capacity,
-            'registered_students' => $lesson->registered_students,
-            'status' => $lesson->status,
-            'description' => $lesson->description,
+            'lesson' => [
+                'id' => $lesson->id,
+                'title' => $lesson->title,
+                'category' => $lesson->category->name,
+                'schedule' => $lesson->schedule,
+                'duration' => $lesson->duration,
+                'price' => $lesson->price,
+                'capacity' => $lesson->capacity,
+                'registered_students' => $lesson->registered_students,
+                'status' => $lesson->status,
+                'description' => $lesson->description,
+            ],
+            'user' => $userProfile ? [
+                'credits' => $userProfile->credits,
+                'valid_date' => $userProfile->valid_date,
+                'role' => $user->role,
+            ] : null,
         ]);
     }
 }

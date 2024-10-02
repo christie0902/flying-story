@@ -40,6 +40,37 @@
                 <p><strong>Registered Students:</strong> <span id="lessonRegisteredStudents"></span></p>
                 <p><strong>Status:</strong> <span id="lessonStatus"></span></p>
                 <p><strong>Description:</strong> <span id="lessonDescription"></span></p>
+
+                {{-- User Role and Credit Status Logic --}}
+               {{-- User Role and Credit Status Logic --}}
+               @if(auth()->check())
+               @if(auth()->user()->role == 'student')
+                   @php
+                       $credits = auth()->user()->profile->credits ?? 0;
+                       $expirationDate = auth()->user()->profile->valid_date ?? now();
+                   @endphp
+           
+                <div class="mt-3 d-flex flex-column align-items-center">
+                    @if($credits > 0 && $expirationDate > now())
+                        <p class="text-primary">Remaining credits: {{ $credits }}</p>
+                        <button id="registerButton" class="btn btn-primary px-5">Join</button>
+                    @elseif($credits <= 0)
+                        <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
+                        <button id="buyCreditsButton" class="btn btn-primary px-5">Buy Credits</button>
+                    @elseif($credits > 0 && $expirationDate <= now())
+                        <p class="text-info">You have {{ $credits }} credits but they have expired.</br> Please contact us for more information.</p>
+                        <button id="expiredCreditsButton" class="btn btn-secondary px-5" disabled>Join</button>
+                    @endif
+                </div>
+                
+               @endif
+           @else
+               {{-- User is not logged in --}}
+               <div class="mt-3 d-flex justify-content-center">
+                    <p class="text-info">Please log in/register to join classes.</p>
+                    <a href="{{ route('login') }}" class="btn btn-info px-5 ms-2">Log In</a>
+                 </div>
+           @endif
             </div>
             <div class="modal-footer">
                 @can('admin')
