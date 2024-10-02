@@ -12,14 +12,17 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/list@latest/main.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/journal/bootstrap.min.css">
 
-    <title>Flying Story</title>
+    <title>Flying Story Schedule</title>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Flying Story</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
+        <div class="container-fluid p-2">
+            <a class="navbar-brand mt-1" href="/">
+                <img src="{{asset('logo.svg')}}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top mx-2">
+                Flying Story
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -76,8 +79,8 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-
+    
     @yield('scripts')
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </body>
 </html>

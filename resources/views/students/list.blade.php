@@ -14,20 +14,26 @@
     </div>
     @endif
 
-    <h1>Student Management</h1>
+    <h2 class="page-title">Students Management</h1>
 
-    <form method="GET" action="{{ route('students.index') }}" class="form-inline mb-3">
-        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by Name or Payment Variable">
-
-        <select name="filter" class="form-control">
-            <option value="">All Students</option>
-            <option value="zero_credits" {{ request('filter') === 'zero_credits' ? 'selected' : '' }}>Students with 0 Credits</option>
-            <option value="expiring_credits" {{ request('filter') === 'expiring_credits' ? 'selected' : '' }}>Students with Expiring Credits</option>
-        </select>
-
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-
+        <form method="GET" action="{{ route('students.index') }}" class="row g-3 mb-3">
+            <div class="col-md-6 col-lg-4">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by Name or Payment Variable">
+            </div>
+        
+            <div class="col-md-4 col-lg-3">
+                <select name="filter" class="form-control">
+                    <option value="">All Students</option>
+                    <option value="zero_credits" {{ request('filter') === 'zero_credits' ? 'selected' : '' }}>Students with 0 Credits</option>
+                    <option value="expiring_credits" {{ request('filter') === 'expiring_credits' ? 'selected' : '' }}>Students with Expiring Credits</option>
+                </select>
+            </div>
+        
+            <div class="col-md-2 col-lg-2">
+                <button type="submit" class="btn btn-primary w-50">Search</button>
+            </div>
+        </form>
+        
     <table class="table table-bordered">
         <thead>
             <tr>

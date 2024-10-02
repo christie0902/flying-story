@@ -11,14 +11,14 @@
 </div>
 @endif
 
-<div class="container">
-    <h1>Add New Class</h1>
+<div class="container w-100 w-lg-50" style="max-width: 100vw;">
+    <h2 class="page-title">Add New Class</h1>
 
     <form action="{{ route('lessons.store') }}" method="POST">
         @csrf
         
         <div class="form-group">
-            <label>Category</label>
+            <label class="form-label">Category</label>
             <select id="category-select" name="category" class="form-control" required>
                 @foreach ($categories as $category)
                     <option value={{ $category->id }} {{ old('category') == $category->id ? 'selected' : '' }}>
@@ -31,31 +31,31 @@
         </div>
 
         <div class="form-group" id="price-group" style="display: none;">
-            <label>Price (in CZK)</label>
+            <label class="form-label">Price (in CZK)</label>
             <input type="number" name="price" class="form-control">
         </div>
 
         <div class="form-group">
-            <label>Title</label>
+            <label class="form-label">Title</label>
             <textarea name="title" class="form-control" required></textarea>
         </div>
 
         <div class="form-group">
-            <label>Description</label>
+            <label class="form-label">Description</label>
             <textarea name="description" class="form-control" required></textarea>
         </div>
         
         <div class="form-group">
-            <label>Schedule</label>
+            <label class="form-label">Schedule</label>
             <input type="datetime-local" name="schedule" class="form-control" required>
         </div>
 
         <div class="form-group">
-            <label>Duration (in minutes)</label>
+            <label class="form-label">Duration (in minutes)</label>
             <input type="number" name="duration" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="level">Level</label>
+            <label class="form-label" for="level">Level</label>
             <select name="level" id="level" class="form-control" required>
                 <option value="beginner">Beginner</option>
                 <option value="lower-intermediate">Lower Intermediate</option>
@@ -66,12 +66,12 @@
         </div>
         
         <div class="form-group">
-            <label>Capacity</label>
+            <label class="form-label">Capacity</label>
             <input type="number" name="capacity" class="form-control" required>
         </div>
         
         <div class="form-group">
-            <label>Recurrence</label>
+            <label class="form-label">Recurrence</label>
             <select id="recurrence-select" name="recurrence_option" class="form-control">
                 <option value="">None</option>
                 <option value="weekly">Weekly</option>
@@ -81,11 +81,11 @@
         </div>
 
         <div class="form-group" id="end-date-group" style="display: none;">
-            <label for="end-date">End Date</label>
+            <label class="form-label" for="end-date">End Date</label>
             <input type="date" id="end-date" name="end_date">
         </div>
 
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-primary my-4 w-100">Save Class</button>
     </form>
 </div>
 @endsection

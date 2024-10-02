@@ -8,46 +8,56 @@
 @endif
 
 <div class="container">
-    <h1>Classes Management</h1>
+    <h2 class="page-title">Classes Management</h1>
     <a href="{{ route('lessons.create') }}" class="btn btn-primary">Add New Class</a>
 
-     <!-- Filter Form -->
-     <form method="GET" action="{{ route('lesson.list') }}" class="mb-4">
-        <div class="form-row">
-            <div class="form-group col-md-3">
-                <label for="status">Status</label>
-                <select name="status" id="status" class="form-control">
-                    <option value="all" {{ $status == 'all' ? 'selected' : '' }}>All</option>
-                    <option value="active" {{ $status == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="canceled" {{ $status == 'canceled' ? 'selected' : '' }}>Canceled</option>
-                </select>
-            </div>
-            <div class="form-group col-md-3">
-                <label for="month">Month</label>
-                <select name="month" id="month" class="form-control">
-                    <option value="">Select Month</option>
-                    @for ($m = 1; $m <= 12; $m++)
-                        <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
-                    @endfor
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="category">Category</label>
-                <select name="category" id="category" class="form-control">
-                    <option value="">All Categories</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" {{ $cat->id == $category ? 'selected' : '' }}>
-                            {{ $cat->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group col-md-3 align-self-end">
-                <button type="submit" class="btn btn-success">Filter</button>
-                <a href="{{ route('lesson.list') }}" class="btn btn-secondary">Refresh Filter</a>
-            </div>
+<!-- Filter Form -->
+<form method="GET" action="{{ route('lesson.list') }}" class="mb-4">
+    <div class="row g-3 align-items-end">
+        <!-- Status Filter -->
+        <div class="col-md-3">
+            <label class="form-label" for="status">Status</label>
+            <select name="status" id="status" class="form-control">
+                <option value="all" {{ $status == 'all' ? 'selected' : '' }}>All</option>
+                <option value="active" {{ $status == 'active' ? 'selected' : '' }}>Active</option>
+                <option value="canceled" {{ $status == 'canceled' ? 'selected' : '' }}>Canceled</option>
+            </select>
         </div>
-    </form>
+        
+        <!-- Month Filter -->
+        <div class="col-md-3">
+            <label class="form-label" for="month">Month</label>
+            <select name="month" id="month" class="form-control">
+                <option value="">Select Month</option>
+                @for ($m = 1; $m <= 12; $m++)
+                    <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                        {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                    </option>
+                @endfor
+            </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="col-md-3">
+            <label class="form-label" for="category">Category</label>
+            <select name="category" id="category" class="form-control">
+                <option value="">All Categories</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}" {{ $cat->id == $category ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Filter and Refresh Buttons -->
+        <div class="col-md-3 d-flex justify-content-center">
+            <button type="submit" class="btn btn-success me-2">Filter</button>
+            <a href="{{ route('lesson.list') }}" class="btn btn-secondary">Refresh</a>
+        </div>
+    </div>
+</form>
+
 
     <table class="table mt-4">
         <thead>
@@ -75,35 +85,40 @@
                     <td>{{ $lesson->registered_students }} / {{ $lesson->capacity }}</td>
                     <td>{{ $lesson->status }}</td>
                     <td>{{ $lesson->recurrence_option ?? 'None' }}</td>
+
+                    {{-- Actions --}}
                     <td>
-                        <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-secondary">Edit</a>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-secondary me-2">Edit</a>
 
-                    {{-- Activate & cancel lesson --}}
-                        @if($lesson->status == "active")
-                        <!-- Cancel Button -->
-                            <form action="{{ route('lessons.cancel', $lesson->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this class?')">Cancel</button>
-                            </form>
-                        @elseif($lesson->status == "canceled")
-                        <!-- Activate Button -->
-                            <form action="{{ route('lessons.activate', $lesson->id) }}"method="POST" style="display:inline;">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to activate this class?')">Activate</button>
-                            </form>
-                        @endif
+                            {{-- Activate & Cancel Lesson --}}
+                            @if($lesson->status == "active")
+                                <!-- Cancel Button -->
+                                <form action="{{ route('lessons.cancel', $lesson->id) }}" method="POST" class="me-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to cancel this class?')">Cancel</button>
+                                </form>
+                            @elseif($lesson->status == "canceled")
+                                <!-- Activate Button -->
+                                <form action="{{ route('lessons.activate', $lesson->id) }}" method="POST" class="me-2">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to activate this class?')">Activate</button>
+                                </form>
+                            @endif
 
-                        {{-- Delete Button --}}
-                        <form action="{{ route('lessons.delete', $lesson->id) }}" method="POST" 
-                            onsubmit="return confirmDelete(event, '{{ $lesson->recurrence_id }}')">
-                          @csrf
-                          @method('DELETE')
-                          <input type="hidden" name="delete_all_recurrence" value="0">
-                          <button class="btn btn-danger" type="submit">Delete</button>
-                      </form>
+                            {{-- Delete Button --}}
+                            <form action="{{ route('lessons.delete', $lesson->id) }}" method="POST" 
+                                onsubmit="return confirmDelete(event, '{{ $lesson->recurrence_id }}')">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="delete_all_recurrence" value="0">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </div>
                     </td>
+
                 </tr>
                 @endforeach
             @endif

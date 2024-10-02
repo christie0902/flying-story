@@ -3,16 +3,20 @@
 @section('content')
 {{-- Filter --}}
 <div class="filter">
-    <h2>Filter by Category</h2>
+    <h2 class="mt-2 page-title">Class Schedule</h2>
     <form id="categoryFilterForm">
-        <select name="categories" id="categorySelect">
-            <option value="">See All</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
-            @endforeach
-        </select>
+        <div class="mb-3">
+            <label for="categorySelect" class="form-label">Select Category Filter</label>
+            <select class="form-select" name="categories" id="categorySelect">
+                <option value="">See All</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
     </form>
 </div>
+
 
 {{-- Render Calendar --}}
 <div id="calendar"></div>
