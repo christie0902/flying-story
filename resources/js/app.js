@@ -97,6 +97,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Admin edit button
                         const editBtn = document.getElementById('editButton');
                         if(editBtn) editBtn.setAttribute('href', `/admin/lessons/edit/${lesson.id}`);
+
+                         // Update the Join Form's action and hidden input field
+                        const joinForm = document.getElementById('joinForm');
+                        if (joinForm) joinForm.setAttribute('action', `/lessons/${lesson.id}/register`);
+                        const lessonIdInput = document.getElementById('joinLessonId');
+                        if(lessonIdInput) lessonIdInput.value = lesson.id;
+
+                        // Update the Cancel Form's action and hidden input field
+                        const cancelForm = document.getElementById('cancelForm');
+                        if (cancelForm) cancelForm.setAttribute('action', `/lessons/${lesson.id}/cancel`);
+                        const lessonIdCancel = document.getElementById('joinLessonId');
+                        if(lessonIdCancel) lessonIdCancel.value = lesson.id;
+
+                        // Show/Hide Cancel button based on whether the user is registered
+                        if ( cancelForm && joinForm )
+                            if (lesson.user_is_registered) {
+                                cancelForm.style.display = 'block';
+                                joinForm.style.display = 'none';
+                            } else {
+                                cancelForm.style.display = 'none';
+                                joinForm.style.display = 'block';
+                            }
+
                         const modal = new bootstrap.Modal(document.getElementById('lessonDetailsModal'));
                         modal.show();
                     });

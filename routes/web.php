@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/calendar');
@@ -18,3 +19,7 @@ Route::get('/profile/change-password', [ProfileController::class, 'showChangePas
 Route::get('/calendar/load-events', [CalendarController::class, 'loadLessons'])->name('calendar.load');
 Route::get('/calendar', [CalendarController::class, 'showCalendar'])->name('calendar.show');
 Route::get('/calendar/lesson/{id}', [CalendarController::class, 'getLessonDetails'])->name('calendar.lesson');
+
+//Lesson registration route
+Route::post('/lessons/{lesson}/register', [RegistrationController::class, 'register'])->name('lessons.register');
+Route::post('/lessons/{lesson}/cancel', [RegistrationController::class, 'cancel'])->name('lessons.cancel');

@@ -1,6 +1,21 @@
 @extends('layout.layout')
 
 @section('content')
+@if(session('success'))
+  <div class="alert alert-success">
+      {{ session('success') }}
+  </div>
+@endif
+@if (count($errors) > 0)
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 {{-- Filter --}}
 <div class="filter">
     <h2 class="mt-2 page-title">Class Schedule</h2>
@@ -41,7 +56,6 @@
                 <p><strong>Status:</strong> <span id="lessonStatus"></span></p>
                 <p><strong>Description:</strong> <span id="lessonDescription"></span></p>
 
-                {{-- User Role and Credit Status Logic --}}
                {{-- User Role and Credit Status Logic --}}
                @if(auth()->check())
                @if(auth()->user()->role == 'student')
@@ -53,7 +67,28 @@
                 <div class="mt-3 d-flex flex-column align-items-center">
                     @if($credits > 0 && $expirationDate > now())
                         <p class="text-primary">Remaining credits: {{ $credits }}</p>
-                        <button id="registerButton" class="btn btn-primary px-5">Join</button>
+                 <!-- Join and Cancel buttons -->
+                         {{-- Join Button Form --}}
+                         <form id="joinForm" action="" method="POST">
+                            @csrf
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="lesson_id" id="joinLessonId">
+                            <button type="submit" class="btn btn-primary px-5" onclick="return confirm('Do you want to use 1 credit to join this class?')">Join</button>
+                        </form>
+
+                        {{-- Cancel Button Form (Initially Hidden) --}}
+                        <form id="cancelForm" action="" method="POST" style="display: none;">
+                            @csrf
+                            @method('POST')
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="lesson_id" id="cancelLessonId">
+                            <button type="submit" class="btn btn-warning px-5" onclick="return confirm('Are you sure you want to cancel? You will receive 1 credit back.')">Cancel Registration</button>
+                        </form>
+
+                        {{-- Warning for canceling within 12 hours --}}
+                        <p id="cancelWarning" style="display: none;" class="text-danger">
+                            You can't cancel this class 12 hours before it starts. Please contact us if you have any questions.
+                        </p>
                     @elseif($credits <= 0)
                         <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
                         <button id="buyCreditsButton" class="btn btn-primary px-5">Buy Credits</button>
