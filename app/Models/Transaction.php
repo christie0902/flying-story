@@ -13,7 +13,9 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
-        'credits_purchased',
+        'payment_info_id',
+        'amount',  
+        'status',  
         'payment_status',
         'payment_date',
     ];
@@ -24,5 +26,13 @@ class Transaction extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the payment info associated with the transaction.
+     */
+    public function paymentInfo(): BelongsTo
+    {
+        return $this->belongsTo(PaymentInfo::class);
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\PaymentInfoController;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -34,4 +35,14 @@ Route::group(['middleware' => 'can:admin'], function () {
     Route::put('/students/{id}/update-credits', [StudentController::class, 'updateCredits'])->name('students.updateCredits');
     route::put('/students/{id}/extend-valid-date', [StudentController::class, 'extendValidDate'])->name('students.extendValidDate');
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+
+    //Payment
+    Route::get('/payment-info', [PaymentInfoController::class, 'index'])->name('payment.info.index');
+    Route::get('/payment-info/create', [PaymentInfoController::class, 'create'])->name('payment.info.create');
+    Route::post('/payment-info', [PaymentInfoController::class, 'store'])->name('payment.info.store');
+    Route::get('/payment-info/{id}/edit', [PaymentInfoController::class, 'edit'])->name('payment.info.edit');
+    Route::put('/payment-info/{id}', [PaymentInfoController::class, 'update'])->name('payment.info.update');
+    Route::delete('/payment-info/{id}', [PaymentInfoController::class, 'destroy'])->name('payment.info.destroy');
 });
+
+
