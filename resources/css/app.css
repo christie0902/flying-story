@@ -100,6 +100,12 @@ body {
   color: #5e452a;
 }
 
+.sub-title{
+  font-family: "Public Sans", sans-serif;
+  font-weight: 600;
+  color: #5e452a;
+}
+
 .btn {
   color: black;
 }
