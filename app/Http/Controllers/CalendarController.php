@@ -81,7 +81,7 @@ class CalendarController extends Controller
                 'category' => $lesson->category->name,
                 'schedule' => $lesson->schedule,
                 'duration' => $lesson->duration,
-                'price' => $lesson->price,
+                'payment_type' => $lesson->payment_type,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,
                 'status' => $lesson->status,

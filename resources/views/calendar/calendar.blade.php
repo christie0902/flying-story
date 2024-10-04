@@ -50,21 +50,23 @@
                 <p><strong>Category:</strong> <span id="lessonCategory"></span></p>
                 <p><strong>Schedule:</strong> <span id="lessonSchedule"></span></p>
                 <p><strong>Duration:</strong> <span id="lessonDuration"></span></p>
-                <p><strong>Price:</strong> <span id="lessonPrice"></span></p>
+                <p><strong>Payment term:</strong> <span id="paymentTerm"></span></p>
                 <p><strong>Capacity:</strong> <span id="lessonCapacity"></span></p>
                 <p><strong>Registered Students:</strong> <span id="lessonRegisteredStudents"></span></p>
                 <p><strong>Status:</strong> <span id="lessonStatus"></span></p>
                 <p><strong>Description:</strong> <span id="lessonDescription"></span></p>
 
+             
                {{-- User Role and Credit Status Logic --}}
-               @if(auth()->check())
+            @if(auth()->check())
                @if(auth()->user()->role == 'student')
+               {{-- display Workshop Sign up button --}}
                    @php
                        $credits = auth()->user()->profile->credits ?? 0;
                        $expirationDate = auth()->user()->profile->valid_date ?? now();
                    @endphp
            
-                <div class="mt-3 d-flex flex-column align-items-center">
+                <div class="mt-3 d-flex flex-column align-items-center" id="join-cancel-container">
                     @if($credits > 0 && $expirationDate > now())
                         <p class="text-primary">Remaining credits: {{ $credits }}</p>
                  <!-- Join and Cancel buttons -->
@@ -97,8 +99,10 @@
                         <button id="expiredCreditsButton" class="btn btn-secondary px-5" disabled>Join</button>
                     @endif
                 </div>
-                
+                <div class="workshop-button"></div>
                @endif
+               {{-- Workshop button element --}}
+               
            @else
                {{-- User is not logged in --}}
                <div class="mt-3 d-flex align-items-center flex-column">
@@ -106,6 +110,10 @@
                     <a href="{{ route('login') }}" class="btn btn-info px-5 ms-2">Log In</a>
                  </div>
            @endif
+           {{-- Passed lesson --}}
+            <div class="mt-3 d-flex flex-column align-items-center" id="lessonPassedMessage" style="display: none;">
+                <p class="text-danger">This lesson has already passed.</p>
+            </div>
             </div>
             <div class="modal-footer">
                 @can('admin')
@@ -120,4 +128,5 @@
 
 @section('scripts')
 @vite('resources/js/app.js')
+
 @endsection
