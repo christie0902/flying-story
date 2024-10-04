@@ -39,8 +39,8 @@
                 <p>{{ $lesson->capacity }}</p>
             </div>
             <div class="form-group">
-                <label class="form-label">Price</label>
-                <p>{{ $lesson->formatted_price }}</p>
+                <label class="form-label">Payment Term</label>
+                <p>{{ $lesson->payment_type }}</p>
             </div>
             <div class="form-group">
                 <label class="form-label">Status</label>

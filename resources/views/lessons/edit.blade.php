@@ -60,14 +60,20 @@
             </select>
         </div>
 
-
-        @if ($lesson->price)
+        @if($lesson->payment_type)
         <div class="form-group">
-            <label class="form-label" for="price">Price</label>
-            <input type="number" name="price" id="price" class="form-control" value="{{ old('price', $lesson->price) }}">
+            <label class="form-label">Payment Term</label>
+            <select name="payment_type" class="form-control" required>
+                <option value="">Select Payment Term for this class</option>
+                @foreach ($paymentTypes as $paymentType)
+                    <option value="{{ $paymentType->type }}" {{ $paymentType->type == $lesson->payment_type ? 'selected' : '' }}>
+                        {{ $paymentType->type }}
+                    </option>
+                @endforeach
+            </select>
         </div>
         @endif
-
+        
         <div class="form-group">
             <label class="form-label" for="capacity">Capacity</label>
             <input type="number" name="capacity" id="capacity" class="form-control" value="{{ old('capacity', $lesson->capacity) }}" required>

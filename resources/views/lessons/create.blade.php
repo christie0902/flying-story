@@ -30,9 +30,16 @@
             <input type="text" id="other-category" name="other_category" class="form-control mt-2 d-none" placeholder="Enter new category">
         </div>
 
-        <div class="form-group" id="price-group" style="display: none;">
-            <label class="form-label">Price (in CZK)</label>
-            <input type="number" name="price" class="form-control">
+        <div class="form-group">
+            <label class="form-label">Payment Term</label>
+            <select name="payment_type" class="form-control" required>
+                <option value="">Select Payment Term for this class</option>
+                @foreach ($paymentTypes as $paymentType)
+                    <option value="{{ $paymentType->type }}" {{ old('payment_type') == $paymentType->type ? 'selected' : '' }}>
+                        {{ $paymentType->type }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <div class="form-group">
@@ -103,12 +110,6 @@
             otherCategoryInput.classList.add('d-none');
             otherCategoryInput.required = false;
             otherCategoryInput.value = '';
-        }
-
-        if (this.value === 4) {
-            priceGroup.style.display = 'block';
-        } else {
-            priceGroup.style.display = 'none';
         }
     });
 

@@ -18,7 +18,7 @@ class Lesson extends Model
         'category_id',
         'description',
         'schedule',
-        'price',
+        'payment_type',
         'duration',
         'capacity',
         'registered_students',
@@ -42,6 +42,11 @@ class Lesson extends Model
     public function registrations(): HasMany
     {
         return $this->hasMany(LessonRegistration::class);
+    }
+
+    public function paymentInfo(): BelongsTo
+    {
+        return $this->belongsTo(PaymentInfo::class, 'payment_type', 'type');
     }
 
     //Accessors

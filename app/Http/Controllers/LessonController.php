@@ -7,6 +7,7 @@ use App\Models\Lesson;
 use App\Models\LessonRegistration;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\PaymentInfo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +51,8 @@ class LessonController extends Controller
     public function createLesson()
     {
         $categories = Category::all();
-        return view('lessons.create', compact('categories'));
+        $paymentTypes = PaymentInfo::select('type')->distinct()->get(); 
+        return view('lessons.create', compact('categories', 'paymentTypes'));
     }
 
     // STORE NEW LESSON
@@ -62,7 +64,7 @@ class LessonController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'schedule' => 'required|date',
-            'price' => 'nullable|numeric|required_if:category,Workshop',
+            'payment_type' => 'required|string|exists:payment_info,type',
             'duration' => 'required|integer|min:1',
             'level' => 'required|in:beginner,lower-intermediate,intermediate,upper-intermediate,advanced',
             'capacity' => 'required|integer',
@@ -81,9 +83,6 @@ class LessonController extends Controller
 
             'schedule.required' => 'The schedule field is required.',
             'schedule.date' => 'The schedule must be a valid date.',
-
-            'price.required_if' => 'The price field is required when the category is Workshop.',
-            'price.numeric' => 'The price must be a number.',
 
             'duration.required' => 'The duration field is required.',
             'duration.integer' => 'The duration must be an integer.',
@@ -121,7 +120,7 @@ class LessonController extends Controller
                 'title' => $validated['title'],
                 'description' => $validated['description'],
                 'schedule' => $validated['schedule'],
-                'price' => $validated['price'] ?? 270,
+                'payment_type' => $validated['payment_type'],
                 'duration' => $validated['duration'],
                 'level' => $validated['level'],
                 'capacity' => $validated['capacity'],
@@ -208,7 +207,7 @@ class LessonController extends Controller
                     'title' => $lesson->title,
                     'description' => $lesson->description,
                     'schedule' => $currentDate->format('Y-m-d H:i:s'),
-                    'price' => $lesson->price,
+                    'payment_type' => $lesson->payment_type,
                     'duration' => $lesson->duration,
                     'level' => $lesson->level,
                     'capacity' => $lesson->capacity,
@@ -248,7 +247,7 @@ class LessonController extends Controller
                     'title' => $lesson->title,
                     'description' => $lesson->description,
                     'schedule' => $currentDate->format('Y-m-d H:i:s'),
-                    'price' => $lesson->price,
+                    'payment_type' => $lesson->payment_type,
                     'duration' => $lesson->duration,
                     'level' => $lesson->level,
                     'capacity' => $lesson->capacity,
@@ -268,12 +267,13 @@ class LessonController extends Controller
     {
         $lesson = Lesson::findOrFail($id);
         $categories = Category::all();
+        $paymentTypes = PaymentInfo::select('type')->distinct()->get(); 
 
         $relatedLessons = Lesson::where('recurrence_id', $lesson->recurrence_id)
             ->where('id', '!=', $lesson->id)
             ->get();
 
-        return view('lessons.edit', compact('lesson', 'categories', 'relatedLessons'));
+        return view('lessons.edit', compact('lesson', 'categories', 'relatedLessons', 'paymentTypes'));
     }
 
     // UPDATE LESSON
@@ -286,7 +286,7 @@ class LessonController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'schedule' => 'required|date',
-            'price' => 'nullable|numeric',
+            'payment_type' => 'required|string|exists:payment_info,type',
             'duration' => 'required|integer|min:1',
             'level' => 'required|in:beginner,lower-intermediate,intermediate,upper-intermediate,advanced',
             'capacity' => 'required|integer',
@@ -304,7 +304,7 @@ class LessonController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'],
             'schedule' => $newSchedule,
-            'price' => $validated['price'],
+            'payment_type' => $validated['payment_type'],
             'duration' => $validated['duration'],
             'level' => $validated['level'],
             'capacity' => $validated['capacity'],
@@ -321,7 +321,7 @@ class LessonController extends Controller
                     'title' => $validated['title'],
                     'description' => $validated['description'],
                     'schedule' => $currentDate . ' ' . $newTime,
-                    'price' => $validated['price'],
+                    'payment_type' => $validated['payment_type'],
                     'duration' => $validated['duration'],
                     'level' => $validated['level'],
                     'capacity' => $validated['capacity'],

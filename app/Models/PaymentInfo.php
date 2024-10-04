@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PaymentInfo extends Model
 {
     use HasFactory;
+    protected $table = 'payment_info';
 
     protected $fillable = [
         'type',
+        'amount_of_credits',
         'price',
         'bank_info',
         'payment_QR_url',
