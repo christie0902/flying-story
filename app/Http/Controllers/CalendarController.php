@@ -65,12 +65,14 @@ class CalendarController extends Controller
         $user = auth()->check() ? auth()->user() : null;
         $userProfile = $user ? $user->profile : null;
 
-        $userRegistration = $lesson->registrations()
-            ->where('user_id', auth()->user()->id)
-            ->first();
+        $userIsRegistered = false;
+        if ($user) {
+            $userRegistration = $lesson->registrations()
+                ->where('user_id', $user->id)
+                ->first();
 
-        // Check the user's registration status based on confirmation_status
-        $userIsRegistered = $userRegistration && $userRegistration->confirmation_status === 'Confirmed';
+            $userIsRegistered = $userRegistration && $userRegistration->confirmation_status === 'Confirmed';
+        }
 
         return response()->json([
             'lesson' => [
