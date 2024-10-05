@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="event-content">
                         <b>${time} ${categoryName} ${
                     info.event.extendedProps.status === "canceled"
-                        ? "(Canceled)"
+                        ? '<span style="color: rgb(235 104 100);">(Canceled)</span>'
                         : ""
                 }</b>
                         <span class="capacity-info">(Spots: ${registeredStudents}/${capacity})</span>
@@ -89,6 +89,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 info.el.style.margin = "2px 0";
             },
             eventClick: function (info) {
+                // Canceled event
+                if (info.event.extendedProps.status === "canceled") {
+                    return;
+                }
                 fetch(`/calendar/lesson/${info.event.id}`)
                     .then((response) => response.json())
                     .then((data) => {
@@ -96,7 +100,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const lessonDateTime = new Date(lesson.schedule);
                         const lessonIsPassed = lessonDateTime < Date.now();
-                        
+                        // Payment Term & Price
+                        const paymentTerm = document.getElementById(
+                            "paymentTermContainer"
+                        );
+                        const price = document.getElementById("priceContainer");
+                        if (paymentTerm && price) {
+                            if (lesson.payment_info) {
+                                paymentTerm.style.display = "block";
+
+                                document.getElementById(
+                                    "paymentTerm"
+                                ).textContent = lesson.payment_type;
+
+                                if (lesson.payment_info.price) {
+                                    price.style.display = "block";
+
+                                    if (
+                                        lesson.payment_info.type === "credits"
+                                    ) {
+                                        document.getElementById(
+                                            "price"
+                                        ).textContent = "1 credit";
+                                    } else {
+                                        document.getElementById(
+                                            "price"
+                                        ).textContent =
+                                            lesson.payment_info.price;
+                                    }
+                                }
+                            }
+                        }
+
                         document.getElementById("lessonTitle").textContent =
                             lesson.title;
                         document.getElementById("lessonCategory").textContent =
@@ -105,8 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             lesson.schedule;
                         document.getElementById("lessonDuration").textContent =
                             lesson.duration;
-                        document.getElementById("paymentTerm").textContent =
-                            lesson.payment_type;
                         document.getElementById("lessonCapacity").textContent =
                             lesson.capacity;
                         document.getElementById(
@@ -118,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             "lessonDescription"
                         ).textContent = lesson.description;
 
-                        
                         //Passed lesson
                         // Show/Hide Cancel button based on whether the user is registered
                         const lessonPassedMessage = document.querySelector(
@@ -128,16 +160,21 @@ document.addEventListener("DOMContentLoaded", function () {
                         const cancelForm =
                             document.getElementById("cancelForm");
 
-                        if (lessonPassedMessage) lessonPassedMessage.style.display = lessonIsPassed ? "block" : "none";                       
-                        if (joinForm) joinForm.style.display =
-                            lessonIsPassed || lesson.user_is_registered
+                        if (lessonPassedMessage)
+                            lessonPassedMessage.style.display = lessonIsPassed
+                                ? "block"
+                                : "none";
+                        if (joinForm)
+                            joinForm.style.display =
+                                lessonIsPassed || lesson.user_is_registered
+                                    ? "none"
+                                    : "block";
+                        if (cancelForm)
+                            cancelForm.style.display = lessonIsPassed
                                 ? "none"
-                                : "block";
-                        if(cancelForm) cancelForm.style.display = lessonIsPassed
-                            ? "none"
-                            : lesson.user_is_registered
-                            ? "block"
-                            : "none";
+                                : lesson.user_is_registered
+                                ? "block"
+                                : "none";
 
                         // Admin edit button
                         const editBtn = document.getElementById("editButton");
@@ -167,35 +204,66 @@ document.addEventListener("DOMContentLoaded", function () {
                             document.getElementById("joinLessonId");
                         if (lessonIdCancel) lessonIdCancel.value = lesson.id;
 
-                        
-                        const workshopButtonContainer = document.querySelector('.workshop-button')
-                        const stdBtnContainer = document.querySelector("#join-cancel-container");
-                        
-                        const savedContainerStyle = stdBtnContainer? {...stdBtnContainer.style} : {}
+                        // Workshop button
+                        const workshopButtonContainer =
+                            document.querySelector(".workshop-button");
+                        const stdBtnContainer = document.querySelector(
+                            "#join-cancel-container"
+                        );
 
-                        if (lesson.category.toLowerCase() === "workshop" && workshopButtonContainer && !lessonIsPassed) {
-                            workshopButtonContainer.setAttribute("class","workshop-button d-flex justify-content-center");
-                            const joinWkspBtn = document.createElement('div');
-                            joinWkspBtn.setAttribute("class","btn btn-primary px-5");
+                        const savedContainerStyle = stdBtnContainer
+                            ? { ...stdBtnContainer.style }
+                            : {};
+
+                        if (
+                            lesson.category.toLowerCase() === "workshop" &&
+                            workshopButtonContainer &&
+                            !lessonIsPassed
+                        ) {
+                            workshopButtonContainer.setAttribute(
+                                "class",
+                                "workshop-button d-flex justify-content-center"
+                            );
+                            const joinWkspBtn = document.createElement("div");
+                            joinWkspBtn.setAttribute(
+                                "class",
+                                "btn btn-primary px-5"
+                            );
                             joinWkspBtn.innerText = "Join Workshop";
                             workshopButtonContainer.appendChild(joinWkspBtn);
-                            stdBtnContainer.setAttribute("style", "display: none !important");
+                            stdBtnContainer.setAttribute(
+                                "style",
+                                "display: none !important"
+                            );
                         }
 
-                        const modalElm = document.getElementById("lessonDetailsModal");
-                        
+                        const modalElm =
+                            document.getElementById("lessonDetailsModal");
+
                         const modal = new bootstrap.Modal(modalElm);
-                        
+
                         const resetContainerStyle = () => {
-                            modalElm.removeEventListener('hidden.bs.modal', resetContainerStyle)
-                            if (!stdBtnContainer || !workshopButtonContainer) return;
-                            stdBtnContainer.style = {...savedContainerStyle};
-                            workshopButtonContainer.setAttribute("class","workshop-button d-none");
-                            const wkspBtn = workshopButtonContainer.querySelector('.btn');
-                            if (workshopButtonContainer.querySelector('.btn')) workshopButtonContainer.removeChild(wkspBtn);
-                        }
+                            modalElm.removeEventListener(
+                                "hidden.bs.modal",
+                                resetContainerStyle
+                            );
+                            if (!stdBtnContainer || !workshopButtonContainer)
+                                return;
+                            stdBtnContainer.style = { ...savedContainerStyle };
+                            workshopButtonContainer.setAttribute(
+                                "class",
+                                "workshop-button d-none"
+                            );
+                            const wkspBtn =
+                                workshopButtonContainer.querySelector(".btn");
+                            if (workshopButtonContainer.querySelector(".btn"))
+                                workshopButtonContainer.removeChild(wkspBtn);
+                        };
                         modal.show();
-                        modalElm.addEventListener('hidden.bs.modal', resetContainerStyle)
+                        modalElm.addEventListener(
+                            "hidden.bs.modal",
+                            resetContainerStyle
+                        );
                     });
             },
         });

@@ -57,13 +57,14 @@ class CalendarController extends Controller
 
     public function getLessonDetails($id)
     {
-        $lesson = Lesson::with('category')->find($id);
+        $lesson = Lesson::with('category', 'paymentInfo')->find($id);
         if (!$lesson) {
             return response()->json(['error' => 'Lesson not found'], 404);
         }
 
         $user = auth()->check() ? auth()->user() : null;
         $userProfile = $user ? $user->profile : null;
+        $paymentInfo = $lesson->paymentInfo;
 
         $userIsRegistered = false;
         if ($user) {
@@ -82,6 +83,13 @@ class CalendarController extends Controller
                 'schedule' => $lesson->schedule,
                 'duration' => $lesson->duration,
                 'payment_type' => $lesson->payment_type,
+                'payment_info' => $paymentInfo ? [
+                    'type' => $paymentInfo->type,
+                    'price' => $paymentInfo->price,
+                    'credits' => $paymentInfo->amount_of_credits,
+                    'bank_info' => $paymentInfo->bank_info,
+                    'payment_QR_url' => $paymentInfo->payment_QR_url,
+                ] : null,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,
                 'status' => $lesson->status,

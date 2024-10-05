@@ -50,7 +50,8 @@
                 <p><strong>Category:</strong> <span id="lessonCategory"></span></p>
                 <p><strong>Schedule:</strong> <span id="lessonSchedule"></span></p>
                 <p><strong>Duration:</strong> <span id="lessonDuration"></span></p>
-                <p><strong>Payment term:</strong> <span id="paymentTerm"></span></p>
+                <p id="paymentTermContainer" style="display: none;"><strong>Payment Term:</strong> <span id="paymentTerm"></span></p>
+                <p id="priceContainer" style="display: none;"><strong>Price:</strong> <span id="price"></span></p>
                 <p><strong>Capacity:</strong> <span id="lessonCapacity"></span></p>
                 <p><strong>Registered Students:</strong> <span id="lessonRegisteredStudents"></span></p>
                 <p><strong>Status:</strong> <span id="lessonStatus"></span></p>

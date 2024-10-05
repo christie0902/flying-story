@@ -22,6 +22,7 @@ class PaymentInfoController extends Controller
     {
         $request->validate([
             'type' => 'required|string|max:255',
+            'amount_of_credits' => 'required|numeric',
             'price' => 'required|numeric',
             'bank_info' => 'nullable|string|max:255',
             'payment_QR_url' => 'nullable|string|max:255',
@@ -29,6 +30,8 @@ class PaymentInfoController extends Controller
             'type.required' => 'The payment type field is required.',
             'type.string' => 'The payment type must be a string.',
             'type.max' => 'The payment type may not be greater than 255 characters.',
+
+            'amount_of_credits.required' => 'Please enter the number of credits. You can enter 0 if it is not applicable',
             
             'price.required' => 'The price field is required.',
             'price.numeric' => 'The price must be a number.',
@@ -41,19 +44,22 @@ class PaymentInfoController extends Controller
         ]);
 
         PaymentInfo::create($request->all());
-        return redirect()->route('payment.paymentList')->with('success', 'Payment info created successfully.');
+        return redirect()->route('payment.info.index')->with('success', 'Payment info created successfully.');
     }
 
-    public function edit(PaymentInfo $paymentInfo)
+    public function edit($id)
     {
+        $paymentInfo = PaymentInfo::findOrFail($id);
         return view('payment.payment-edit', compact('paymentInfo'));
     }
 
-    public function update(Request $request, PaymentInfo $paymentInfo)
+    public function update(Request $request, $id)
     {
+        $paymentInfo = PaymentInfo::findOrFail($id);
         $request->validate([
             'type' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'amount_of_credits' => 'required|numeric',
             'bank_info' => 'nullable|string|max:255',
             'payment_QR_url' => 'nullable|string|max:255',
         ], [
@@ -72,12 +78,18 @@ class PaymentInfoController extends Controller
         ]);;
 
         $paymentInfo->update($request->all());
-        return redirect()->route('payment.paymentList')->with('success', 'Payment info updated successfully.');
+
+        if ($request->input('update_all') === 'yes') {
+            PaymentInfo::where('id', '!=', $id)->update(['bank_info' => $request->bank_info]);
+        }
+
+        return redirect()->route('payment.info.index')->with('success', 'Payment info updated successfully.');
     }
 
-    public function destroy(PaymentInfo $paymentInfo)
+    public function destroy($id)
     {
+        $paymentInfo = PaymentInfo::findOrFail($id);
         $paymentInfo->delete();
-        return redirect()->route('payment.paymentList')->with('success', 'Payment info deleted successfully.');
+        return redirect()->route('payment.info.index')->with('success', 'Payment info deleted successfully.');
     }
 }

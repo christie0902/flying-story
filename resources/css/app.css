@@ -110,6 +110,11 @@ body {
   color: black;
 }
 
-.btn-primary, .btn-info{
+.btn-primary, .btn-info {
   color: white;
+}
+
+.btn-secondary {
+  background-color: #f3ede8;
+  border: #f3ede8;
 }

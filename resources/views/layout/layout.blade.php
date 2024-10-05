@@ -39,7 +39,7 @@
                         <a class="nav-link" href="{{route('students.index')}}">Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Payments</a>
+                        <a class="nav-link" href="{{route('payment.info.index')}}">Payments</a>
                     </li>
                     @endcan
                 </ul>

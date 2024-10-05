@@ -21,5 +21,5 @@ Route::get('/calendar', [CalendarController::class, 'showCalendar'])->name('cale
 Route::get('/calendar/lesson/{id}', [CalendarController::class, 'getLessonDetails'])->name('calendar.lesson');
 
 //Lesson registration route
-Route::post('/lessons/{lesson}/register', [RegistrationController::class, 'register'])->name('lessons.register');
-Route::post('/lessons/{lesson}/cancel', [RegistrationController::class, 'cancel'])->name('lessons.cancel');
+Route::post('/lessons/{lesson}/register', [RegistrationController::class, 'register'])->name('class.register');
+Route::post('/lessons/{lesson}/cancel', [RegistrationController::class, 'cancel'])->name('class.cancel');
