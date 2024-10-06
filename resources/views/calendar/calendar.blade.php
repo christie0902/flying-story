@@ -19,7 +19,7 @@
 {{-- Filter --}}
 <div class="filter">
     <h2 class="mt-2 page-title">Class Schedule</h2>
-    <form id="categoryFilterForm">
+    <form id="categoryFilterForm" class="mx-sm-5">
         <div class="mb-3">
             <label for="categorySelect" class="form-label">Select Category Filter</label>
             <select class="form-select" name="categories" id="categorySelect">
@@ -34,7 +34,7 @@
 
 
 {{-- Render Calendar --}}
-<div id="calendar"></div>
+<div id="calendar" class="mx-sm-5"></div>
 
 {{-- Details Modal Screen --}}
 <div class="modal fade" id="lessonDetailsModal" tabindex="-1" aria-labelledby="lessonDetailsLabel" aria-hidden="true">
@@ -93,7 +93,7 @@
                             You can't cancel this class 12 hours before it starts. Please contact us if you have any questions.
                         </p>
                     @elseif($credits <= 0)
-                        <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
+                        <p class="text-primary">You have no credits.</br>Please purchase credits to register for the class.</p>
                         <button id="buyCreditsButton" class="btn btn-primary px-5">Buy Credits</button>
                     @elseif($credits > 0 && $expirationDate <= now())
                         <p class="text-info">You have {{ $credits }} credits but they have expired.</br> Please contact us for more information.</p>

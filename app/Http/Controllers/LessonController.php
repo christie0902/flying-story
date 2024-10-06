@@ -31,7 +31,8 @@ class LessonController extends Controller
         }
 
         if ($category) {
-            $query->where('category_id', $category);;
+            $query->where('category_id', $category);
+            ;
         }
 
         $lessons = $query->orderByDesc('schedule')->paginate(10);
@@ -51,7 +52,7 @@ class LessonController extends Controller
     public function createLesson()
     {
         $categories = Category::all();
-        $paymentTypes = PaymentInfo::select('type')->distinct()->get(); 
+        $paymentTypes = PaymentInfo::select('type')->distinct()->get();
         return view('lessons.create', compact('categories', 'paymentTypes'));
     }
 
@@ -267,7 +268,7 @@ class LessonController extends Controller
     {
         $lesson = Lesson::findOrFail($id);
         $categories = Category::all();
-        $paymentTypes = PaymentInfo::select('type')->distinct()->get(); 
+        $paymentTypes = PaymentInfo::select('type')->distinct()->get();
 
         $relatedLessons = Lesson::where('recurrence_id', $lesson->recurrence_id)
             ->where('id', '!=', $lesson->id)

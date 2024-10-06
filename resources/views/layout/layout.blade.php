@@ -18,7 +18,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
-        <div class="container-fluid p-2">
+        <div class="container-fluid p-1">
             <a class="navbar-brand mt-1 ms-2" href="/">
                 <img src="{{asset('logo.svg')}}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top mx-2">
                 Flying Story

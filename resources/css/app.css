@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 /*<weight>: Use a value from 100 to 800
 
@@ -20,101 +20,106 @@
 } */
 
 body {
-  background-color:#fcfcfc;
+    background-color: #fcfcfc;
 }
 
 .event-content {
-  display: flex;
-  flex-direction: column;
-  white-space: wrap;
-  cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    white-space: wrap;
+    cursor: pointer;
 }
 
-.fc-event:hover{
-  cursor: pointer;
-  scale: 1.05;
-  transition: 0.3s;
-  z-index: 99;
+.fc-event:hover {
+    cursor: pointer;
+    scale: 1.05;
+    transition: 0.3s;
+    z-index: 99;
 }
-
 
 /* Navbar */
 .navbar-brand {
-  font-family: "Playpen Sans", cursive;
-  font-weight: 500;
-  text-transform:initial;
+    font-family: "Playpen Sans", cursive;
+    font-weight: 500;
+    text-transform: initial;
 }
 
 .container-fluid {
-  background-color: #ede9e6;
+    background-color: #ede9e6;
 }
 
-.nav-item{
-  font-family: "Public Sans", sans-serif;
-  font-weight: 600;
-  color: #5e452a;
+.nav-item {
+    font-family: "Public Sans", sans-serif;
+    font-weight: 600;
+    color: #5e452a;
 }
 
 .logout-spacer {
-  padding-top: 05px;
+    padding-top: 05px;
 }
 
 .logout-btn {
-  font-size: 1.1rem;
-  font-weight: 200;
+    font-size: 1.1rem;
+    font-weight: 200;
 }
 
 /* Calendar */
 .event-content b {
-  font-size: 1em;
+    font-size: 1em;
 }
 
 @media (max-width: 600px) {
-  .event-content b {
-      font-size: 0.7em;
-  }
-  .capacity-info {
-      font-size: 0.7em;
-      white-space: nowrap;
-  }
+    .event-content b {
+        font-size: 0.7em;
+    }
+    .capacity-info {
+        font-size: 0.7em;
+        white-space: nowrap;
+    }
 }
 
 /* form */
-.form-group{
-  margin-top: 0.5rem;
+.form-group {
+    margin-top: 0.5rem;
 }
 .form-label {
-  font-family: "Playpen Sans", cursive;
+    font-family: "Playpen Sans", cursive;
 }
 
 .form-select {
-  font-family: "Public Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
 }
 
 .page-title {
-  font-family: "Playpen Sans", cursive;
-  font-weight: 500;
-  text-transform: uppercase;
-  text-align: center;
-  padding-block: 1rem;
-  color: #5e452a;
+    font-family: "Playpen Sans", cursive;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-align: center;
+    padding-block: 1rem;
+    color: #5e452a;
 }
 
-.sub-title{
-  font-family: "Public Sans", sans-serif;
-  font-weight: 600;
-  color: #5e452a;
+.sub-title {
+    font-family: "Public Sans", sans-serif;
+    font-weight: 600;
+    color: #5e452a;
 }
 
 .btn {
-  color: black;
+    color: black;
 }
 
-.btn-primary, .btn-info {
-  color: white;
+.btn-primary,
+.btn-info {
+    color: white;
 }
 
 .btn-secondary {
-  background-color: #f3ede8;
-  border: #f3ede8;
+    background-color: #f3ede8;
+    border: #f3ede8;
+}
+
+.btn-danger {
+    background-color: rgb(240, 163, 86);
+    border: rgb(240, 163, 86);
 }
