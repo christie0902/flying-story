@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/calendar');
@@ -23,3 +24,7 @@ Route::get('/calendar/lesson/{id}', [CalendarController::class, 'getLessonDetail
 //Lesson registration route
 Route::post('/lessons/{lesson}/register', [RegistrationController::class, 'register'])->name('class.register');
 Route::post('/lessons/{lesson}/cancel', [RegistrationController::class, 'cancel'])->name('class.cancel');
+
+//Credits purchase
+Route::get('/buy-credits', [PaymentController::class, 'showBuyCreditsPage'])->name('buy.credits');
+Route::post('/confirm-payment', [PaymentController::class, 'confirmPayment'])->name('confirm.payment');

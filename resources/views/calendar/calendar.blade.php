@@ -94,7 +94,7 @@
                         </p>
                     @elseif($credits <= 0)
                         <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
-                        <button id="buyCreditsButton" class="btn btn-primary px-5">Buy Credits</button>
+                        <a href="{{route('buy.credits')}}"><button id="buyCreditsButton" class="btn btn-primary px-5">Buy Credits</button></a>
                     @elseif($credits > 0 && $expirationDate <= now())
                         <p class="text-info">You have {{ $credits }} credits but they have expired.</br> Please contact us for more information.</p>
                         <button id="expiredCreditsButton" class="btn btn-secondary px-5" disabled>Join</button>
