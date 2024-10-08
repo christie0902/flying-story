@@ -54,8 +54,10 @@
                         <p>Did you complete the payment?</p>
                     </div>
                     <div class="modal-footer">
-                        <form action="{{ route('confirm.payment') }}" method="POST">
+                        <form action="{{ route('confirm.payment') }}" method="POST" id="confirmPaymentForm">
                             @csrf
+                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                            <input type="hidden" name="payment_info_id" id="paymentInfoId" value="">
                             <button type="submit" class="btn btn-primary">Confirm</button>
                         </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
@@ -75,6 +77,7 @@
         const price = selectedOption.getAttribute('data-price');
         const bankInfo = selectedOption.getAttribute('data-bank-info');
         const qrCodeUrl = selectedOption.getAttribute('data-qr');
+        const paymentInfoId = selectedOption.value;
 
         // Update the QR code, price, and bank info on the page
         document.getElementById('priceText').textContent = price;
@@ -82,6 +85,7 @@
         document.getElementById('qrCodeImage').src = qrCodeUrl;
 
         document.getElementById('qrCodeSection').style.display = 'block';
+        document.getElementById('paymentInfoId').value = paymentInfoId;
     });
 
     document.getElementById('completePaymentButton').addEventListener('click', function () {

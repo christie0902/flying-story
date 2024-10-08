@@ -94,6 +94,7 @@
                         <p id="cancelWarning" style="display: none;" class="text-danger">
                             You can't cancel this class 12 hours before it starts. Please contact us if you have any questions.
                         </p>
+                        {{-- Buy credits --}}
                     @elseif($credits <= 0)
                         <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
                         <a href="{{route('buy.credits')}}"><button id="buyCreditsButton" class="btn btn-primary px-5">Buy Credits</button></a>

@@ -5,6 +5,8 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PaymentInfoController;
+use App\Http\Controllers\TransactionController;
+
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -43,6 +45,9 @@ Route::group(['middleware' => 'can:admin'], function () {
     Route::get('/payment-info/{id}/edit', [PaymentInfoController::class, 'edit'])->name('payment.info.edit');
     Route::put('/payment-info/{id}', [PaymentInfoController::class, 'update'])->name('payment.info.update');
     Route::delete('/payment-info/{id}', [PaymentInfoController::class, 'destroy'])->name('payment.info.destroy');
+
+    //Transaction
+    Route::put('/transactions/{transaction_id}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
 });
 
 
