@@ -57,12 +57,54 @@
 
  <!-- Transactions Section -->
  <h2 class="mt-5 page-title">Transactions</h2>
+ 
+    {{-- Filter Section --}}
+    <div class="container">
+        <form action="{{ route('payment.info.index') }}" method="GET" class="row g-3">
+            <div class="col-md-3">
+                <label for="month" class="form-label">Filter by Month</label>
+                <select name="month" id="month" class="form-control">
+                    <option value="">All</option>
+                    @for ($i = 1; $i <= 12; $i++)
+                        <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::createFromFormat('m', $i)->format('F') }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
 
+            <div class="col-md-3">
+                <label for="status" class="form-label">Filter by Status</label>
+                <select name="status" id="status" class="form-control">
+                    <option value="">All</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="refunded" {{ request('status') == 'refunded' ? 'selected' : '' }}>Refunded</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="name" class="form-label">Search by Name</label>
+                <input type="text" name="name" id="name" class="form-control" value="{{ request('name') }}" placeholder="Enter name">
+            </div>
+
+            <div class="col-md-3">
+                <label for="payment_variable" class="form-label">Search by Variable</label>
+                <input type="text" name="payment_variable" id="payment_variable" class="form-control" value="{{ request('payment_variable') }}" placeholder="Enter payment variable">
+            </div>
+
+            <div class="col-md-12 my-3 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary px-md-5 me-2">Filter</button>
+                <a href="{{ route('payment.info.index') }}" class="btn btn-secondary  px-md-5">Reset</a>
+            </div>
+        </form>
+    </div>
  <table class="table">
      <thead>
          <tr>
              <th>User Name</th>
              <th>User Email</th>
+             <th>Payment Variable</th>
              <th>Payment Type</th>
              <th>No. of Credits</th>
              <th>Price</th>
@@ -75,6 +117,7 @@
              <tr>
                  <td>{{ $transaction->user->name }}</td>
                  <td>{{ $transaction->user->email }}</td>
+                 <td>{{ $transaction->user->profile->payment_variable ?? 'N/A' }}</td>
                  <td class="text-capitalize">{{ $transaction->paymentInfo->type }}</td>
                  <td>{{ $transaction->paymentInfo->amount_of_credits == 0 ? "N/A" : $transaction->paymentInfo->amount_of_credits }}</td>
                  <td>{{ $transaction->paymentInfo->formatted_price }}</td>

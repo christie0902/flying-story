@@ -8,15 +8,44 @@ use App\Models\Transaction;
 
 class PaymentInfoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $paymentInfos = PaymentInfo::all();
-        $transactions = Transaction::with('user', 'paymentInfo')
-            ->orderByRaw("FIELD(payment_status, 'Pending') DESC") // Prioritize 'Pending'
-            ->orderBy('payment_date', 'desc')                    // Order by latest payment date
-            ->paginate(10);
+        $month = $request->input('month');
+        $status = $request->input('status');
+        $name = $request->input('name');
+        $variableNumber = $request->input('payment_variable');
 
-        return view('payment.paymentList', compact('paymentInfos', 'transactions'));
+        $paymentInfos = PaymentInfo::all();
+
+        $transactionsQuery = Transaction::with('user.profile', 'paymentInfo')
+            ->orderByRaw("FIELD(payment_status, 'Pending') DESC") // Prioritize 'Pending'
+            ->orderBy('payment_date', 'desc');                    // Order by latest payment date
+
+        // Apply filters
+        if ($month) {
+            $transactionsQuery->whereMonth('payment_date', $month);
+        }
+
+        if ($status) {
+            $transactionsQuery->where('payment_status', $status);
+        }
+
+        if ($name) {
+            $transactionsQuery->whereHas('user', function ($query) use ($name) {
+                $query->where('name', 'like', '%' . $name . '%');
+            });
+        }
+
+        if ($variableNumber) {
+            $transactionsQuery->whereHas('user.profile', function ($query) use ($variableNumber) {
+                $query->where('payment_variable', 'like', '%' . $variableNumber . '%');
+            });
+        }
+
+        // Paginate the filtered transactions
+        $transactions = $transactionsQuery->paginate(10);
+
+        return view('payment.paymentList', compact('paymentInfos', 'transactions', 'month', 'status', 'name', 'variableNumber'));
     }
 
     public function create()
