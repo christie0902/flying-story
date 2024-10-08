@@ -9,8 +9,11 @@ class PaymentController extends Controller
 {
     public function showBuyCreditsPage(Request $request)
     {
-        $paymentInfo = PaymentInfo::where('type', 'credits')->get();
-
+        $paymentInfo = PaymentInfo::where('type', 'credits')->get()->map(function ($info) {
+            // Add a formatted price attribute to each PaymentInfo instance
+            $info->formatted_price = $info->formatted_price;
+            return $info;
+        });
         $user = auth()->user();
         $userProfile = $user->profile;
 

@@ -26,4 +26,11 @@ class PaymentInfo extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function getFormattedPriceAttribute()
+    {
+        return intval($this->price) == $this->price
+            ? number_format($this->price, 0) . ' CZK'
+            : number_format($this->price, 2) . ' CZK';
+    }
 }

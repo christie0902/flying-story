@@ -85,7 +85,7 @@ class CalendarController extends Controller
                 'payment_type' => $lesson->payment_type,
                 'payment_info' => $paymentInfo ? [
                     'type' => $paymentInfo->type,
-                    'price' => $paymentInfo->price,
+                    'price' => $paymentInfo->formatted_price,
                     'credits' => $paymentInfo->amount_of_credits,
                     'bank_info' => $paymentInfo->bank_info,
                     'payment_QR_url' => $paymentInfo->payment_QR_url,
