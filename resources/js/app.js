@@ -39,26 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             editable: false,
             selectable: true,
-            // eventContent: function(info) {
-            //     let schedule = info.event.start;
-            //     // let time = schedule.split(" ")[1].substring(0, 5);
-            //     let categoryName = info.event.title;
-            //     let capacity = info.event.extendedProps.capacity;
-            //     let registeredStudents = info.event.extendedProps.registered_students;
-            //     return { html: `<b>${schedule} ${categoryName}</b><br>(${registeredStudents}/${capacity})` };
-            // },
-            // eventRender: function(info) {
-            //     let categoryName = info.event.title;
-            //     let capacity = info.event.extendedProps.capacity;
-            //     let registeredStudents = info.event.extendedProps.registered_students;
-
-            //     // Create custom HTML element for the event
-            //     let eventElement = document.createElement('div');
-            //     eventElement.innerHTML = `<b>${categoryName}</b><br>(${registeredStudents}/${capacity})`;
-            //     eventElement.style.backgroundColor = info.event.color;
-            //     eventElement.style.color = '#fff';
-            //     return eventElement;
-            // },
             eventDidMount: function (info) {
                 //console.log("Event Object:", info.event);
                 let categoryName = info.event.title;
@@ -66,7 +46,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 let registeredStudents =
                     info.event.extendedProps.registered_students;
                 let time = info.event.extendedProps.formattedTime;
+                let userRegistrationStatus =
+                    info.event.extendedProps.userRegistrationStatus;
 
+                let registrationLabel = "";
+                if (userRegistrationStatus === "Pending") {
+                    registrationLabel =
+                        '<span class="badge bg-warning">Pending</span>';
+                } else if (userRegistrationStatus === "Confirmed") {
+                    registrationLabel =
+                        '<span class="badge bg-light text-dark w-md-50 d-block mx-auto my-1">Enrolled</span>';
+                }
                 // Set inner HTML
                 info.el.innerHTML = `
                     <div class="event-content">
@@ -76,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         : ""
                 }</b>
                         <span class="capacity-info">(Spots: ${registeredStudents}/${capacity})</span>
+                        ${registrationLabel}
                     </div>
                 `;
                 if (info.event.extendedProps.status === "canceled") {

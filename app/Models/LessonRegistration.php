@@ -15,7 +15,7 @@ class LessonRegistration extends Model
         'user_id',
         'lesson_id',
         'registration_date',
-        'payment_status',
+        'confirmation_status',
     ];
 
     /**

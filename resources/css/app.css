@@ -65,6 +65,10 @@ body {
 }
 
 /* Calendar */
+.event-content {
+  width: 100%;
+  text-align: center;
+}
 .event-content b {
   font-size: 1em;
 }

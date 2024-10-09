@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\Category;
+use App\Models\LessonRegistration;
 
 class CalendarController extends Controller
 {
     public function loadLessons(Request $request)
     {
+        $userId = auth()->id();
         $categoryColors = [
             'Aerial Sling' => '#f6d8cf',
             'Aerial Hoop' => '#fef1e4',
@@ -25,11 +27,19 @@ class CalendarController extends Controller
             })
             ->get();
 
-        $events = $lessons->map(function ($lesson) use ($categoryColors) {
+        $registrations = LessonRegistration::where('user_id', $userId)
+            ->whereIn('lesson_id', $lessons->pluck('id'))
+            ->get()
+            ->keyBy('lesson_id');
+
+        $events = $lessons->map(function ($lesson) use ($categoryColors, $registrations) {
             $dateTime = new \DateTime($lesson->schedule);
 
             // Format the time
             $formattedTime = $dateTime->format('g\hiA');
+            $registrationStatus = $registrations->has($lesson->id)
+            ? $registrations[$lesson->id]->confirmation_status // 'Pending' or 'Confirmed'
+            : null;
 
             return [
                 'id' => $lesson->id,
@@ -40,6 +50,7 @@ class CalendarController extends Controller
                 'status' => $lesson->status,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,
+                'userRegistrationStatus' => $registrationStatus,
             ];
         });
 
