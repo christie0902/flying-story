@@ -40,12 +40,11 @@
 <div class="modal fade" id="lessonDetailsModal" tabindex="-1" aria-labelledby="lessonDetailsLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header flex-column align-items-start">
+                <!-- Full-width image on top of the title -->
+                <img src="\detail-cover.jfif" alt="details-cover" class="img-fluid rounded-top w-100 mb-3" style="max-height: 200px; object-fit: cover;">
+                
                 <h5 class="modal-title" id="lessonDetailsLabel">Class Details</h5>
-               
-                {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button> --}}
             </div>
             <div class="modal-body">
                 <div class="row">
