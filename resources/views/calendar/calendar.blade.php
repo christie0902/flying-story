@@ -48,16 +48,60 @@
                 </button> --}}
             </div>
             <div class="modal-body">
-                <p><strong>Title:</strong> <span id="lessonTitle"></span></p>
-                <p><strong>Category:</strong> <span id="lessonCategory"></span></p>
-                <p><strong>Schedule:</strong> <span id="lessonSchedule"></span></p>
-                <p><strong>Duration:</strong> <span id="lessonDuration"></span></p>
-                <p id="paymentTermContainer" style="display: none;"><strong>Payment Term:</strong> <span id="paymentTerm"></span></p>
-                <p id="priceContainer" style="display: none;"><strong>Price:</strong> <span id="price"></span></p>
-                <p><strong>Capacity:</strong> <span id="lessonCapacity"></span></p>
-                <p><strong>Registered Students:</strong> <span id="lessonRegisteredStudents"></span></p>
-                <p><strong>Status:</strong> <span id="lessonStatus"></span></p>
-                <p><strong>Description:</strong> <span id="lessonDescription"></span></p>
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Title</h6>
+                            <p id="lessonTitle"></p>
+                        </div>
+                        <hr>
+
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Category</h6>
+                            <p id="lessonCategory"></p>
+                        </div>
+                        <hr>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Description</h6>
+                            <p id="lessonDescription"></p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <!-- Schedule -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Schedule</h6>
+                            <p id="lessonSchedule"></p>
+                        </div>
+                        <hr>
+
+                        <!-- Duration -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Duration</h6>
+                            <p id="lessonDuration"></p>
+                        </div>
+                        <hr>
+
+                        <!-- Capacity -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Capacity</h6>
+                            <p id="lessonCapacity"></p>
+                        </div>
+                        <hr>
+
+                        <!-- Registered Students -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Joined Students</h6>
+                            <p id="lessonRegisteredStudents"></p>
+                        </div>
+                    </div>
+                </div>
 
              
                {{-- User Role and Credit Status Logic --}}
@@ -97,7 +141,7 @@
                         {{-- Buy credits --}}
                     @elseif($credits <= 0)
                         <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
-                        <a href="" id="buyCreditsButton"><button class="btn btn-primary px-5">Buy Credits</button></a>
+                        <a href="" id="buyCreditsButton" ><button class="btn btn-primary px-5">Buy Credits</button></a>
                     @elseif($credits > 0 && $expirationDate <= now())
                         <p class="text-info">You have {{ $credits }} credits but they have expired.</br> Please contact us for more information.</p>
                         <button id="expiredCreditsButton" class="btn btn-secondary px-5" disabled>Join</button>

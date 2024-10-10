@@ -18,7 +18,7 @@
 
 <div class="container">
     <h2 class="page-title">Classes Management</h1>
-    <a href="{{ route('lessons.create') }}" class="btn btn-primary">Add New Class</a>
+    <a href="{{ route('lessons.create') }}" class="btn btn-primary my-3">Add New Class</a>
 
 <!-- Filter Form -->
 <form method="GET" action="{{ route('lesson.list') }}" class="mb-4">
@@ -135,7 +135,7 @@
     </table>
 
     <!-- Custom Pagination -->
-    <nav aria-label="Page navigation">
+    <nav aria-label="Page navigation" class="mt-4">
         <ul class="pagination justify-content-center">
             {{-- Previous Page Link --}}
             @if ($lessons->onFirstPage())

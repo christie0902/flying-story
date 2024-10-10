@@ -117,16 +117,19 @@
                 <h5 class="modal-title" id="studentModalLabel">Student Details</h5>
             </div>
             <div class="modal-body">
-                <p><strong>Name:</strong> <span id="modal-student-name"></span></p>
-                <p><strong>Email:</strong> <span id="modal-student-email"></span></p>
+                <div class="mb-3">
+                    <p><strong>Name:</strong> <span id="modal-student-name"></span></p>
+                </div>
 
-                {{-- Credit Management --}}
-                <p>
-                    <strong>Credits:</strong> 
-                    <span id="modal-student-credits-display"></span>
+                <div class="mb-3">
+                    <p><strong>Email:</strong> <span id="modal-student-email"></span></p>
+                </div>
+
+                <!-- Credit Management -->
+                <div class="mb-3 border-top pt-3">
+                    <p><strong>Credits:</strong> <span id="modal-student-credits-display"></span></p>
                     <button id="edit-credits-btn" type="button" class="btn btn-sm btn-secondary">Edit</button>
 
-                    {{-- Credit edit form --}}
                     <form id="edit-credits-form" method="POST" action="" style="display: none;">
                         @csrf
                         @method('PUT')
@@ -147,24 +150,28 @@
 
                         <button type="submit" class="btn btn-primary mt-3">Update Credits</button>
                     </form>
-                </p>
+                </div>
 
-                <p><strong>Credits Purchased Date:</strong> <span id="modal-credits-purchased"></span></p>
+                <div class="mb-3 border-top pt-3">
+                    <p><strong>Credits Purchased Date:</strong> <span id="modal-credits-purchased"></span></p>
+                </div>
 
-                {{-- Valid date extension --}}
-                <p>
-                    <strong>Valid Date:</strong> 
-                    <span id="modal-valid-date"></span>
+                <!-- Valid date extension -->
+                <div class="mb-3 border-top pt-3">
+                    <p><strong>Valid Date:</strong> <span id="modal-valid-date"></span></p>
                     <button id="edit-valid-date-btn" type="button" class="btn btn-sm btn-secondary">Extend</button>
-                
+
                     <form id="edit-valid-date-form" method="POST" action="" style="display: none;">
                         @csrf
                         @method('PUT')
                         <input type="date" name="valid_date" id="modal-valid-date-input" class="form-control mt-2">
                         <button type="submit" class="btn btn-primary mt-2">Update</button>
                     </form>
-                </p>
-                <p><strong>Payment Variable:</strong> <span id="modal-payment-variable"></span></p>
+                </div>
+
+                <div class="mb-3 border-top pt-3">
+                    <p><strong>Payment Variable:</strong> <span id="modal-payment-variable"></span></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -172,6 +179,7 @@
         </div>
     </div>
 </div>
+
 
 @endsection
 @section('scripts')

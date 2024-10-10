@@ -11,89 +11,94 @@
 </div>
 @endif
 
-<div class="container w-100 w-lg-50" style="max-width: 100vw;">
-    <h2 class="page-title">Add New Class</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+            <h2 class="page-title">Add New Class</h2>
 
-    <form action="{{ route('lessons.store') }}" method="POST">
-        @csrf
-        
-        <div class="form-group">
-            <label class="form-label">Category</label>
-            <select id="category-select" name="category" class="form-control" required>
-                @foreach ($categories as $category)
-                    <option value={{ $category->id }} {{ old('category') == $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
-                    </option>
-                @endforeach
-                    <option value="Other">Other</option>
-            </select>
-            <input type="text" id="other-category" name="other_category" class="form-control mt-2 d-none" placeholder="Enter new category">
-        </div>
+            <form action="{{ route('lessons.store') }}" method="POST">
+                @csrf
+                
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="category-select" name="category" class="form-control" required>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="other-category" name="other_category" class="form-control mt-2 d-none" placeholder="Enter new category">
+                </div>
 
-        <div class="form-group">
-            <label class="form-label">Payment Term</label>
-            <select name="payment_type" class="form-control" required>
-                <option value="">Select Payment Term for this class</option>
-                @foreach ($paymentTypes as $paymentType)
-                    <option value="{{ $paymentType->type }}" {{ old('payment_type') == $paymentType->type ? 'selected' : '' }}>
-                        {{ $paymentType->type }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Payment Term</label>
+                    <select name="payment_type" class="form-control" required>
+                        <option value="">Select Payment Term for this class</option>
+                        @foreach ($paymentTypes as $paymentType)
+                            <option value="{{ $paymentType->type }}" {{ old('payment_type') == $paymentType->type ? 'selected' : '' }}>
+                                {{ $paymentType->type }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label class="form-label">Title</label>
-            <textarea name="title" class="form-control" required></textarea>
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <textarea name="title" class="form-control" required></textarea>
+                </div>
 
-        <div class="form-group">
-            <label class="form-label">Description</label>
-            <textarea name="description" class="form-control" required></textarea>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Schedule</label>
-            <input type="datetime-local" name="schedule" class="form-control" required>
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" required></textarea>
+                </div>
 
-        <div class="form-group">
-            <label class="form-label">Duration (in minutes)</label>
-            <input type="number" name="duration" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label class="form-label" for="level">Level</label>
-            <select name="level" id="level" class="form-control" required>
-                <option value="beginner">Beginner</option>
-                <option value="lower-intermediate">Lower Intermediate</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="upper-intermediate">Upper Intermediate</option>
-                <option value="advanced">Advanced</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Capacity</label>
-            <input type="number" name="capacity" class="form-control" required>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Recurrence</label>
-            <select id="recurrence-select" name="recurrence_option" class="form-control">
-                <option value="">None</option>
-                <option value="weekly">Weekly</option>
-                <option value="bi-weekly">Bi-Weekly</option>
-                <option value="monthly">Monthly</option>
-            </select>
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Schedule</label>
+                    <input type="datetime-local" name="schedule" class="form-control" required>
+                </div>
 
-        <div class="form-group" id="end-date-group" style="display: none;">
-            <label class="form-label" for="end-date">End Date</label>
-            <input type="date" id="end-date" name="end_date">
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Duration (in minutes)</label>
+                    <input type="number" name="duration" class="form-control" required>
+                </div>
 
-        <button type="submit" class="btn btn-primary my-4 w-100">Save Class</button>
-    </form>
+                <div class="form-group">
+                    <label class="form-label" for="level">Level</label>
+                    <select name="level" id="level" class="form-control" required>
+                        <option value="beginner">Beginner</option>
+                        <option value="lower-intermediate">Lower Intermediate</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="upper-intermediate">Upper Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Capacity</label>
+                    <input type="number" name="capacity" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Recurrence</label>
+                    <select id="recurrence-select" name="recurrence_option" class="form-control">
+                        <option value="">None</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="bi-weekly">Bi-Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="end-date-group" style="display: none;">
+                    <label class="form-label" for="end-date">End Date</label>
+                    <input type="date" id="end-date" name="end_date" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary my-4 w-100">Save Class</button>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -121,6 +126,5 @@
             endDateGroup.style.display = 'none';
         }
     });
-
 </script>
 @endsection
