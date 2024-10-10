@@ -65,6 +65,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Class Registration Confirmation Modal -->
+        <div id="registrationModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Registration</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p id="lessonDetailsText"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('payment.register.lesson') }}" method="POST" id="registerLessonForm">
+                            @csrf
+                            <input type="hidden" name="lesson_id" id="lessonIdInput">
+                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                            <button type="submit" class="btn btn-primary">Yes, Register me</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">No, Thanks</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Passing lesson data --}}
+        <div id="lessonData" 
+            data-lesson-id="{{ $lesson ? $lesson->id : 'null' }}" 
+            data-lesson-title="{{ $lesson ? $lesson->title : 'null' }}" 
+            data-lesson-schedule="{{ $lesson ? $lesson->formatted_schedule : 'null' }}">
+        </div>
     </div>
 @endsection
 
@@ -92,5 +122,33 @@
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
         confirmationModal.show();
     });
+
+    document.getElementById('confirmPaymentForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    
+    const lessonData = document.getElementById('lessonData');
+    const lessonId = lessonData.getAttribute('data-lesson-id');
+    const lessonTitle = lessonData.getAttribute('data-lesson-title');
+    const lessonSchedule = lessonData.getAttribute('data-lesson-schedule');
+    
+    if (lessonId && lessonId !== 'null') {
+            const registrationModal = new bootstrap.Modal(document.getElementById('registrationModal'));
+            const detailText = document.getElementById('lessonDetailsText');
+            const lessonIdInput = document.getElementById('lessonIdInput');
+            
+            // Set the lesson details in the modal
+            if(detailText) {
+                detailText.textContent = `Do you want to automatically register for the lesson: "${lessonTitle}" at ${lessonSchedule}?`;
+            }
+
+            if (lessonIdInput) {
+                lessonIdInput.value = lessonId;
+            }
+
+            registrationModal.show();
+        } else {
+            this.submit();
+    }
+});
 </script>
 @endsection

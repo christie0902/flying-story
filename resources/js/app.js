@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let registrationLabel = "";
                 if (userRegistrationStatus === "Pending") {
                     registrationLabel =
-                        '<span class="badge bg-warning">Pending</span>';
+                        '<span class="badge bg-primary w-md-50 d-block mx-auto my-1">Pending</span>';
                 } else if (userRegistrationStatus === "Confirmed") {
                     registrationLabel =
                         '<span class="badge bg-light text-dark w-md-50 d-block mx-auto my-1">Enrolled</span>';
@@ -201,6 +201,18 @@ document.addEventListener("DOMContentLoaded", function () {
                         const stdBtnContainer = document.querySelector(
                             "#join-cancel-container"
                         );
+
+                        //Buy credits button
+                        const creditBtn =
+                            document.getElementById("buyCreditsButton");
+                        if (creditBtn) {
+                            const baseUrl = "/buy-credits";
+                            const urlWithLesson = lesson.id
+                                ? `${baseUrl}/${lesson.id}`
+                                : baseUrl;
+
+                            creditBtn.setAttribute("href", urlWithLesson);
+                        }
 
                         const savedContainerStyle = stdBtnContainer
                             ? { ...stdBtnContainer.style }

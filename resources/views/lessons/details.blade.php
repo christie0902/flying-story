@@ -105,13 +105,13 @@
                                 @csrf
                                 @method('PUT')
                                 <select name="confirmation_status" onchange="confirmStatusChange(this)" 
-                                @if ($registration->user->profile->credits <= 0) disabled @endif>
+                                >
                                     <option value="Confirmed" {{ $registration->confirmation_status == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
                                     <option value="Pending" {{ $registration->confirmation_status == 'Pending' ? 'selected' : '' }}>Pending</option>
                                     <option value="Canceled" {{ $registration->confirmation_status == 'Canceled' ? 'selected' : '' }}>Canceled</option>
                                 </select>
-                                <button type="submit" class="btn btn-sm btn-warning ms-1 px-2" 
-                                    @if ($registration->user->profile->credits <= 0) disabled @endif>Update</button>
+                                <button type="submit" class="btn btn-sm btn-info ms-1 px-2" 
+                                    >Update</button>
                             </form>
                         </td>
                         @else

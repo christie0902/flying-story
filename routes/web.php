@@ -26,5 +26,6 @@ Route::post('/lessons/{lesson}/register', [RegistrationController::class, 'regis
 Route::post('/lessons/{lesson}/cancel', [RegistrationController::class, 'cancel'])->name('class.cancel');
 
 //Credits purchase
-Route::get('/buy-credits', [PaymentController::class, 'showBuyCreditsPage'])->name('buy.credits');
+Route::get('/buy-credits/{lesson_id?}', [PaymentController::class, 'showBuyCreditsPage'])->name('buy.credits');
 Route::post('/confirm-payment', [PaymentController::class, 'confirmPayment'])->name('confirm.payment');
+Route::post('/confirm-payment/register-lesson', [PaymentController::class, 'registerForLesson'])->name('payment.register.lesson');
