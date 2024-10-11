@@ -10,6 +10,7 @@ use App\Models\LessonRegistration;
 
 class PaymentController extends Controller
 {
+    // BUY CREDITS
     public function showBuyCreditsPage(Request $request, $lessonId = null)
     {
         $lesson = null;
@@ -27,6 +28,25 @@ class PaymentController extends Controller
         $userProfile = $user->profile;
 
         return view('payment.buy-credits', compact('paymentInfo', 'userProfile', 'lesson'));
+    }
+
+    // OTHER PAYMENT TERMs
+    public function showPaymentPage(Request $request, $lessonId = null)
+    {
+        $lesson = null;
+        if ($lessonId) {
+            $lesson = Lesson::find($lessonId);
+        }
+
+        $paymentInfo = PaymentInfo::where('type', $lesson->payment_type)->get()->map(function ($info) {
+            $info->formatted_price = $info->formatted_price;
+            return $info;
+        });
+
+        $user = auth()->user();
+        $userProfile = $user->profile;
+
+        return view('payment.class-payment', compact('paymentInfo', 'userProfile', 'lesson'));
     }
 
     public function confirmPayment(Request $request)

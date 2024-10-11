@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (editBtn)
                             editBtn.setAttribute(
                                 "href",
-                                `/admin/lessons/edit/${lesson.id}`
+                                `/admin/lessons/show/${lesson.id}`
                             );
 
                         // Update the Join Form's action and hidden input field
@@ -212,7 +212,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             creditBtn.setAttribute("href", urlWithLesson);
                         }
-
+                        
+                        // Workshop Join Button
                         const savedContainerStyle = stdBtnContainer
                             ? { ...stdBtnContainer.style }
                             : {};
@@ -226,12 +227,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                 "class",
                                 "workshop-button d-flex justify-content-center"
                             );
+
+                            workshopButtonContainer.setAttribute(
+                                'href',
+                                `/join-class/${lesson.id}`
+                            )
+                            
                             const joinWkspBtn = document.createElement("div");
                             joinWkspBtn.setAttribute(
                                 "class",
                                 "btn btn-primary px-5"
                             );
-                            joinWkspBtn.innerText = "Join Workshop";
+                            joinWkspBtn.innerText = "Join Class";
                             workshopButtonContainer.appendChild(joinWkspBtn);
                             stdBtnContainer.setAttribute(
                                 "style",

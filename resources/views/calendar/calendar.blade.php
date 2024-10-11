@@ -166,7 +166,7 @@
                 </div>
 
                 {{-- WORKSHOP --}}
-                <div class="workshop-button"></div>
+                <a class="workshop-button"></a>
                @endif
                {{-- Workshop button element --}}
                
@@ -187,7 +187,7 @@
                 {{-- ADMIN EDIT BUTTON --}}
             <div class="modal-footer">
                 @can('admin')
-                <a id="editButton" href="" class="btn btn-info">Edit class</a>
+                <a id="editButton" href="" class="btn btn-info">See details</a>
                 @endcan
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
