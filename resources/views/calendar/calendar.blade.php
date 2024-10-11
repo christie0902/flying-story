@@ -44,7 +44,7 @@
                 <!-- Full-width image on top of the title -->
                 <img src="\detail-cover.jfif" alt="details-cover" class="img-fluid rounded-top w-100 mb-3" style="max-height: 200px; object-fit: cover;">
                 
-                <h5 class="modal-title" id="lessonDetailsLabel">Class Details</h5>
+                <h5 class="modal-title page-title" id="lessonDetailsLabel">Class Details</h5>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -52,21 +52,21 @@
                     <div class="col-md-6">
                         <!-- Title -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Title</h6>
+                            <h6 class="fw-bold sub-title">Title</h6>
                             <p id="lessonTitle"></p>
                         </div>
                         <hr>
 
                         <!-- Category -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Category</h6>
+                            <h6 class="fw-bold sub-title">Category</h6>
                             <p id="lessonCategory"></p>
                         </div>
                         <hr>
 
                         <!-- Description -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Description</h6>
+                            <h6 class="fw-bold sub-title">Description</h6>
                             <p id="lessonDescription"></p>
                         </div>
                     </div>
@@ -75,47 +75,49 @@
                     <div class="col-md-6">
                         <!-- Schedule -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Schedule</h6>
+                            <h6 class="fw-bold sub-title">Schedule</h6>
                             <p id="lessonSchedule"></p>
                         </div>
                         <hr>
 
                         <!-- Duration -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Duration</h6>
+                            <h6 class="fw-bold sub-title">Duration</h6>
                             <p id="lessonDuration"></p>
                         </div>
                         <hr>
 
                         <!-- Capacity -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Capacity</h6>
+                            <h6 class="fw-bold sub-title">Capacity</h6>
                             <p id="lessonCapacity"></p>
                         </div>
                         <hr>
 
                         <!-- Registered Students -->
                         <div class="mb-3">
-                            <h6 class="fw-bold">Joined Students</h6>
+                            <h6 class="fw-bold sub-title">Reserved Students</h6>
                             <p id="lessonRegisteredStudents"></p>
                         </div>
                     </div>
                 </div>
 
              
-               {{-- User Role and Credit Status Logic --}}
+    {{-- User Role and Credit Status Logic --}}
+
             @if(auth()->check())
                @if(auth()->user()->role == 'student')
-               {{-- display Workshop Sign up button --}}
                    @php
                        $credits = auth()->user()->profile->credits ?? 0;
                        $expirationDate = auth()->user()->profile->valid_date ?? now();
                    @endphp
            
                 <div class="mt-3 d-flex flex-column align-items-center" id="join-cancel-container">
+
+                {{-- VALID CREDITS --}}
                     @if($credits > 0 && $expirationDate > now())
                         <p class="text-primary">Remaining credits: {{ $credits }}</p>
-                 <!-- Join and Cancel buttons -->
+                    <!-- Join and Cancel buttons -->
                          {{-- Join Button Form --}}
                          <form id="joinForm" action="" method="POST">
                             @csrf
@@ -133,35 +135,56 @@
                             <button type="submit" class="btn btn-warning px-5" onclick="return confirm('Are you sure you want to cancel? You will receive 1 credit back.')">Cancel Registration</button>
                         </form>
 
+                {{-- CANNOT CANCEL --}}
                         {{-- Warning for canceling within 12 hours --}}
                         <p id="cancelWarning" style="display: none;" class="text-danger">
                             You can't cancel this class 12 hours before it starts. Please contact us if you have any questions.
                         </p>
-                        {{-- Buy credits --}}
+
+                {{-- NO CREDITS --}}
                     @elseif($credits <= 0)
-                        <p class="text-primary">You have no credits.</br>please purchase credits to register for the class.</p>
+                        {{-- Cancel Button Form (Initially Hidden) --}}
+                        <form id="cancelForm" action="" method="POST" class="mb-3" style="display: none;">
+                            @csrf
+                            @method('POST')
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                            <input type="hidden" name="lesson_id" id="cancelLessonId">
+                            <button type="submit" class="btn btn-warning px-5" onclick="return confirm('Are you sure you want to cancel? You will receive 1 credit back.')">Cancel Registration</button>
+                        </form>
+                         {{-- Warning for canceling within 12 hours --}}
+                         <p id="cancelWarning" style="display: none;" class="text-danger">
+                            You can't cancel this class 12 hours before it starts. Please contact us if you have any questions.
+                        </p>
+                        <p class="text-primary text-center">You have no credits.</br>Please purchase credits to register for classes.</p>
                         <a href="" id="buyCreditsButton" ><button class="btn btn-primary px-5">Buy Credits</button></a>
+
+                {{-- EXPIRED CREDITS --}}
                     @elseif($credits > 0 && $expirationDate <= now())
                         <p class="text-info">You have {{ $credits }} credits but they have expired.</br> Please contact us for more information.</p>
                         <button id="expiredCreditsButton" class="btn btn-secondary px-5" disabled>Join</button>
                     @endif
                 </div>
+
+                {{-- WORKSHOP --}}
                 <div class="workshop-button"></div>
                @endif
                {{-- Workshop button element --}}
                
            @else
-               {{-- User is not logged in --}}
+               {{-- NOT LOGGED IN --}}
                <div class="mt-3 d-flex align-items-center flex-column">
                     <p class="text-info">Please log in/register to join classes.</p>
                     <a href="{{ route('login') }}" class="btn btn-info px-5 ms-2">Log In</a>
                  </div>
            @endif
-           {{-- Passed lesson --}}
+
+                {{-- LESSON IN THE PAST --}}
             <div class="mt-3 d-flex flex-column align-items-center" id="lessonPassedMessage" style="display: none;">
                 <p class="text-danger">This lesson has already passed.</p>
             </div>
             </div>
+
+                {{-- ADMIN EDIT BUTTON --}}
             <div class="modal-footer">
                 @can('admin')
                 <a id="editButton" href="" class="btn btn-info">Edit class</a>
