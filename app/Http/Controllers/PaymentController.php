@@ -51,6 +51,7 @@ class PaymentController extends Controller
 
     public function confirmPayment(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_info_id' => 'required|exists:payment_info,id',

@@ -96,9 +96,11 @@
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Credits</th>
-                        <th>Credits Valid Until</th>
-                        <th>Credits Purchased Date</th>
+                        @if ($lesson->payment_type == 'credits')
+                            <th>Credits</th>
+                            <th>Credits Valid Until</th>
+                            <th>Credits Purchased Date</th>
+                        @endif
                         <th>Registration Date</th>
                         <th>Confirmation Status</th>
                     </tr>
@@ -108,21 +110,23 @@
                         <tr>
                             <td>{{ $registration->user->name }}</td>
                             <td>{{ $registration->user->email }}</td>
-                            <td>
-                                <span style="{{ ($registration->user->profile->credits ?? 0) == 0 ? 'color: red;' : '' }}">
-                                    {{ $registration->user->profile->credits ?? 0 }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($registration->user->profile->valid_date && \Carbon\Carbon::parse($registration->user->profile->valid_date)->isPast())
-                                    <span style="color: red;">
-                                        {{ \Carbon\Carbon::parse($registration->user->profile->valid_date)->format('Y-m-d') }} (Expired)
+                            @if ($lesson->payment_type == 'credits')
+                                <td>
+                                    <span style="{{ ($registration->user->profile->credits ?? 0) == 0 ? 'color: red;' : '' }}">
+                                        {{ $registration->user->profile->credits ?? 0 }}
                                     </span>
-                                @else
-                                    {{ $registration->user->profile->valid_date ? \Carbon\Carbon::parse($registration->user->profile->valid_date)->format('Y-m-d') : 'N/A' }}
-                                @endif
-                            </td>
-                            <td>{{ $registration->user->profile->credits_purchased_date ? \Carbon\Carbon::parse($registration->user->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}</td>
+                                </td>
+                                <td>
+                                    @if($registration->user->profile->valid_date && \Carbon\Carbon::parse($registration->user->profile->valid_date)->isPast())
+                                        <span style="color: red;">
+                                            {{ \Carbon\Carbon::parse($registration->user->profile->valid_date)->format('Y-m-d') }} (Expired)
+                                        </span>
+                                    @else
+                                        {{ $registration->user->profile->valid_date ? \Carbon\Carbon::parse($registration->user->profile->valid_date)->format('Y-m-d') : 'N/A' }}
+                                    @endif
+                                </td>
+                                <td>{{ $registration->user->profile->credits_purchased_date ? \Carbon\Carbon::parse($registration->user->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}</td>
+                            @endif
                             <td>{{ \Carbon\Carbon::parse($registration->registration_date)->format('Y-m-d') }}</td>
                             <td>
                                 <form action="{{ route('lessons.registration.update', $registration->id) }}" method="POST" class="confirmation-form form-label d-flex">
@@ -151,7 +155,7 @@
         const form = select.closest('.confirmation-form');
         const selectedValue = select.value;
 
-        if (!select.disabled && confirm(`Are you sure you want to change the confirmation status to ${selectedValue}? Student's credits will be changed accordingly!`)) {
+        if (!select.disabled && confirm(`Are you sure you want to change the confirmation status to ${selectedValue}?`)) {
             form.submit();
         } else {
             select.value = select.options[0].value;

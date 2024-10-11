@@ -23,6 +23,8 @@ class TransactionController extends Controller
     if ($transaction->payment_status == 'completed') {
         if ($transaction->paymentInfo->type == 'credits') {
             $profile->credits += $transaction->paymentInfo->amount_of_credits;
+            $profile->credits_purchased_date = now();
+            $profile->valid_date = now()->addDays(30);
             $profile->save();
             $message = 'Transaction confirmed and credits added to the student\'s account.';
         } else {
@@ -31,6 +33,8 @@ class TransactionController extends Controller
     } elseif ($transaction->payment_status == 'refunded') {
         if ($transaction->paymentInfo->type == 'credits') {
             $profile->credits -= $transaction->paymentInfo->amount_of_credits;
+            $profile->credits_purchased_date = null;
+            $profile->valid_date = null;
             $profile->save();
             $message = 'Transaction refunded and credits removed from the student\'s account.';
         } else {

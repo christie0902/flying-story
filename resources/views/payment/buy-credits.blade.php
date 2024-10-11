@@ -83,7 +83,7 @@
                             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                             <button type="submit" class="btn btn-primary">Yes, Register me</button>
                         </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">No, Thanks</button>
+                        <button type="button" class="btn btn-secondary" id="noThanksButton" aria-label="Not register">No, Thanks</button>
                     </div>
                 </div>
             </div>
@@ -150,5 +150,13 @@
             this.submit();
     }
 });
+document.getElementById('noThanksButton').addEventListener('click', function () {
+        event.preventDefault(); 
+        const confirmPaymentForm = document.getElementById('confirmPaymentForm');
+        
+        if (confirmPaymentForm) {
+            confirmPaymentForm.submit();
+        }
+    });
 </script>
 @endsection
