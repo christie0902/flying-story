@@ -25,6 +25,7 @@
    --bs-border-color: rgba(200, 178, 178, .5);
  }
 
+ 
 
 body {
   background-color:#dcd6d1;
@@ -122,6 +123,7 @@ body {
   color: #5e452a;
 }
 
+/* Button Styles */
 .btn {
   color: black;
 }
@@ -149,4 +151,8 @@ body {
 .btn-secondary {
   background-color: #d8c8bb;
   border: #d8c8bb;
+}
+
+.workshop-button {
+  text-decoration: none;
 }

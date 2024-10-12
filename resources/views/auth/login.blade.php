@@ -36,7 +36,7 @@
 
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
-            <p>Don't have an account yet? <a href="{{Route('register')}}">Register here</a></p>
+            <p class=" pt-2">Don't have an account yet? <a href="{{Route('register')}}" class="text-primary">Register here</a></p>
         </div>
     </div>
 </div>

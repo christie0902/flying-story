@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 `;
                 if (info.event.extendedProps.status === "canceled") {
-                    info.el.style.backgroundColor = " #ede9e6";
+                    info.el.style.backgroundColor = "#c9c7c5";
                 } else {
                     info.el.style.backgroundColor =
                         info.event.extendedProps.eventBgColor || "#007bff";

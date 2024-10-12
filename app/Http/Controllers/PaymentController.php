@@ -30,7 +30,7 @@ class PaymentController extends Controller
         return view('payment.buy-credits', compact('paymentInfo', 'userProfile', 'lesson'));
     }
 
-    // OTHER PAYMENT TERMs
+    // OTHER PAYMENT TERMS
     public function showPaymentPage(Request $request, $lessonId = null)
     {
         $lesson = null;
@@ -49,9 +49,9 @@ class PaymentController extends Controller
         return view('payment.class-payment', compact('paymentInfo', 'userProfile', 'lesson'));
     }
 
+    // CONFIRM PAYMENT
     public function confirmPayment(Request $request)
     {
-        dd($request->all());
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_info_id' => 'required|exists:payment_info,id',
@@ -69,6 +69,7 @@ class PaymentController extends Controller
         return redirect()->route('calendar.show')->with('success', 'Thank you for your payment. We will add credits and/or confirm your attendance after confirming the transaction.');
     }
 
+    // ADD ENTRY TO CLASS REGISTRATION
     public function registerForLesson(Request $request)
     {
         $lessonId = $request->input('lesson_id');

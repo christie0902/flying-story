@@ -224,9 +224,8 @@ document.getElementById('confirmPaymentForm').addEventListener('submit', functio
             }
 
             registrationModal.show();
-        } else {
-            this.submit();
-    }
+        } 
+    this.submit();
 });
 document.getElementById('noThanksButton').addEventListener('click', function () {
         event.preventDefault(); 
