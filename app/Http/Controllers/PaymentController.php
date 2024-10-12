@@ -51,7 +51,7 @@ class PaymentController extends Controller
 
     public function confirmPayment(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_info_id' => 'required|exists:payment_info,id',
@@ -66,7 +66,7 @@ class PaymentController extends Controller
         ]);
 
         // Redirect to the calendar page with a success message
-        return redirect()->route('calendar.show')->with('success', 'Thank you for purchasing credits. We will add credits to your account after confirming the transaction.');
+        return redirect()->route('calendar.show')->with('success', 'Thank you for your payment. We will add credits and/or confirm your attendance after confirming the transaction.');
     }
 
     public function registerForLesson(Request $request)

@@ -13,10 +13,15 @@ class CalendarController extends Controller
     {
         $userId = auth()->id();
         $categoryColors = [
-            'Aerial Sling' => '#f6d8cf',
-            'Aerial Hoop' => '#fef1e4',
-            'Aerial Silk' => '#e1d7d7',
-            'Workshop' => '#eac2b6'
+            'Aerial Yoga' => '#f5e5e5',
+            'Fly High' => '#f5e5e5',
+            'Hammock Dance' => '#f5e5e5',
+            'Workshop' => '#f6d8cf',
+            'Aerial Ballet'  => '#c8b2b2',
+            'Aerial Hoop' => '#f0ece3',
+            'Yoga Wheel' => '#ede9e6',
+            'Private Lesson' => '#ece3df',
+            'Online yoga wheel' =>'#f8f5f5'
         ];
 
         $selectedCategory = $request->query('category');
@@ -46,7 +51,7 @@ class CalendarController extends Controller
                 'title' => $lesson->category->name,
                 'start' => $lesson->schedule,
                 'formattedTime' => $formattedTime,
-                'eventBgColor' => $categoryColors[$lesson->category->name] ?? '#cccccc',
+                'eventBgColor' => $categoryColors[$lesson->category->name] ?? '#ffefea',
                 'status' => $lesson->status,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,

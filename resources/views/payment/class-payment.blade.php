@@ -13,7 +13,7 @@
                     
                     <label for="paymentOption" class="fw-bold mb-2 form-label">Select Payment Term</label>
                     <select id="paymentOption" class="form-control w-m-50 form-label">
-                        <option value="" disabled selected>Select credits...</option>
+                        <option value="" disabled selected>Select payment option...</option>
                         @foreach($paymentInfo as $info)
                             <option value="{{ $info->id }}" data-price="{{ $info->formatted_price }}" 
                                     data-bank-info="{{ $info->bank_info }}" data-qr="{{ $info->payment_QR_url }}">
@@ -197,12 +197,12 @@ if (paymentOptionSelect) {
     }
 }
 
-    document.getElementById('completePaymentButton').addEventListener('click', function () {
+document.getElementById('completePaymentButton').addEventListener('click', function () {
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
         confirmationModal.show();
-    });
+});
 
-    document.getElementById('confirmPaymentForm').addEventListener('submit', function (event) {
+document.getElementById('confirmPaymentForm').addEventListener('submit', function (event) {
     event.preventDefault();
     
     const lessonData = document.getElementById('lessonData');
@@ -228,13 +228,13 @@ if (paymentOptionSelect) {
             this.submit();
     }
 });
-    document.getElementById('noThanksButton').addEventListener('click', function () {
+document.getElementById('noThanksButton').addEventListener('click', function () {
         event.preventDefault(); 
         const confirmPaymentForm = document.getElementById('confirmPaymentForm');
         
         if (confirmPaymentForm) {
             confirmPaymentForm.submit();
         }
-    });
+});
 </script>
 @endsection

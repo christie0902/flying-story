@@ -18,9 +18,16 @@
   font-weight: <weight>;
   font-style: normal;
 } */
+ :root {
+   --fc-border-color:  rgba(94, 69, 42, 0.3);
+   --bs-link-color-rgb: #5e452a;
+   --bs-body-bg: #ece9e6;
+   --bs-border-color: rgba(200, 178, 178, .5);
+ }
+
 
 body {
-  background-color:#fcfcfc;
+  background-color:#dcd6d1;
 }
 
 .event-content {
@@ -37,6 +44,11 @@ body {
   z-index: 99;
 }
 
+.fc-button {
+  background-color: #5e452a !important;
+  border: #5e452a !important;
+}
+
 
 /* Navbar */
 .navbar-brand {
@@ -46,7 +58,7 @@ body {
 }
 
 .container-fluid {
-  background-color: #ede9e6;
+  background-color: #c8b2b2;
 }
 
 .nav-item{
@@ -118,7 +130,23 @@ body {
   color: white;
 }
 
+.btn-success {
+  background-color: rgb(143, 211, 143);
+  border-color: rgb(143, 211, 143);
+}
+
+.btn-danger{
+  background-color: rgb(202, 126, 126);
+  border-color: rgb(202, 126, 126);
+  color: black;
+}
+
+.btn-warning {
+  background-color: rgb(236, 229, 122);
+  border-color: rgb(236, 229, 122);
+}
+
 .btn-secondary {
-  background-color: #f3ede8;
-  border: #f3ede8;
+  background-color: #d8c8bb;
+  border: #d8c8bb;
 }
