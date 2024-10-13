@@ -27,7 +27,7 @@
                                 {{ $category->name }}
                             </option>
                         @endforeach
-                        <option value="Other">Other</option>
+                        <option value='999'>Other</option>
                     </select>
                     <input type="text" id="other-category" name="other_category" class="form-control mt-2 d-none" placeholder="Enter new category">
                 </div>
@@ -108,7 +108,7 @@
         const otherCategoryInput = document.getElementById('other-category');
         const priceGroup = document.getElementById('price-group');
 
-        if (this.value === 'Other') {
+        if (+this.value === 999) {
             otherCategoryInput.classList.remove('d-none');
             otherCategoryInput.required = true;
         } else {

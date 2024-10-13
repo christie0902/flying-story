@@ -82,4 +82,17 @@ class Lesson extends Model
     {
         return Carbon::parse($this->schedule)->format('ga M j, Y');
     }
+
+    //Student counts
+    public function confirmedStudentsCount()
+    {
+        return $this->hasMany(LessonRegistration::class)
+                    ->where('confirmation_status', 'Confirmed')
+                    ->count();
+    }
+
+    public function totalRegisteredStudentsCount()
+    {
+        return $this->hasMany(LessonRegistration::class)->count();
+    }
 }

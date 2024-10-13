@@ -34,7 +34,9 @@ class LessonController extends Controller
             $query->where('category_id', $category);;
         }
 
-        $lessons = $query->orderByDesc('schedule')->paginate(10);
+        $lessons = $query->withCount(['registrations as confirmed_students_count' => function ($query) {
+            $query->where('confirmation_status', 'Confirmed');
+        }])->orderByDesc('schedule')->paginate(10);
 
         $categories = Category::all();
 
@@ -59,7 +61,7 @@ class LessonController extends Controller
     public function storeLesson(Request $request)
     {
         $validated = $request->validate([
-            'category' => 'required|integer|exists:categories,id',
+            'category' => 'required|integer',
             'other_category' => 'nullable|string',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',

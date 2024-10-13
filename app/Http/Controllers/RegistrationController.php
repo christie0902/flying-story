@@ -19,38 +19,48 @@ class RegistrationController extends Controller
             $user = $registration->user;
             $lesson = $registration->lesson;
 
-            if ($lesson->payment_type === 'credits') {
-                if ($request->confirmation_status === 'Confirmed') {
-                    if ($user->profile->credits > 0) {
-                        $user->profile->credits -= 1;
-                        $user->profile->save();
-                    } else {
-                        return redirect()->back()->with('error', 'User has no credits to confirm the registration.');
-                    }
-                } elseif ($request->confirmation_status === 'Canceled') {
-                    if ($registration->confirmation_status === 'Confirmed') {
-                        $user->profile->credits += 1;
-                        $user->profile->save();
-                    }
-                } elseif ($request->confirmation_status === 'Pending') {
-                    if ($registration->confirmation_status === 'Confirmed') {
-                        $user->profile->credits += 1;
-                        $user->profile->save();
-                    }
-                }
-            }
+            $this->handleRegistrationUpdate($request->confirmation_status, $user, $lesson, $registration);
             $registration->confirmation_status = $request->confirmation_status;
             $registration->save();
 
-            if ($lesson->payment_type === 'credits') {
-                return redirect()->back()->with('success', 'Confirmation status updated successfully. Credits updated.');
-            } else {
-                return redirect()->back()->with('success', 'Confirmation status updated successfully.');
-            }
+            $this->updateRegisteredStudentsCount($lesson);
+
+            return redirect()->back()->with('success', 'Confirmation status updated successfully.' . ($lesson->payment_type === 'credits' ? ' Credits updated.' : ''));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while updating the status: ' . $e->getMessage());
         }
     }
+    // FUNCTION TO HANDLE CREDITS BASED ON STATUS
+    private function handleRegistrationUpdate($confirmationStatus, $user, $lesson, $registration)
+    {
+        if ($lesson->payment_type === 'credits') {
+            if ($confirmationStatus === 'Confirmed') {
+
+                if ($user->profile->credits > 0) {
+                    $user->profile->credits -= 1;
+                    $user->profile->save();
+                } else {
+                    throw new \Exception('User has no credits to confirm the registration.');
+                }
+            } elseif ($confirmationStatus === 'Canceled' || $confirmationStatus === 'Pending') {
+                if ($registration->confirmation_status === 'Confirmed') {
+                    $user->profile->credits += 1;
+                    $user->profile->save();
+                }
+            }
+        }
+    }
+    // FUNCTION TO HANDLE REGISTERED STUDENTS
+    private function updateRegisteredStudentsCount($lesson)
+    {
+        $confirmedCount = LessonRegistration::where('lesson_id', $lesson->id)
+            ->where('confirmation_status', 'Confirmed')
+            ->count();
+
+        $lesson->registered_students = $confirmedCount;
+        $lesson->save();
+    }
+
 
     // Lesson join
     public function register(Request $request, $lessonId)

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Lesson;
 use App\Models\LessonRegistration;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -55,37 +56,38 @@ class PaymentController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_info_id' => 'required|exists:payment_info,id',
+            'lesson_id' => 'nullable|exists:lessons,id', 
         ]);
-
-        // Store the transaction data
-        Transaction::create([
-            'user_id' => $request->user_id,
-            'payment_info_id' => $request->payment_info_id,
-            'payment_status' => 'pending',
-            'payment_date' => now(),
-        ]);
-
-        // Redirect to the calendar page with a success message
-        return redirect()->route('calendar.show')->with('success', 'Thank you for your payment. We will add credits and/or confirm your attendance after confirming the transaction.');
+    
+        DB::beginTransaction();
+    
+        try {
+            // Store the transaction data
+            $transaction = Transaction::create([
+                'user_id' => $request->user_id,
+                'payment_info_id' => $request->payment_info_id,
+                'payment_status' => 'pending',
+                'payment_date' => now(),
+            ]);
+    
+            // If lesson_id is present, register for the class
+            if ($request->lesson_id) {
+                LessonRegistration::create([
+                    'user_id' => $request->user_id,
+                    'lesson_id' => $request->lesson_id,
+                    'registration_date' => now(),
+                    'confirmation_status' => 'pending',
+                ]);
+    
+                DB::commit();
+            }
+            return redirect()->route('calendar.show')->with('success', 'Thank you for your payment and registration. We will confirm the transaction as soon as possible.');
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+    
+            return redirect()->route('calendar.show')->with('error', 'There was an error processing your payment. Please try again.');
+        }
     }
 
-    // ADD ENTRY TO CLASS REGISTRATION
-    public function registerForLesson(Request $request)
-    {
-        $lessonId = $request->input('lesson_id');
-        $userId = $request->input('user_id');
-
-        $lesson = Lesson::find($lessonId);
-
-        $registration = new LessonRegistration([
-            'user_id' => $userId,
-            'lesson_id' => $lessonId,
-            'registration_date' => now(),
-            'confirmation_status' => 'pending',
-        ]);
-
-        $registration->save();
-
-        return redirect()->route('calendar.show')->with('success', 'Thank you for purchasing credits. We will add credits to your account and register for the class you chose after confirming the transaction!');
-    }
 }

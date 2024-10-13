@@ -52,38 +52,17 @@
                     </div>
                     <div class="modal-body">
                         <p>Did you complete the payment?</p>
+                        <p id="lessonDetailsText"></p>
                     </div>
                     <div class="modal-footer">
                         <form action="{{ route('confirm.payment') }}" method="POST" id="confirmPaymentForm">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                            <input type="hidden" name="lesson_id" id="lessonIdInput">
                             <input type="hidden" name="payment_info_id" id="paymentInfoId" value="">
                             <button type="submit" class="btn btn-primary">Confirm</button>
                         </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Class Registration Confirmation Modal -->
-        <div id="registrationModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Registration</h5>
-                    </div>
-                    <div class="modal-body">
-                        <p id="lessonDetailsText"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <form action="{{ route('payment.register.lesson') }}" method="POST" id="registerLessonForm">
-                            @csrf
-                            <input type="hidden" name="lesson_id" id="lessonIdInput">
-                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                            <button type="submit" class="btn btn-primary">Yes, Register me</button>
-                        </form>
-                        <button type="button" class="btn btn-secondary" id="noThanksButton" aria-label="Not register">No, Thanks</button>
                     </div>
                 </div>
             </div>
@@ -119,7 +98,17 @@
     });
 
     document.getElementById('completePaymentButton').addEventListener('click', function () {
+        const lessonData = document.getElementById('lessonData');
+        const lessonId = lessonData.getAttribute('data-lesson-id');
+        const detailText = document.getElementById('lessonDetailsText');
+        const lessonTitle = lessonData.getAttribute('data-lesson-title');
+        const lessonSchedule = lessonData.getAttribute('data-lesson-schedule');
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        if (lessonId && lessonId !== 'null') {
+            if(detailText) {
+                detailText.textContent = `You will be automatically registered for the class: "${lessonTitle}" at ${lessonSchedule} after we confirm the transaction.`;
+            }
+        }
         confirmationModal.show();
     });
 
@@ -128,38 +117,15 @@
     
     const lessonData = document.getElementById('lessonData');
     const lessonId = lessonData.getAttribute('data-lesson-id');
-    const lessonTitle = lessonData.getAttribute('data-lesson-title');
-    const lessonSchedule = lessonData.getAttribute('data-lesson-schedule');
     
     if (lessonId && lessonId !== 'null') {
-            const registrationModal = new bootstrap.Modal(document.getElementById('registrationModal'));
-            const detailText = document.getElementById('lessonDetailsText');
             const lessonIdInput = document.getElementById('lessonIdInput');
-            
-            // Set the lesson details in the modal
-            if(detailText) {
-                detailText.textContent = `Do you want to automatically register for the lesson: "${lessonTitle}" at ${lessonSchedule}?`;
-            }
 
             if (lessonIdInput) {
                 lessonIdInput.value = lessonId;
             }
-
-            registrationModal.show();
-        }
+        } 
     this.submit();
-});
-
-
-
-
-document.getElementById('noThanksButton').addEventListener('click', function () {
-        event.preventDefault(); 
-        const confirmPaymentForm = document.getElementById('confirmPaymentForm');
-        
-        if (confirmPaymentForm) {
-            confirmPaymentForm.submit();
-        }
     });
 </script>
 @endsection

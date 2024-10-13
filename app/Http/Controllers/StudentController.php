@@ -46,25 +46,6 @@ class StudentController extends Controller
         return view('students.list', compact('students', 'search', 'filter'));
     }
 
-    // public function updateCredits(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'credits' => 'required|integer|min:0'
-    //     ]);
-
-    //     $user = User::findOrFail($id);
-
-    //     $profile = $user->profile;
-
-    //     if ($profile) {
-    //         $profile->credits = $request->input('credits');
-    //         $profile->save();
-
-    //         return response()->json(['success' => true]);
-    //     }
-
-    //     return response()->json(['success' => false, 'message' => 'Profile not found'], 404);
-    // }
     public function updateCredits(Request $request, $id)
     {
         $request->validate([
