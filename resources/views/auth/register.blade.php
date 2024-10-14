@@ -65,9 +65,20 @@
                     @enderror
                 </div>
 
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="privacy_policy" id="privacy_policy" class="form-check-input @error('privacy_policy') is-invalid @enderror" required>
+                    <label class="form-check-label" for="privacy_policy">
+                        I agree to the <a href="{{ route('privacy-policy') }}" target="_blank" class="text-info">Privacy Policy</a>
+                    </label>
+                    @error('privacy_policy')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+
                 <button type="submit" class="btn btn-primary w-100">Register</button>
             </form>
-            <p>Already have an account? <a href="{{Route('login')}}">Login here</a></p>
+            <p class="mt-2">Already have an account? <a href="{{Route('login')}}" class="text-primary">Login here</a></p>
         </div>
     </div>
 </div>

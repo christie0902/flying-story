@@ -26,6 +26,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:20'],
             'credits' => ['nullable', 'integer'],
+            'privacy_policy' => ['accepted'],
         ])->validate();
 
         // Create the user

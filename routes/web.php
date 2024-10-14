@@ -30,3 +30,8 @@ Route::get('/buy-credits/{lesson_id?}', [PaymentController::class, 'showBuyCredi
 Route::get('/join-class/{lesson_id?}', [PaymentController::class, 'showPaymentPage'])->name('payment.class');
 Route::post('/confirm-payment', [PaymentController::class, 'confirmPayment'])->name('confirm.payment');
 Route::post('/confirm-payment/register-lesson', [PaymentController::class, 'registerForLesson'])->name('payment.register.lesson');
+
+//Privacy Policy
+Route::get('/privacy-policy', function () {
+    return view('auth.privacy-policy');
+})->name('privacy-policy');
