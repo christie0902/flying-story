@@ -93,10 +93,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         const currentTime = Date.now();
 
                         // Cover the case 8 hours before class starts
-                        const hoursDifference = (lessonDateTime.getTime() - currentTime) / (1000 * 60 * 60); // Difference in hours
+                        const hoursDifference =
+                            (lessonDateTime.getTime() - currentTime) /
+                            (1000 * 60 * 60); // Difference in hours
                         const isWithin8Hours = hoursDifference < 8;
 
-                        const lessonIsPassed = lessonDateTime.getTime() < currentTime;
+                        const lessonIsPassed =
+                            lessonDateTime.getTime() < currentTime;
                         // Payment Term & Price
                         const paymentTerm = document.getElementById(
                             "paymentTermContainer"
@@ -129,6 +132,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                         }
 
+                        const capacity = lesson.capacity;
+                        const registeredStudents = lesson.registered_students;
+                        const availableSpots = capacity - registeredStudents;
+
                         document.getElementById("lessonTitle").textContent =
                             lesson.title;
                         document.getElementById("lessonCategory").textContent =
@@ -137,12 +144,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             lesson.schedule;
                         document.getElementById("lessonDuration").textContent =
                             lesson.duration;
-                        document.getElementById("lessonCapacity").textContent =
-                            lesson.capacity;
                         document.getElementById(
-                            "lessonRegisteredStudents"
-                        ).textContent = lesson.registered_students;
-                    
+                            "availableSpots"
+                        ).textContent = `${availableSpots} (Enrolled: ${registeredStudents}/${capacity})`;
+
                         document.getElementById(
                             "lessonDescription"
                         ).textContent = lesson.description;
@@ -155,8 +160,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         const joinForm = document.getElementById("joinForm");
                         const cancelForm =
                             document.getElementById("cancelForm");
-                        const cancelWarning = document.getElementById("cancelWarning");
-                        const cancelButton = cancelForm.querySelector("button[type='submit']");
+                        const cancelWarning =
+                            document.getElementById("cancelWarning");
+                        const cancelButton = cancelForm.querySelector(
+                            "button[type='submit']"
+                        );
 
                         if (lessonPassedMessage)
                             lessonPassedMessage.style.display = lessonIsPassed
@@ -175,13 +183,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                 : "none";
 
                         //Disable cancelation 8 hours before starting time
-                        if (!lessonIsPassed && isWithin8Hours && lesson.user_is_registered) {
-                                cancelButton.disabled = true;
-                                cancelWarning.style.display = "block";
-                            } else {
-                                cancelButton.disabled = false;
-                                cancelWarning.style.display = "none";
-                            }                
+                        if (
+                            !lessonIsPassed &&
+                            isWithin8Hours &&
+                            lesson.user_is_registered
+                        ) {
+                            cancelButton.disabled = true;
+                            cancelWarning.style.display = "block";
+                        } else {
+                            cancelButton.disabled = false;
+                            cancelWarning.style.display = "none";
+                        }
 
                         // Admin edit button
                         const editBtn = document.getElementById("editButton");
@@ -229,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             creditBtn.setAttribute("href", urlWithLesson);
                         }
-                        
+
                         // Workshop Join Button
                         const savedContainerStyle = stdBtnContainer
                             ? { ...stdBtnContainer.style }
@@ -246,10 +258,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             );
 
                             workshopButtonContainer.setAttribute(
-                                'href',
+                                "href",
                                 `/join-class/${lesson.id}`
-                            )
-                            
+                            );
+
                             const joinWkspBtn = document.createElement("div");
                             joinWkspBtn.setAttribute(
                                 "class",

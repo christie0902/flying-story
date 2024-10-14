@@ -87,18 +87,12 @@
                         </div>
                         <hr>
 
-                        <!-- Capacity -->
+                        <!-- Available Spots -->
                         <div class="mb-2">
-                            <h6 class="fw-bold sub-title">Capacity</h6>
-                            <p id="lessonCapacity"></p>
+                            <h6 class="fw-bold sub-title">Available Spots</h6>
+                            <p id="availableSpots"></p>
                         </div>
                         <hr>
-
-                        <!-- Registered Students -->
-                        <div class="mb-2">
-                            <h6 class="fw-bold sub-title">Reserved Students</h6>
-                            <p id="lessonRegisteredStudents"></p>
-                        </div>
                     </div>
                 </div>
 
