@@ -51,7 +51,7 @@ class StudentController extends Controller
         $request->validate([
             'credits' => 'required|integer|min:0',
             'credits_purchased_date' => 'required|date',
-            'valid_date' => 'required|date|after_or_equal:credits_purchased_date', // Ensure valid date is after or equal to purchased date
+            'valid_date' => 'required|date|after_or_equal:credits_purchased_date',
         ]);
 
         $user = User::findOrFail($id);

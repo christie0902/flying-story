@@ -145,7 +145,7 @@
 
                         <div class="form-group mt-3">
                             <label for="valid-date">Valid Date</label>
-                            <input type="date" name="valid_date" id="valid-date" class="form-control">
+                            <input type="date" name="valid_date" id="valid-date" class="form-control" value="{{ now()->addDays(45)->format('Y-m-d') }}">
                         </div>
 
                         <button type="submit" class="btn btn-primary mt-3">Update Credits</button>
@@ -200,7 +200,7 @@
 
         const calculateValidDate = (purchaseDate) => {
             const date = new Date(purchaseDate);
-            date.setDate(date.getDate() + 30);
+            date.setDate(date.getDate() + 45);
             
             return date.toISOString().split('T')[0]; 
             // Return in YYYY-MM-DD format

@@ -90,7 +90,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         const lesson = data.lesson;
 
                         const lessonDateTime = new Date(lesson.schedule);
-                        const lessonIsPassed = lessonDateTime < Date.now();
+                        const currentTime = Date.now();
+
+                        // Cover the case 8 hours before class starts
+                        const hoursDifference = (lessonDateTime.getTime() - currentTime) / (1000 * 60 * 60); // Difference in hours
+                        const isWithin8Hours = hoursDifference < 8;
+
+                        const lessonIsPassed = lessonDateTime.getTime() < currentTime;
                         // Payment Term & Price
                         const paymentTerm = document.getElementById(
                             "paymentTermContainer"
@@ -149,6 +155,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         const joinForm = document.getElementById("joinForm");
                         const cancelForm =
                             document.getElementById("cancelForm");
+                        const cancelWarning = document.getElementById("cancelWarning");
+                        const cancelButton = cancelForm.querySelector("button[type='submit']");
 
                         if (lessonPassedMessage)
                             lessonPassedMessage.style.display = lessonIsPassed
@@ -165,6 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                 : lesson.user_is_registered
                                 ? "block"
                                 : "none";
+
+                        //Disable cancelation 8 hours before starting time
+                        if (!lessonIsPassed && isWithin8Hours && lesson.user_is_registered) {
+                                cancelButton.disabled = true;
+                                cancelWarning.style.display = "block";
+                            } else {
+                                cancelButton.disabled = false;
+                                cancelWarning.style.display = "none";
+                            }                
 
                         // Admin edit button
                         const editBtn = document.getElementById("editButton");

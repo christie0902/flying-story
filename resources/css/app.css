@@ -156,3 +156,23 @@ body {
 .workshop-button {
   text-decoration: none;
 }
+
+@media (min-width: 992px) { /* For large screens */
+  .custom-modal-width .modal-dialog {
+      max-width: 1000px;
+  }
+}
+
+@media (max-height: 900px) { /* Target MacBook and similar smaller screens */
+  .custom-modal-height .modal-content {
+      max-height: 90vh;
+      overflow-y: auto;
+  }
+}
+
+/* For even smaller screens (e.g. tablets in landscape) */
+@media (max-height: 700px) { 
+  .custom-modal-height .modal-content {
+      max-height: 70vh;
+  }
+}
