@@ -58,6 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         '<span class="badge bg-light text-dark w-md-50 d-block mx-auto my-1">Enrolled</span>';
                 }
                 // Set inner HTML
+                let capacityColorClass =
+                    registeredStudents >= capacity ? "text-success" : "";
                 info.el.innerHTML = `
                     <div class="event-content">
                         <b>${time} ${categoryName} ${
@@ -65,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ? '<span style="color: rgb(235 104 100);">(Canceled)</span>'
                         : ""
                 }</b>
-                        <span class="capacity-info">(Spots: ${registeredStudents}/${capacity})</span>
+                        <span class="capacity-info ${capacityColorClass}">(Spots: ${registeredStudents}/${capacity})</span>
                         ${registrationLabel}
                     </div>
                 `;
@@ -162,9 +164,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             document.getElementById("cancelForm");
                         const cancelWarning =
                             document.getElementById("cancelWarning");
-                        const cancelButton = cancelForm.querySelector(
-                            "button[type='submit']"
-                        );
 
                         if (lessonPassedMessage)
                             lessonPassedMessage.style.display = lessonIsPassed
@@ -183,16 +182,38 @@ document.addEventListener("DOMContentLoaded", function () {
                                 : "none";
 
                         //Disable cancelation 8 hours before starting time
-                        if (
-                            !lessonIsPassed &&
-                            isWithin8Hours &&
-                            lesson.user_is_registered
-                        ) {
-                            cancelButton.disabled = true;
-                            cancelWarning.style.display = "block";
+                        if (cancelForm) {
+                            const cancelButton = cancelForm.querySelector(
+                                "button[type='submit']"
+                            );
+                            if (
+                                !lessonIsPassed &&
+                                isWithin8Hours &&
+                                lesson.user_is_registered
+                            ) {
+                                if (cancelButton) cancelButton.disabled = true;
+                                cancelWarning.style.display = "block";
+                            } else {
+                                if (cancelButton) cancelButton.disabled = false;
+                                cancelWarning.style.display = "none";
+                            }
+                        }
+                        // Full lesson
+                        const fullMessage =
+                            document.getElementById("joinWarning");
+                        if (registeredStudents >= capacity) {
+                            if (joinForm)
+                                joinForm.querySelector(
+                                    "button[type='submit']"
+                                ).disabled = true;
+                            if (fullMessage)
+                                fullMessage.style.display = "block";
                         } else {
-                            cancelButton.disabled = false;
-                            cancelWarning.style.display = "none";
+                            if (joinForm)
+                                joinForm.querySelector(
+                                    "button[type='submit']"
+                                ).disabled = false;
+                            if (fullMessage) fullMessage.style.display = "none";
                         }
 
                         // Admin edit button

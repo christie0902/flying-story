@@ -111,29 +111,32 @@
                 {{-- VALID CREDITS --}}
                     @if($credits > 0 && $expirationDate > now())
                         <p class="text-primary">Remaining credits: {{ $credits }}</p>
+
                     <!-- Join and Cancel buttons -->
                          {{-- Join Button Form --}}
+                         <p id="joinWarning" style="display: none;" class="text-info">
+                            This class is full. Please register another class or contact us for more information.
+                        </p>
                          <form id="joinForm" action="" method="POST">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                             <input type="hidden" name="lesson_id" id="joinLessonId">
                             <button type="submit" class="btn btn-primary px-5" onclick="return confirm('Do you want to use 1 credit to join this class?')">Join</button>
                         </form>
-
                         {{-- Cancel Button Form (Initially Hidden) --}}
                         <form id="cancelForm" action="" method="POST" style="display: none;">
                             @csrf
                             @method('POST')
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                             <input type="hidden" name="lesson_id" id="cancelLessonId">
-                            <button type="submit" class="btn btn-warning px-5" onclick="return confirm('Are you sure you want to cancel? You will receive 1 credit back.')">Cancel Registration</button>
+                            <button type="submit" class="btn btn-warning px-5 text-dark" onclick="return confirm('Are you sure you want to cancel? You will receive 1 credit back.')">Cancel Registration</button>
                         </form>
 
                 {{-- CANNOT CANCEL --}}
                         {{-- Warning for canceling within 8 hours --}}
                         <div class="d-flex flex-column align-items-center">
-                            <p id="cancelWarning" style="display: none;" class="text-danger">
-                                You can't cancel this class 8 hours before it starts.</br>Please contact us if you have any questions.
+                            <p id="cancelWarning" style="display: none;" class="text-danger mt-1">
+                                You can't cancel this class 8 hours before the class starts. Please contact us if you have any questions.
                             </p>
                         </div>
 
@@ -149,7 +152,7 @@
                         </form>
                          {{-- Warning for canceling within 8 hours --}}
                          <p id="cancelWarning" style="display: none;" class="text-danger">
-                            You can't cancel this class 8 hours before it starts. Please contact us if you have any questions.
+                            You can't cancel this class 8 hours before the class starts. Please contact us if you have any questions.
                         </p>
                         <p class="text-primary text-center">You have no credits.</br>Please purchase credits to register for classes.</p>
                         <a href="" id="buyCreditsButton" ><button class="btn btn-primary px-5">Buy Credits</button></a>
