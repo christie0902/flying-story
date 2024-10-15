@@ -52,11 +52,21 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
-    public function transactions() {
+    public function transactions()
+    {
         return $this->hasMany(Transaction::class);
     }
 
-    public function classRegistrations() {
+    public function classRegistrations()
+    {
         return $this->hasMany(LessonRegistration::class);
+    }
+
+    public function recentRegistrations()
+    {
+        return $this->hasMany(LessonRegistration::class)
+            ->with('lesson')
+            ->orderBy('registration_date', 'desc')
+            ->limit(10);
     }
 }

@@ -57,7 +57,14 @@
                            data-credits="{{ $student->profile->credits ?? 'N/A' }}"
                            data-credits-purchased="{{ $student->profile->credits_purchased_date ? \Carbon\Carbon::parse($student->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}"
                            data-valid-date="{{ $student->profile->valid_date ? \Carbon\Carbon::parse($student->profile->valid_date)->format('Y-m-d') : 'N/A' }}"
-                           data-payment-variable="{{ $student->profile->payment_variable ?? 'N/A' }}">
+                           data-payment-variable="{{ $student->profile->payment_variable ?? 'N/A' }}"
+                           data-recent-classes="{{ json_encode($student->classRegistrations->map(function($registration) {
+                            return [
+                                'lesson_name' => $registration->lesson->title ?? 'Unknown Class',
+                                'lesson_schedule' => $registration->lesson->formatted_schedule ?? 'No Schedule',
+                                'lesson_id' => $registration->lesson->id
+                            ];
+                        })) }}">
                            {{ $student->name }}
                         </a>
                     </td>
@@ -172,6 +179,14 @@
                 <div class="mb-3 border-top pt-3">
                     <p><strong>Payment Variable:</strong> <span id="modal-payment-variable"></span></p>
                 </div>
+
+                {{-- Recent classes --}}
+                <div class="mb-3 border-top pt-3">
+                    <h5>Recent Classes</h5>
+                    <ul id="modal-recent-classes" class="list-group">
+                    </ul>
+                </div>
+
                 <form id="delete-account-form" method="POST" action="" style="display: inline;">
                     @csrf
                     @method('DELETE')
@@ -223,6 +238,7 @@
                 const creditsPurchased = student.getAttribute('data-credits-purchased');
                 const validDate = student.getAttribute('data-valid-date');
                 const paymentVariable = student.getAttribute('data-payment-variable');
+                const recentClasses = JSON.parse(student.getAttribute('data-recent-classes'));
 
                 // Populate the modal with the student's details
                 document.getElementById('modal-student-name').textContent = name;
@@ -240,6 +256,32 @@
 
                 form.action = `/admin/students/${id}/update-credits`;
                 editValidDateForm.action = `/admin/students/${id}/extend-valid-date`;
+
+                // Recent class
+                const recentClassesList = document.getElementById('modal-recent-classes');
+                recentClassesList.innerHTML = '';
+                if (recentClasses.length > 0) {
+                    recentClasses.forEach(classData => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+                        const lessonLink = document.createElement('a');
+                        lessonLink.href = `/admin/lessons/show/${classData.lesson_id}`;
+                        lessonLink.textContent = classData.lesson_name;
+                        lessonLink.className = 'text-decoration-none';
+                        li.appendChild(lessonLink);
+                        const scheduleSpan = document.createElement('span');
+                        scheduleSpan.className = 'badge badge-primary badge-pill text-dark';
+                        scheduleSpan.textContent = classData.lesson_schedule;
+                        li.appendChild(scheduleSpan);
+
+                        recentClassesList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'No recent confirmed classes found.';
+                    recentClassesList.appendChild(li);
+                }
 
                 const bootstrapModal = new bootstrap.Modal(modal);
                 bootstrapModal.show();

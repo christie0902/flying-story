@@ -14,7 +14,11 @@ class StudentController extends Controller
         $search = $request->input('search');
         $filter = $request->input('filter');
 
-        $query = User::with('profile');
+        $query = User::with(['profile', 'classRegistrations' => function ($query) {
+            $query->where('confirmation_status', 'Confirmed')
+                  ->orderBy('registration_date', 'desc')
+                  ->take(10);
+        }, 'classRegistrations.lesson']);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
