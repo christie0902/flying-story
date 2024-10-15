@@ -89,4 +89,21 @@ class StudentController extends Controller
 
         return redirect()->back()->with('error', 'Profile not found.');
     }
+
+    public function destroy($id)
+    {
+        $student = User::findOrFail($id);
+
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            if ($student->profile) {
+                $student->profile()->delete();
+            }
+
+            $student->delete();
+
+            return redirect()->route('students.index')->with('success', 'Student account deleted successfully.');
+        }
+
+        return redirect()->route('students.index')->with('error', 'You do not have permission to delete this account.');
+    }
 }

@@ -172,6 +172,11 @@
                 <div class="mb-3 border-top pt-3">
                     <p><strong>Payment Variable:</strong> <span id="modal-payment-variable"></span></p>
                 </div>
+                <form id="delete-account-form" method="POST" action="" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger mt-2" id="delete-account-btn" onclick="return confirm('Warning: Are you sure you want to delete this student account? All data, including credits and class history, will be permanently removed.')">Delete Student's Account</button>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -229,9 +234,12 @@
                 extendValidInput.value=validDate;
                 document.getElementById('modal-payment-variable').textContent = paymentVariable;
 
+                // Account Delete
+                const deleteAccountForm = document.getElementById('delete-account-form');
+                deleteAccountForm.action = `/admin/students/delete/${id}`;
+
                 form.action = `/admin/students/${id}/update-credits`;
                 editValidDateForm.action = `/admin/students/${id}/extend-valid-date`;
-
 
                 const bootstrapModal = new bootstrap.Modal(modal);
                 bootstrapModal.show();

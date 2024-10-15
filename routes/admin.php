@@ -36,7 +36,9 @@ Route::group(['middleware' => 'can:admin'], function () {
     //Student
     Route::put('/students/{id}/update-credits', [StudentController::class, 'updateCredits'])->name('students.updateCredits');
     route::put('/students/{id}/extend-valid-date', [StudentController::class, 'extendValidDate'])->name('students.extendValidDate');
+    Route::delete('/students/delete/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+
 
     //Payment
     Route::get('/payment-info', [PaymentInfoController::class, 'index'])->name('payment.info.index');
