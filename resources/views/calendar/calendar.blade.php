@@ -92,10 +92,62 @@
                             <h6 class="fw-bold sub-title">Available Spots</h6>
                             <p id="availableSpots"></p>
                         </div>
-                        <hr>
+
                     </div>
                 </div>
 
+                 {{-- Cancellation and Payment Policies Section --}}
+                 <div class="mt-4" style="display: none;" id="class-policy">
+                    <!-- Button to toggle the policies section -->
+                    <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover policy-link" data-bs-toggle="collapse" data-bs-target="#policiesCollapse" aria-expanded="false" aria-controls="policiesCollapse">
+                        See Class Policies
+                    </a>
+                
+                    <!-- Policies section -->
+                    <div class="collapse mt-3" id="policiesCollapse">
+                        <div class="bg-light border rounded p-3">
+                            <div class="row">
+                                <!-- Class Packages -->
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold sub-title">Class Packages:</h6>
+                                    <ul class="list-unstyled">
+                                        <li>4 Classes: 1100 CZK (valid for 45 days)</li>
+                                        <li>8 Classes: 2000 CZK (valid for 60 days)</li>
+                                    </ul>
+                                </div>
+                                <!-- Cancellation Policy -->
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold sub-title">Cancellation Policy:</h6>
+                                    <ul class="list-unstyled">
+                                        <li>Cancellations must be made at least 8 hours before the class.</li>
+                                    </ul>
+                                </div>
+                                <!-- Credit Validity -->
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold sub-title">Credit Validity:</h6>
+                                    <ul class="list-unstyled">
+                                        <li>After expiration, classes can be extended for 1 month at 100 CZK per class.</li>
+                                    </ul>
+                                </div>
+                                <!-- Minimum Enrollment -->
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold sub-title">Minimum Enrollment:</h6>
+                                    <ul class="list-unstyled">
+                                        <li>A minimum of 2 students is required to open a class.</li>
+                                    </ul>
+                                </div>
+                                <!-- Payment Methods -->
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold sub-title">Payment Methods:</h6>
+                                    <ul class="list-unstyled">
+                                        <li>Payments can be made in cash or via bank transfer.</li>
+                                        <li>First-time students must complete the bank transfer before the class.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
              
     {{-- User Role and Credit Status Logic --}}
 

@@ -124,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         document.getElementById(
                                             "price"
                                         ).textContent = "1 credit";
+                                        
                                     } else {
                                         document.getElementById(
                                             "price"
@@ -132,6 +133,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                     }
                                 }
                             }
+                        }
+
+                        // Display Policies
+                        const policyContainer = document.getElementById(
+                            "class-policy"
+                        );
+                        if (policyContainer && lesson.payment_info && lesson.payment_info.type === "credits") {
+                            policyContainer.style.display = "block";
+                        } else {
+                            policyContainer.style.display = "none";
                         }
 
                         const capacity = lesson.capacity;

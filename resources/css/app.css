@@ -178,3 +178,7 @@ body {
       max-height: 70vh;
   }
 }
+
+.policy-link {
+  font-weight: 500;
+}
