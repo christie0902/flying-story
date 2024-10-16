@@ -42,7 +42,7 @@
         <div class="modal-content">
             <div class="modal-header flex-column align-items-start">
                 <!-- Full-width image on top of the title -->
-                <img src="" alt="details-cover" class="img-fluid rounded-top w-100 mb-3" style="max-height: 400px; object-fit: cover;" id='class-coverImg'>
+                <img src="" alt="details-cover" class="img-fluid rounded-top w-100 mb-3" style="max-height: 320px; object-fit: cover;" id='class-coverImg'>
                 
                 <h5 class="modal-title page-title" id="lessonDetailsLabel">Class Details</h5>
             </div>
@@ -124,7 +124,7 @@
                                 </div>
                                 <!-- Credit Validity -->
                                 <div class="col-md-4 mb-3">
-                                    <h6 class="fw-bold sub-title">Credit Validity:</h6>
+                                    <h6 class="fw-bold sub-title">Credit Validity Extension:</h6>
                                     <ul class="list-unstyled">
                                         <li>After expiration, classes can be extended for 1 month at 100 CZK per class.</li>
                                     </ul>
@@ -217,9 +217,12 @@
                 </div>
 
                 {{-- WORKSHOP --}}
-                <a class="workshop-button"></a>
-               @endif
-               {{-- Workshop button element --}}
+                <div class="workshop-button"></div>
+                {{-- Workshop button element --}}
+                <div class="d-flex justify-content-center">
+                    <p class="additional-info "></p>
+                </div>
+                @endif
                
            @else
                {{-- NOT LOGGED IN --}}

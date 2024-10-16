@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then((response) => response.json())
                     .then((data) => {
                         const lesson = data.lesson;
-                        console.log(lesson.img_url)
+                        //console.log(lesson.img_url)
                         const lessonDateTime = new Date(lesson.schedule);
                         const currentTime = Date.now();
 
@@ -142,11 +142,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         const policyContainer = document.getElementById(
                             "class-policy"
                         );
+
                         if (policyContainer && lesson.payment_info && lesson.payment_info.type === "credits") {
                             policyContainer.style.display = "block";
                         } else {
                             policyContainer.style.display = "none";
                         }
+                      
 
                         const capacity = lesson.capacity;
                         const registeredStudents = lesson.registered_students;
@@ -213,21 +215,25 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                         }
                         // Full lesson
-                        const fullMessage =
+                        const fullJoinWarning =
                             document.getElementById("joinWarning");
-                        if (registeredStudents >= capacity) {
+                        if (
+                            (registeredStudents >= capacity) &&
+                            !lessonIsPassed && 
+                            !lesson.user_is_registered
+                        ) {
                             if (joinForm)
                                 joinForm.querySelector(
                                     "button[type='submit']"
                                 ).disabled = true;
-                            if (fullMessage)
-                                fullMessage.style.display = "block";
+                            if (fullJoinWarning)
+                                fullJoinWarning.style.display = "block";
                         } else {
                             if (joinForm)
                                 joinForm.querySelector(
                                     "button[type='submit']"
                                 ).disabled = false;
-                            if (fullMessage) fullMessage.style.display = "none";
+                            if (fullJoinWarning) fullJoinWarning.style.display = "none";
                         }
 
                         // Admin edit button
@@ -281,6 +287,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         const savedContainerStyle = stdBtnContainer
                             ? { ...stdBtnContainer.style }
                             : {};
+                        
+                        const additionalInfo = document.querySelector('.additional-info');
+                        if (additionalInfo) additionalInfo.style.display = 'none';
 
                         if (
                             lesson.category.toLowerCase() === "workshop" &&
@@ -292,21 +301,35 @@ document.addEventListener("DOMContentLoaded", function () {
                                 "workshop-button d-flex justify-content-center"
                             );
 
-                            workshopButtonContainer.setAttribute(
-                                "href",
-                                `/join-class/${lesson.id}`
-                            );
-
-                            const joinWkspBtn = document.createElement("div");
+                            const joinWkspBtn = document.createElement("a");
                             joinWkspBtn.setAttribute(
                                 "class",
                                 "btn btn-primary px-5"
                             );
-                            joinWkspBtn.innerText = "Join Class";
+                            
                             workshopButtonContainer.appendChild(joinWkspBtn);
                             stdBtnContainer.setAttribute(
                                 "style",
                                 "display: none !important"
+                            );
+
+                            if (lesson.user_is_registered){
+                                joinWkspBtn.innerText = "Enrolled";
+                                joinWkspBtn.classList.add('disabled')
+                                joinWkspBtn.style.marginTop = "5px";
+                                additionalInfo.style.display = 'block';
+                                additionalInfo.style.marginTop = "5px";
+                                additionalInfo.innerText = 'You have signed up for this workshop. Please contact us if you would like to cancel.'
+
+                            } else {
+                                joinWkspBtn.innerText = "Join Class";
+                                joinWkspBtn.classList.remove('disabled');
+                                joinWkspBtn.style.marginTop = "5px";
+                            }
+
+                            joinWkspBtn.setAttribute(
+                                "href",
+                                `/join-class/${lesson.id}`
                             );
                         }
 
