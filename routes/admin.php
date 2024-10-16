@@ -6,6 +6,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PaymentInfoController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,11 @@ Route::group(['middleware' => 'can:admin'], function () {
 
     //Transaction
     Route::put('/transactions/{transaction_id}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+
+    //Categories
+    Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
 });
 
 

@@ -168,6 +168,46 @@
         Page {{ $lessons->currentPage() }} of {{ $lessons->lastPage() }}
     </div>
 </div>
+
+<h2 class="page-title">Categories Management</h1>
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Background Color</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if ($categories->isEmpty())
+            <tr>
+                <td colspan="4" class="text-center">No categories found</td>
+            </tr>
+        @else
+            @foreach ($categories as $category)
+                <tr>
+                    <td>{{ $category->name }}</td>
+                    <td>
+                        <span style="display:inline-block; width: 20px; height: 20px; background-color: {{ $category->bg_color }};"></span> <span>{{ $category->bg_color }}</span>
+                    </td>
+                    <td>{{ $category->img_url }}</td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-secondary me-2">Edit</a>
+
+                            <form action="{{ route('categories.delete', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
+    </tbody>
+</table>
 @endsection
 
 @section('scripts')
