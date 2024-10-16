@@ -42,7 +42,7 @@
         <div class="modal-content">
             <div class="modal-header flex-column align-items-start">
                 <!-- Full-width image on top of the title -->
-                <img src="\detail-cover.jfif" alt="details-cover" class="img-fluid rounded-top w-100 mb-3" style="max-height: 200px; object-fit: cover;">
+                <img src="" alt="details-cover" class="img-fluid rounded-top w-100 mb-3" style="max-height: 400px; object-fit: cover;" id='class-coverImg'>
                 
                 <h5 class="modal-title page-title" id="lessonDetailsLabel">Class Details</h5>
             </div>

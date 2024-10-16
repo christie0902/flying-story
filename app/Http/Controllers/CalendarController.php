@@ -6,23 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\Category;
 use App\Models\LessonRegistration;
+use Illuminate\Support\Facades\Log;
 
 class CalendarController extends Controller
 {
     public function loadLessons(Request $request)
     {
         $userId = auth()->id();
-        $categoryColors = [
-            'Aerial Yoga' => '#f5e5e5',
-            'Fly High' => '#f5e5e5',
-            'Hammock Dance' => '#f5e5e5',
-            'Workshop' => '#f6d8cf',
-            'Aerial Ballet'  => '#c8b2b2',
-            'Aerial Hoop' => '#f0ece3',
-            'Yoga Wheel' => '#ede9e6',
-            'Private Lesson' => '#ece3df',
-            'Online yoga wheel' =>'#f8f5f5'
-        ];
 
         $selectedCategory = $request->query('category');
 
@@ -37,7 +27,7 @@ class CalendarController extends Controller
             ->get()
             ->keyBy('lesson_id');
 
-        $events = $lessons->map(function ($lesson) use ($categoryColors, $registrations) {
+        $events = $lessons->map(function ($lesson) use ($registrations) {
             $dateTime = new \DateTime($lesson->schedule);
 
             // Format the time
@@ -51,14 +41,14 @@ class CalendarController extends Controller
                 'title' => $lesson->category->name,
                 'start' => $lesson->schedule,
                 'formattedTime' => $formattedTime,
-                'eventBgColor' => $categoryColors[$lesson->category->name] ?? '#ffefea',
+                'eventBgColor' => $lesson->category->bg_color ?? '#ffefea',
                 'status' => $lesson->status,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,
                 'userRegistrationStatus' => $registrationStatus,
             ];
         });
-
+        // Log::info('Events Data:', $events->toArray());
         return response()->json($events);
     }
 
@@ -111,6 +101,7 @@ class CalendarController extends Controller
                 'status' => $lesson->status,
                 'description' => $lesson->description,
                 'user_is_registered' => $userIsRegistered,
+                'img_url' => $lesson->category->img_url ?? 'detail-cover.jfif', 
             ],
             'user' => $userProfile ? [
                 'credits' => $userProfile->credits,

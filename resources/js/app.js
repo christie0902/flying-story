@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then((response) => response.json())
                     .then((data) => {
                         const lesson = data.lesson;
-
+                        console.log(lesson.img_url)
                         const lessonDateTime = new Date(lesson.schedule);
                         const currentTime = Date.now();
 
@@ -134,6 +134,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 }
                             }
                         }
+                        // Lesson Cover Img
+                        const coverImgElement = document.getElementById('class-coverImg');
+                        coverImgElement.src = lesson.img_url; //can also set default image here
 
                         // Display Policies
                         const policyContainer = document.getElementById(
