@@ -8,29 +8,21 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     // Add Category
-    public function add($request)
+    public function add(Request $request)
     {
         
         $request->validate([
             'name' => 'required|string|max:255',
-            'bg_color' => 'required|string',
-            'img_url' => 'required|url',
+            'bg_color' => 'string|nullable',
+            'img_url' => 'string|nullable',
         ], [
            'name.required' => 'A name is required.',
-            'bg_color.required' => 'A color is required.',
-            'img_url.required' => 'An image is required.',
-
-
-            'name.string' => 'The name must be a string of alpha-numeric characters.',
-            'bg_color.string' => 'The background color must be a string of alphanumeric charcters eg. #ff2200.',
-            'img_url.string' => 'The image URL must be a string of alphanumeric characters formatted into a URL.',
-            
             'name.max' => 'The name may not be greater than 255 characters.',
             'img_url.max' => 'The image URL may not be greater than 255 characters.',
         ]);
 
         Category::create($request->all());
-        return redirect()->route('categories.create')->with('success', 'Category added successfully!');
+        return redirect()->route('lessons.lessonList')->with('success', 'Category added successfully!');
     }
 
     // Edit Category
