@@ -53,6 +53,7 @@ Route::group(['middleware' => 'can:admin'], function () {
     Route::put('/transactions/{transaction_id}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
 
     //Categories
+    Route::get('/categories/add/', [CategoryController::class, 'add'])->name('categories.add');
     Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
