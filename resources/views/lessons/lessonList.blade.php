@@ -170,8 +170,8 @@
 </div>
 
 <h2 class="page-title">Categories Management</h1>
-    <a href="{{ route('categories.create') }}" class="btn btn-primary my-3">Add New Class</a>
-    
+    <a href="{{ route('categories.create') }}" class="btn btn-primary my-3">Add New Category</a>
+
     <table class="table mt-4">
         <thead>
             <tr>
