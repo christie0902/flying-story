@@ -143,8 +143,10 @@ class LessonController extends Controller
                 $this->createOccurrences($lesson, $validated['recurrence_option'], $validated['end_date']);
             } else {
                 $lesson->recurrence_option = null;
-                $lesson->recurrence_id = null;
+                $lesson->recurrence_id = uniqid();
             }
+            
+            $lesson->save();
 
             DB::commit();
 
