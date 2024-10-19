@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Checkbox to edit the entire series -->
-                @if($lesson->recurrence_id)
+                @if($relatedLessons->isNotEmpty())
                 <div class="form-group">
                     <label class="form-label">
                         <input type="checkbox" name="edit_all_recurrence" value="1">

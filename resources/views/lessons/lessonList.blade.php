@@ -217,7 +217,7 @@
 
             if (singleDeleteConfirm) {
                 if (recurrenceId) {
-                    deleteAll = confirm('This lesson is part of a recurring series. Delete all lessons in this series? Only this lesson will be deleted if you click "No"');
+                    deleteAll = confirm('This lesson is part of a recurring series. Delete all lessons in this series? Only this lesson will be deleted if you click "Cancel"');
                 }
 
                 const form = event.target;

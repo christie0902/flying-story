@@ -88,7 +88,7 @@ class StudentController extends Controller
             $profile->valid_date = $request->input('valid_date');
             $profile->save();
 
-            return redirect()->back()->with('success', "Valid date for {$user->name} has been extended to {$profile->valid_date}.");
+            return redirect()->back()->with('success', "Valid date for {$user->name} has been changed to {$profile->valid_date}.");
         }
 
         return redirect()->back()->with('error', 'Profile not found.');
