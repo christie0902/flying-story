@@ -88,6 +88,14 @@
                             <h6 class="fw-bold sub-title">Available Spots</h6>
                             <p id="availableSpots"></p>
                         </div>
+                        <hr>
+
+                        {{-- Price --}}
+                        <div class="mb-2">
+                            <h6 class="fw-bold sub-title">Price</h6>
+                            <p id="priceContainer"></p>
+                        </div>
+
 
                     </div>
                 </div>

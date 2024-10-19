@@ -42,12 +42,12 @@
 
                 <div class="form-group">
                     <label class="form-label">Title</label>
-                    <textarea name="title" class="form-control" required></textarea>
+                    <input name="title" class="form-control" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea name="description" class="form-control" required></textarea>
+                    <textarea name="description" class="form-control" rows="5" required></textarea>
                 </div>
 
                 <div class="form-group">

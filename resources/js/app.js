@@ -102,37 +102,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         const lessonIsPassed =
                             lessonDateTime.getTime() < currentTime;
-                        // Payment Term & Price
-                        const paymentTerm = document.getElementById(
-                            "paymentTermContainer"
-                        );
+
+                        // PRICE DISPLAY
                         const price = document.getElementById("priceContainer");
-                        if (paymentTerm && price) {
-                            if (lesson.payment_info) {
-                                paymentTerm.style.display = "block";
-
-                                document.getElementById(
-                                    "paymentTerm"
-                                ).textContent = lesson.payment_type;
-
-                                if (lesson.payment_info.price) {
-                                    price.style.display = "block";
-
+                        if (price) {
                                     if (
                                         lesson.payment_info.type === "credits"
                                     ) {
-                                        document.getElementById(
-                                            "price"
-                                        ).textContent = "1 credit";
+                                        price.textContent = 'By credit';
                                         
                                     } else {
-                                        document.getElementById(
-                                            "price"
-                                        ).textContent =
+                                        price.textContent =
                                             lesson.payment_info.price;
                                     }
-                                }
-                            }
                         }
                         // Lesson Cover Img
                         const coverImgElement = document.getElementById('class-coverImg');
