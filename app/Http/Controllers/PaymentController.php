@@ -72,12 +72,16 @@ class PaymentController extends Controller
     
             // If lesson_id is present, register for the class
             if ($request->lesson_id) {
+                $lesson = Lesson::find($request->lesson_id);
+
+                if ($lesson->totalRegisteredStudentsCount() < $lesson->capacity) {
                 LessonRegistration::create([
                     'user_id' => $request->user_id,
                     'lesson_id' => $request->lesson_id,
                     'registration_date' => now(),
                     'confirmation_status' => 'pending',
                 ]);
+            }
     
                 DB::commit();
             }
