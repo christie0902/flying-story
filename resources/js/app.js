@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ? '<span style="color: rgb(235 104 100);">(Canceled)</span>'
                         : ""
                 }</b>
-                        <span class="capacity-info ${capacityColorClass}">(Spots: ${registeredStudents}/${capacity})</span>
+                        <span class="capacity-info ${capacityColorClass}">(Joined: ${registeredStudents}/${capacity})</span>
                         ${registrationLabel}
                     </div>
                 `;
