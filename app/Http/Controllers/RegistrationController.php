@@ -19,7 +19,12 @@ class RegistrationController extends Controller
             $user = $registration->user;
             $lesson = $registration->lesson;
 
-            $this->handleRegistrationUpdate($request->confirmation_status, $user, $lesson, $registration);
+            $errorMessage = $this->handleRegistrationUpdate($request->confirmation_status, $user, $lesson, $registration);
+
+            if ($errorMessage) {
+                return redirect()->back()->with('error', $errorMessage);
+            }
+            
             $registration->confirmation_status = $request->confirmation_status;
             $registration->save();
 
@@ -40,7 +45,7 @@ class RegistrationController extends Controller
                     $user->profile->credits -= 1;
                     $user->profile->save();
                 } else {
-                    throw new \Exception('User has no credits to confirm the registration.');
+                    return '"Registration cannot be confirmed as the student currently has no available credits.';
                 }
             } elseif ($confirmationStatus === 'Canceled' || $confirmationStatus === 'Pending') {
                 if ($registration->confirmation_status === 'Confirmed') {
@@ -49,6 +54,7 @@ class RegistrationController extends Controller
                 }
             }
         }
+        return null;
     }
     // FUNCTION TO HANDLE REGISTERED STUDENTS
     private function updateRegisteredStudentsCount($lesson)

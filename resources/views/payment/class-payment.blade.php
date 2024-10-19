@@ -100,7 +100,9 @@
         <div id="lessonData" 
             data-lesson-id="{{ $lesson ? $lesson->id : 'null' }}" 
             data-lesson-title="{{ $lesson ? $lesson->title : 'null' }}" 
-            data-lesson-schedule="{{ $lesson ? $lesson->formatted_schedule : 'null' }}">
+            data-lesson-schedule="{{ $lesson ? $lesson->formatted_schedule : 'null' }}"
+            data-lesson-capacity="{{ $lesson ? $lesson->capacity : 'null' }}"
+            data-lesson-registered="{{ $lesson ? $lesson->totalRegisteredStudentsCount() : 'null' }}">
         </div>
     </div>
 @endsection
@@ -179,13 +181,21 @@ if (paymentOptionSelect) {
 document.getElementById('completePaymentButton').addEventListener('click', function () {
         const lessonData = document.getElementById('lessonData');
         const lessonId = lessonData.getAttribute('data-lesson-id');
+        const lessonCapacity = parseInt(lessonData.getAttribute('data-lesson-capacity'), 10);
+        const registeredStudents = parseInt(lessonData.getAttribute('data-lesson-registered'), 10);
         const detailText = document.getElementById('lessonDetailsText');
         const lessonTitle = lessonData.getAttribute('data-lesson-title');
         const lessonSchedule = lessonData.getAttribute('data-lesson-schedule');
         const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
         if (lessonId && lessonId !== 'null') {
-            if(detailText) {
-                detailText.textContent = `You will be automatically registered for the class: "${lessonTitle}" at ${lessonSchedule} after we confirm the transaction.`;
+            if (registeredStudents >= lessonCapacity) {
+                if(detailText) {
+                    detailText.textContent = `The class: "${lessonTitle}" at ${lessonSchedule} is full so you won't be registered automatically.`;
+                }
+            } else {
+                if(detailText) {
+                    detailText.textContent = `You will be automatically registered for the class: "${lessonTitle}" at ${lessonSchedule} after we confirm the transaction.`;
+                }
             }
         }
         confirmationModal.show();

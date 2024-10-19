@@ -1,6 +1,12 @@
 @extends('layout.layout')
 
 @section('content')
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="container mt-5">
     <h2 class="page-title text-center mb-4">Class Details: {{ $lesson->title }}</h2>
     <a href="{{ route('lessons.edit', $lesson->id) }}" class="btn btn-primary mb-4">Edit Class</a>
