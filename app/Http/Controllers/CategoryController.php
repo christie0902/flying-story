@@ -22,7 +22,7 @@ class CategoryController extends Controller
         ]);
 
         Category::create($request->all());
-        return redirect()->route('lessons.lessonList')->with('success', 'Category added successfully!');
+        return redirect()->route('lesson.list')->with('success', 'Category added successfully!');
     }
 
     // Edit Category
@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         return view('categories.edit', compact('category'));
-    }
+    } 
 
     // Update Category
     public function update(Request $request, $id)

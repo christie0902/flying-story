@@ -74,17 +74,16 @@ class PaymentController extends Controller
             if ($request->lesson_id) {
                 $lesson = Lesson::find($request->lesson_id);
 
-                if ($lesson->totalRegisteredStudentsCount() < $lesson->capacity) {
-                LessonRegistration::create([
-                    'user_id' => $request->user_id,
-                    'lesson_id' => $request->lesson_id,
-                    'registration_date' => now(),
-                    'confirmation_status' => 'pending',
-                ]);
+                    if ($lesson->totalRegisteredStudentsCount() < $lesson->capacity) {
+                    LessonRegistration::create([
+                        'user_id' => $request->user_id,
+                        'lesson_id' => $request->lesson_id,
+                        'registration_date' => now(),
+                        'confirmation_status' => 'pending',
+                    ]);
+                }
             }
-    
-                DB::commit();
-            }
+            DB::commit();
             return redirect()->route('calendar.show')->with('success', 'Thank you for your payment and registration. We will confirm the transaction as soon as possible.');
     
         } catch (\Exception $e) {
