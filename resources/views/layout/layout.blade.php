@@ -20,7 +20,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
         <div class="container-fluid p-2">
-            <a class="navbar-brand mt-1 ms-2" href="/">
+            <a class="navbar-brand mt-1 ms-2" href="https://flying-story.com/">
                 <img src="{{asset('logo.svg')}}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top mx-2">
                 Flying Story
             </a>
@@ -29,6 +29,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://flying-story.com/">Home</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route ('calendar.show')}}">Calendar</a>
                     </li>
