@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (additionalInfo) additionalInfo.style.display = 'none';
 
                         if (
-                            lesson.category.toLowerCase() === "workshop" &&
+                            lesson.payment_info.type !== "credits" &&
                             workshopButtonContainer &&
                             !lessonIsPassed
                         ) {
