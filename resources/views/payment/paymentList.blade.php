@@ -110,6 +110,7 @@
              <th>Price</th>
              <th>Payment Status</th>
              <th>Payment Date</th>
+             <th>Action</th>
          </tr>
      </thead>
      <tbody>
@@ -134,6 +135,13 @@
                     </form>
                  </td>
                  <td>{{ \Carbon\Carbon::parse($transaction->payment_date)->format('d M Y H:i') }}</td>
+                 <td>
+                    <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this transaction? This action cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
              </tr>
          @endforeach
      </tbody>

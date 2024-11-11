@@ -51,6 +51,8 @@ Route::group(['middleware' => 'can:admin'], function () {
 
     //Transaction
     Route::put('/transactions/{transaction_id}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+    Route::delete('/transactions/{transaction_id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+
 
     //Categories
     Route::get('/categories/add/', function () {
