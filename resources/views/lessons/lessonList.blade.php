@@ -71,7 +71,7 @@
                     <th>Category</th>
                     <th>Schedule</th>
                     <th>Confirmed Students</th>
-                    <th>Registered Students</th>
+                    <th>Pending Students</th>
                     <th>Status</th>
                     <th>Recurrence</th>
                     <th>Actions</th>
@@ -88,8 +88,12 @@
                     <td><a href="{{ route('lessons.details', $lesson->id) }}">{{ $lesson->title }}</a></td>
                     <td>{{ $lesson->category->name ?? 'No Category' }}</td>
                     <td>{{ $lesson->formatted_schedule }}</td>
-                    <td>{{ $lesson->confirmed_students_count }}</td> <!-- Confirmed Students -->
-                    <td>{{ $lesson->registrations()->count() }} / {{ $lesson->capacity }}</td> <!-- Registered Students -->
+                    <td class="text-center">{{ $lesson->confirmed_students_count }} / {{ $lesson->capacity }}</td> <!-- Confirmed Students -->
+                    <td class="text-center">
+                        <span style="{{ $lesson->pending_students_count > 0 ? 'color: red;' : '' }}">
+                            {{ $lesson->pending_students_count }}
+                        </span>
+                    </td> <!-- Pending Students -->
                     <td>{{ $lesson->status }}</td>
                     <td>{{ $lesson->recurrence_option ?? 'None' }}</td>
 

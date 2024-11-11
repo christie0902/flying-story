@@ -20,7 +20,15 @@ class LessonController extends Controller
         $month = $request->query('month', '');
         $category = $request->query('category', '');
 
-        $query = Lesson::query();
+        $query = Lesson::query()
+            ->withCount([
+                'registrations as confirmed_students_count' => function ($query) {
+                    $query->where('confirmation_status', 'Confirmed');
+                },
+                'registrations as pending_students_count' => function ($query) {
+                    $query->where('confirmation_status', 'Pending');
+                }
+            ]);
 
         if ($status !== 'all') {
             $query->where('status', $status);
@@ -34,9 +42,9 @@ class LessonController extends Controller
             $query->where('category_id', $category);;
         }
 
-        $lessons = $query->withCount(['registrations as confirmed_students_count' => function ($query) {
-            $query->where('confirmation_status', 'Confirmed');
-        }])->orderByDesc('schedule')->paginate(10);
+        $lessons = $query->orderByDesc('pending_students_count')
+        ->orderByDesc('schedule')
+        ->paginate(10);
 
         $categories = Category::all();
 
@@ -53,7 +61,7 @@ class LessonController extends Controller
     public function createLesson()
     {
         $categories = Category::all();
-        $paymentTypes = PaymentInfo::select('type')->distinct()->get(); 
+        $paymentTypes = PaymentInfo::select('type')->distinct()->get();
         return view('lessons.create', compact('categories', 'paymentTypes'));
     }
 
@@ -145,7 +153,7 @@ class LessonController extends Controller
                 $lesson->recurrence_option = null;
                 $lesson->recurrence_id = uniqid();
             }
-            
+
             $lesson->save();
 
             DB::commit();
@@ -271,7 +279,7 @@ class LessonController extends Controller
     {
         $lesson = Lesson::findOrFail($id);
         $categories = Category::all();
-        $paymentTypes = PaymentInfo::select('type')->distinct()->get(); 
+        $paymentTypes = PaymentInfo::select('type')->distinct()->get();
 
         $relatedLessons = Lesson::where('recurrence_id', $lesson->recurrence_id)
             ->where('id', '!=', $lesson->id)

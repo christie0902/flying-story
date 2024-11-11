@@ -91,6 +91,13 @@ class Lesson extends Model
                     ->count();
     }
 
+    public function pendingStudentsCount()
+    {
+        return $this->hasMany(LessonRegistration::class)
+                    ->where('confirmation_status', 'Pending')
+                    ->count();
+    }
+
     public function totalRegisteredStudentsCount()
     {
         return $this->hasMany(LessonRegistration::class)->count();
