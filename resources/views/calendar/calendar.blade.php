@@ -130,7 +130,7 @@
                                 <div class="col-md-4 mb-3">
                                     <h6 class="fw-bold sub-title">Credit Validity Extension:</h6>
                                     <ul class="list-unstyled">
-                                        <li>After expiration, classes can be extended for 1 month at 100 CZK per class.</li>
+                                        <li>After expiration, credits can be extended for 2 weeks for 100 CZK.</li>
                                     </ul>
                                 </div>
                                 <!-- Minimum Enrollment -->
