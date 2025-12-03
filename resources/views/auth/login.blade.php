@@ -33,6 +33,10 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                <label class="inline-flex items-center mt-3">
+                <input type="checkbox" name="remember" class="form-checkbox">
+                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                </label>
 
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
