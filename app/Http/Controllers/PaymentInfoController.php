@@ -43,7 +43,7 @@ class PaymentInfoController extends Controller
         }
 
         // Paginate the filtered transactions
-        $transactions = $transactionsQuery->paginate(10);
+        $transactions = $transactionsQuery->paginate(10)->withQueryString();
 
         return view('payment.paymentList', compact('paymentInfos', 'transactions', 'month', 'status', 'name', 'variableNumber'));
     }
