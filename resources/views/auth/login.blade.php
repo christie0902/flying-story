@@ -33,12 +33,13 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
                 <label class="inline-flex items-center mt-3">
                 <input type="checkbox" name="remember" class="form-checkbox">
                     <span class="ml-2 text-sm text-gray-600">Keep me logged in.</span>
                 </label>
 
-                <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
+                <button type="submit" class="btn btn-primary w-100 mt-2 mt-3">Login</button>
             </form>
             <p class=" pt-2">Don't have an account yet? <a href="{{Route('register')}}" class="text-primary">Register here</a></p>
         </div>

@@ -24,7 +24,7 @@ class TransactionController extends Controller
             if ($transaction->paymentInfo->type == 'credits') {
                 $profile->credits += $transaction->paymentInfo->amount_of_credits;
                 $profile->credits_purchased_date = now();
-                $profile->valid_date = now()->addDays(45);
+                $profile->valid_date = now()->addDays(60);
                 $profile->save();
                 $message = 'Transaction confirmed and credits added to the student\'s account.';
             } else {

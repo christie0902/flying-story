@@ -44,7 +44,8 @@ class LessonController extends Controller
 
         $lessons = $query->orderByDesc('pending_students_count')
         ->orderByDesc('schedule')
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString(); //keep the query on next page
 
         $categories = Category::all();
 

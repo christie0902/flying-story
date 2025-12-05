@@ -45,7 +45,7 @@ class StudentController extends Controller
                     break;
             }
         }
-        $students = $query->paginate(10);
+        $students = $query->paginate(10)->withQueryString();
 
         return view('students.list', compact('students', 'search', 'filter'));
     }
