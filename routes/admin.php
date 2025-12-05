@@ -15,7 +15,7 @@ use App\Http\Controllers\CategoryController;
 */
 
 
-Route::group(['middleware' => 'can:admin'], function () {
+Route::middleware(['auth', 'can:admin'])->group(function () {
     //Lesson routes
     Route::get('/lessons', [LessonController::class, 'loadLessons'])->name('lesson.list');
 
