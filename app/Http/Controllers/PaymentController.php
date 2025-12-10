@@ -71,16 +71,20 @@ class PaymentController extends Controller
             ]);
     
             // If lesson_id is present, register for the class
-            if ($request->lesson_id) {
-                $lesson = Lesson::find($request->lesson_id);
+            $alreadyRegistered = LessonRegistration::where('user_id', $request->user_id)
+            ->where('lesson_id', $lesson->id)
+            ->exists();
 
+                if (! $alreadyRegistered) {
+                    // 2) Check capacity before creating
                     if ($lesson->totalRegisteredStudentsCount() < $lesson->capacity) {
-                    LessonRegistration::create([
-                        'user_id' => $request->user_id,
-                        'lesson_id' => $request->lesson_id,
-                        'registration_date' => now(),
-                        'confirmation_status' => 'pending',
-                    ]);
+                        LessonRegistration::create([
+                            'user_id' => $request->user_id,
+                            'lesson_id' => $lesson->id,
+                            'registration_date' => now(),
+                            'confirmation_status' => 'pending',
+                        ]);
+                    }
                 }
             }
             DB::commit();
