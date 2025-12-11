@@ -88,6 +88,7 @@
                             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                             <input type="hidden" name="lesson_id" id="lessonIdInput">
                             <input type="hidden" name="payment_info_id" id="paymentInfoId" value="">
+                            <input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}">
                             <button type="submit" class="btn btn-primary">Confirm</button>
                         </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>

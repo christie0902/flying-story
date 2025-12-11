@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Models\PaymentInfo;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
@@ -27,8 +28,9 @@ class PaymentController extends Controller
 
         $user = auth()->user();
         $userProfile = $user->profile;
+        $idempotencyKey = (string) Str::uuid();
 
-        return view('payment.buy-credits', compact('paymentInfo', 'userProfile', 'lesson'));
+        return view('payment.buy-credits', compact('paymentInfo', 'userProfile', 'lesson', 'idempotencyKey'));
     }
 
     // OTHER PAYMENT TERMS
@@ -46,8 +48,9 @@ class PaymentController extends Controller
 
         $user = auth()->user();
         $userProfile = $user->profile;
+        $idempotencyKey = (string) Str::uuid();
 
-        return view('payment.class-payment', compact('paymentInfo', 'userProfile', 'lesson'));
+        return view('payment.class-payment', compact('paymentInfo', 'userProfile', 'lesson', 'idempotencyKey'));
     }
 
     // CONFIRM PAYMENT
@@ -56,27 +59,37 @@ class PaymentController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_info_id' => 'required|exists:payment_info,id',
-            'lesson_id' => 'nullable|exists:lessons,id', 
+            'lesson_id' => 'nullable|exists:lessons,id',
         ]);
     
         DB::beginTransaction();
     
         try {
-            // Store the transaction data
-            $transaction = Transaction::create([
-                'user_id' => $request->user_id,
-                'payment_info_id' => $request->payment_info_id,
-                'payment_status' => 'pending',
-                'payment_date' => now(),
-            ]);
+            // Store the transaction 
+            $transaction = Transaction::firstOrCreate(
+                ['idempotency_key' => $request->idempotency_key],
+                [
+                    'user_id' => $request->user_id,
+                    'payment_info_id' => $request->payment_info_id,
+                    'payment_status' => 'pending',
+                    'payment_date' => now(),
+                ]
+            );
+            
     
-            // If lesson_id is present, register for the class
-            $alreadyRegistered = LessonRegistration::where('user_id', $request->user_id)
-            ->where('lesson_id', $lesson->id)
-            ->exists();
-
+            // If a lesson ID is provided, attempt registration
+            if ($request->lesson_id) {
+    
+                $lesson = Lesson::findOrFail($request->lesson_id);
+    
+                // 1. Check for existing registration
+                $alreadyRegistered = LessonRegistration::where('user_id', $request->user_id)
+                    ->where('lesson_id', $lesson->id)
+                    ->exists();
+    
                 if (! $alreadyRegistered) {
-                    // 2) Check capacity before creating
+    
+                    // 2. Check capacity
                     if ($lesson->totalRegisteredStudentsCount() < $lesson->capacity) {
                         LessonRegistration::create([
                             'user_id' => $request->user_id,
@@ -87,14 +100,18 @@ class PaymentController extends Controller
                     }
                 }
             }
+    
             DB::commit();
-            return redirect()->route('calendar.show')->with('success', 'Thank you for your payment and registration. We will confirm the transaction as soon as possible.');
+    
+            return redirect()->route('calendar.show')
+                ->with('success', 'Thank you for your payment and registration. We will confirm the transaction as soon as possible.');
     
         } catch (\Exception $e) {
             DB::rollBack();
     
-            return redirect()->route('calendar.show')->with('error', 'There was an error processing your payment. Please try again.');
+            return redirect()->route('calendar.show')
+                ->with('error', 'There was an error processing your payment. Please try again.');
         }
-    }
+    }    
 
 }

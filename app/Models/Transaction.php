@@ -13,9 +13,10 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
-        'payment_info_id',  
+        'payment_info_id',
         'payment_status',
         'payment_date',
+        'idempotency_key',
     ];
 
     /**
