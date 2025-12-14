@@ -50,7 +50,7 @@
                         name="month"
                         id="month"
                         class="form-control"
-                        value="{{ $month ?? '' }}"  {{-- YYYY-MM --}}
+                         value="{{ request('month') }}"
                     >
                 </div>
 

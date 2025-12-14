@@ -10,10 +10,17 @@ class PaymentInfoController extends Controller
 {
     public function index(Request $request)
     {
-        $month = $request->input('month');
+        $monthStr = $request->input('month', '');
         $status = $request->input('status');
         $name = $request->input('name');
         $variableNumber = $request->input('payment_variable');
+
+        $year  = null;
+        $month = null;
+
+        if ($monthStr) {
+            [$year, $month] = explode('-', $monthStr);
+        }
 
         $paymentInfos = PaymentInfo::all();
 
@@ -22,8 +29,9 @@ class PaymentInfoController extends Controller
             ->orderBy('payment_date', 'desc');                    // Order by latest payment date
 
         // Apply filters
-        if ($month) {
-            $transactionsQuery->whereMonth('payment_date', $month);
+        if ($month && $year) {
+            $transactionsQuery->whereYear('payment_date', $year)
+                              ->whereMonth('payment_date', $month);
         }
 
         if ($status) {
@@ -45,7 +53,7 @@ class PaymentInfoController extends Controller
         // Paginate the filtered transactions
         $transactions = $transactionsQuery->paginate(10)->withQueryString();
 
-        return view('payment.paymentList', compact('paymentInfos', 'transactions', 'month', 'status', 'name', 'variableNumber'));
+        return view('payment.paymentList', compact('paymentInfos', 'transactions', 'monthStr', 'status', 'name', 'variableNumber'));
     }
 
     public function create()

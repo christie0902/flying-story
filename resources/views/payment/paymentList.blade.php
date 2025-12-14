@@ -61,7 +61,7 @@
     {{-- Filter Section --}}
     <div class="container">
         <form action="{{ route('payment.info.index') }}" method="GET" class="row g-3">
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
                 <label for="month" class="form-label">Filter by Month</label>
                 <select name="month" id="month" class="form-control">
                     <option value="">All</option>
@@ -71,6 +71,18 @@
                         </option>
                     @endfor
                 </select>
+            </div> -->
+            
+            <!-- Filter by Month and Year -->
+            <div class="col-md-3">
+                    <label class="form-label" for="month">Month</label>
+                    <input
+                        type="month"
+                        name="month"
+                        id="month"
+                        class="form-control"
+                         value="{{ request('month') }}"
+                    >
             </div>
 
             <div class="col-md-3">
