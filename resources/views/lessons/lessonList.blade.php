@@ -30,7 +30,7 @@
                 </div>
 
                 <!-- Month Filter -->
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <label class="form-label" for="month">Month</label>
                     <select name="month" id="month" class="form-control">
                         <option value="">Select Month</option>
@@ -40,7 +40,20 @@
                             </option>
                             @endfor
                     </select>
+                </div> -->
+                
+                <!-- Month + Year Filter (as a month picker) -->
+                <div class="col-md-3">
+                    <label class="form-label" for="month">Month</label>
+                    <input
+                        type="month"
+                        name="month"
+                        id="month"
+                        class="form-control"
+                        value="{{ $month ?? '' }}"  {{-- YYYY-MM --}}
+                    >
                 </div>
+
 
                 <!-- Category Filter -->
                 <div class="col-md-3">

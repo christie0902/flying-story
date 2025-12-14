@@ -17,8 +17,15 @@ class LessonController extends Controller
     public function loadLessons(Request $request)
     {
         $status = $request->query('status', 'all');
-        $month = $request->query('month', '');
+        $monthStr = $request->query('month', '');
         $category = $request->query('category', '');
+
+        $year  = null;
+        $month = null;
+
+        if ($monthStr) {
+            [$year, $month] = explode('-', $monthStr);
+        }
 
         $query = Lesson::query()
             ->withCount([
@@ -34,8 +41,12 @@ class LessonController extends Controller
             $query->where('status', $status);
         }
 
-        if ($month) {
-            $query->whereMonth('schedule', $month);
+        // if ($month) {
+        //     $query->whereMonth('schedule', $month);
+        // }
+        if ($month && $year) {
+            $query->whereYear('schedule', $year)
+                  ->whereMonth('schedule', $month);
         }
 
         if ($category) {
@@ -52,7 +63,7 @@ class LessonController extends Controller
         return view('lessons.lessonList', [
             'lessons' => $lessons,
             'status' => $status,
-            'month' => $month,
+            'month' => $monthStr,
             'category' => $category,
             'categories' => $categories,
         ]);
