@@ -85,7 +85,7 @@ class Lesson extends Model
     //Format schedule
     public function getFormattedScheduleAttribute()
     {
-        return Carbon::parse($this->schedule)->format('ga M j, Y');
+        return Carbon::parse($this->schedule)->format('g:ia M j, Y');
     }
 
      // ISO 8601 string with timezone (for JS / FullCalendar)
