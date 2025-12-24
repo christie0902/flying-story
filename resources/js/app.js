@@ -15,6 +15,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const calendar = new Calendar(calendarEl, {
             timeZone: "local",
 
+            eventTimeFormat: {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true
+            },
+
             plugins: [
                 dayGridPlugin,
                 timeGridPlugin,
