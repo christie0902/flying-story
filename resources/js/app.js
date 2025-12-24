@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (calendarEl) {
         const calendar = new Calendar(calendarEl, {
+            timeZone: "local",
+
             plugins: [
                 dayGridPlugin,
                 timeGridPlugin,
@@ -45,7 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 let capacity = info.event.extendedProps.capacity;
                 let registeredStudents =
                     info.event.extendedProps.registered_students;
-                let time = info.event.extendedProps.formattedTime;
+                // let time = info.event.extendedProps.formattedTime;
+                let time = info.timeText;
                 let userRegistrationStatus =
                     info.event.extendedProps.userRegistrationStatus;
 
@@ -91,7 +94,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then((data) => {
                         const lesson = data.lesson;
                         //console.log(lesson.img_url)
-                        const lessonDateTime = new Date(lesson.schedule);
+                        // const lessonDateTime = new Date(lesson.schedule);
+                        const lessonDateTime = new Date(lesson.schedule_iso);
                         const currentTime = Date.now();
 
                         // Cover the case 8 hours before class starts
@@ -135,13 +139,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         const capacity = lesson.capacity;
                         const registeredStudents = lesson.registered_students;
                         const availableSpots = capacity - registeredStudents;
+                        const localScheduleString = lessonDateTime.toLocaleString(undefined, {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          });
 
                         document.getElementById("lessonTitle").textContent =
                             lesson.title;
                         document.getElementById("lessonCategory").textContent =
                             lesson.category;
+                        // document.getElementById("lessonSchedule").textContent =
+                        //     lesson.schedule;
                         document.getElementById("lessonSchedule").textContent =
-                            lesson.schedule;
+                        `${localScheduleString} (your time)`;
                         document.getElementById("lessonDuration").textContent =
                             lesson.duration;
                         document.getElementById(

@@ -39,13 +39,20 @@ class CalendarController extends Controller
             return [
                 'id' => $lesson->id,
                 'title' => $lesson->category->name,
-                'start' => $lesson->schedule,
+                // 'start' => $lesson->schedule,
+                'start' => $lesson->schedule_iso, // ✅ timezone-aware ISO
                 'formattedTime' => $formattedTime,
                 'eventBgColor' => $lesson->category->bg_color ?? '#ffefea',
                 'status' => $lesson->status,
                 'capacity' => $lesson->capacity,
                 'registered_students' => $lesson->registered_students,
                 'userRegistrationStatus' => $registrationStatus,
+
+                // In case I need to show Prague time somewhere:
+                // 'schedule_prague' => $lesson->schedule
+                // ->copy()
+                // ->timezone('Europe/Prague')
+                // ->format('H:i'),
             ];
         });
         // Log::info('Events Data:', $events->toArray());
@@ -86,7 +93,12 @@ class CalendarController extends Controller
                 'id' => $lesson->id,
                 'title' => $lesson->title,
                 'category' => $lesson->category->name,
-                'schedule' => $lesson->schedule,
+                // 'schedule' => $lesson->schedule,
+                'schedule_iso' => $lesson->schedule_iso,
+                // 'schedule_prague' => $lesson->schedule
+                //     ->copy()
+                //     ->timezone('Europe/Prague')
+                //     ->format('ga M j, Y'),
                 'duration' => $lesson->duration,
                 'payment_type' => $lesson->payment_type,
                 'payment_info' => $paymentInfo ? [

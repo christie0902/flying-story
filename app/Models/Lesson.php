@@ -28,6 +28,11 @@ class Lesson extends Model
         'level',
     ];
 
+     // cast schedule to datetime
+     protected $casts = [
+        'schedule' => 'datetime',
+    ];
+
     /**
      * Define the relationship with Category.
      */
@@ -82,6 +87,15 @@ class Lesson extends Model
     {
         return Carbon::parse($this->schedule)->format('ga M j, Y');
     }
+
+     // ISO 8601 string with timezone (for JS / FullCalendar)
+     public function getScheduleIsoAttribute(): string
+     {
+         return $this->schedule
+             ->copy()
+             ->timezone(config('app.timezone'))
+             ->toIso8601String();
+     }
 
     //Student counts
     public function confirmedStudentsCount()
