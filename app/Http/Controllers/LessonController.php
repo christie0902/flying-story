@@ -16,9 +16,9 @@ class LessonController extends Controller
     // SHOW LESSON LIST
     public function loadLessons(Request $request)
     {
-        $status = $request->query('status', 'all');
-        $monthStr = $request->query('month', '');
-        $category = $request->query('category', '');
+        $status = $request->input('status', 'all');
+        $monthStr = $request->input('month', '');
+        $category = $request->input('category', '');
 
         $year  = null;
         $month = null;

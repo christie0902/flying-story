@@ -71,7 +71,7 @@
                 <!-- Filter and Refresh Buttons -->
                 <div class="col-md-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-success me-2">Filter</button>
-                    <a href="{{ route('lesson.list') }}" class="btn btn-secondary">Refresh</a>
+                    <a href="{{ route('lesson.list') }}" class="btn btn-secondary">Reset</a>
                 </div>
             </div>
         </form>
