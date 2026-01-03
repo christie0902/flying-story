@@ -10,7 +10,7 @@ Route::redirect('/', '/calendar');
 
 
 //redirect to login page if session expired
-Route::middleware(['auth'])->group(function () {
+//Route::middleware(['auth'])->group(function () {
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'loadProfile'])->middleware('auth')->name('profile.load');
     Route::get('/profile/edit', [ProfileController::class, 'editForm'])->middleware('auth')->name('profile.editForm');
@@ -37,4 +37,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/privacy-policy', function () {
         return view('auth.privacy-policy');
     })->name('privacy-policy');
-});
+//});
