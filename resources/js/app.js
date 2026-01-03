@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         const lesson = data.lesson;
                         //console.log(lesson.img_url)
                         // const lessonDateTime = new Date(lesson.schedule);
-                        const lessonDateTime = new Date(lesson.schedule_iso);
+                        const lessonDateTime = new Date(lesson.schedule);
                         const currentTime = Date.now();
 
                         // Cover the case 8 hours before class starts

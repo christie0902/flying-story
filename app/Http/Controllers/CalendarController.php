@@ -39,8 +39,8 @@ class CalendarController extends Controller
             return [
                 'id' => $lesson->id,
                 'title' => $lesson->category->name,
-                // 'start' => $lesson->schedule,
-                'start' => $lesson->schedule_iso, // ✅ timezone-aware ISO
+                'start' => $lesson->schedule,
+                // 'start' => $lesson->schedule_iso, // ✅ timezone-aware ISO
                 'formattedTime' => $formattedTime,
                 'eventBgColor' => $lesson->category->bg_color ?? '#ffefea',
                 'status' => $lesson->status,
@@ -93,8 +93,8 @@ class CalendarController extends Controller
                 'id' => $lesson->id,
                 'title' => $lesson->title,
                 'category' => $lesson->category->name,
-                // 'schedule' => $lesson->schedule,
-                'schedule_iso' => $lesson->schedule_iso,
+                'schedule' => $lesson->schedule,
+                // 'schedule_iso' => $lesson->schedule_iso,
                 // 'schedule_prague' => $lesson->schedule
                 //     ->copy()
                 //     ->timezone('Europe/Prague')
