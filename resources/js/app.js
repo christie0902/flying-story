@@ -244,7 +244,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                 "href",
                                 `/admin/lessons/show/${lesson.id}`
                             );
-
+                        // Admin cancel button
+                        const cancelBtn = document.getElementById("adminCancelForm");
+                        if (cancelBtn)
+                            cancelBtn.setAttribute(
+                                "action", `admin/lessons/edit/${lesson.id}/cancel`
+                            );
+                        const redirectInput = document.getElementById("adminCancelRedirectTo");
+                        if (redirectInput) {
+                            redirectInput.value = window.location.href; // back to calendar (same view)
+                        }
                         // Update the Join Form's action and hidden input field
                         if (joinForm)
                             joinForm.setAttribute(

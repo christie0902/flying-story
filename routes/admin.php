@@ -28,7 +28,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::delete('/lessons/edit/{id}', [LessonController::class, 'deleteLesson'])->name('lessons.delete');
     Route::get('/lessons/show/{id}', [LessonController::class, 'details'])->name('lessons.details');
 
-    Route::put('/lessons/edit/{id}/cancel', [LessonController::class, 'cancel'])->name('lessons.cancel');
+    Route::put('/lessons/edit/{id}/cancel', [LessonController::class, 'cancel'])->middleware('can:admin')->name('lessons.cancel');
     Route::put('/lessons/edit/{id}/activate', [LessonController::class, 'activate'])->name('lessons.activate');
 
     //Registration

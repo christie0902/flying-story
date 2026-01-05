@@ -389,14 +389,18 @@ class LessonController extends Controller
     }
 
     //CANCEL & ACTIVATE LESSON
-    public function cancel($id)
+    public function cancel(Request $request, $id)
     {
         $lesson = Lesson::findOrFail($id);
         $lesson->status = 'canceled';
         $lesson->save();
 
-        return redirect()->route('lesson.list')->with('success', 'Lesson canceled successfully.');
-    }
+        $redirectTo = $request->input('redirect_to');
+
+        return $redirectTo
+            ? redirect()->to($redirectTo)->with('success', 'Lesson canceled successfully.')
+            : redirect()->route('lesson.list')->with('success', 'Lesson canceled successfully.');
+}
 
     public function activate($id)
     {

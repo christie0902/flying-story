@@ -246,6 +246,13 @@
             <div class="modal-footer">
                 @can('admin')
                 <a id="editButton" href="" class="btn btn-info">See details</a>
+                <form id="adminCancelForm" action="#" method="POST" class="me-2"
+                    onsubmit="return confirm('Are you sure you want to cancel this class?')">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="redirect_to" id="adminCancelRedirectTo" value="">
+                    <button type="submit" class="btn btn-warning">Cancel</button>
+                </form>
                 @endcan
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
