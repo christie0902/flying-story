@@ -13,43 +13,54 @@ class StudentController extends Controller
     {
         $search = $request->input('search');
         $filter = $request->input('filter');
-
-        $query = User::with(['profile', 'classRegistrations' => function ($query) {
-            $query->where('confirmation_status', 'Confirmed')
-                  ->orderBy('registration_date', 'desc')
-                  ->take(10);
-        }, 'classRegistrations.lesson']);
-
+    
+        // Base query builder (reuse logic)
+        $base = User::with([
+            'profile',
+            'classRegistrations' => function ($query) {
+                $query->where('confirmation_status', 'Confirmed')
+                    ->orderBy('registration_date', 'desc')
+                    ->take(10);
+            },
+            'classRegistrations.lesson'
+        ]);
+    
+        // ---------- STUDENTS ----------
+        $studentsQuery = (clone $base)->where('role', 'student');
+    
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', '%' . $search . '%')
-                    ->orWhereHas('profile', function ($query) use ($search) {
-                        $query->where('payment_variable', 'LIKE', '%' . $search . '%');
-                    });
+            $studentsQuery->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhereHas('profile', function ($query) use ($search) {
+                      $query->where('payment_variable', 'LIKE', "%{$search}%");
+                  });
             });
         }
-
-        // Apply filter for students with credits = 0 or about to expire
+    
         if ($filter) {
             switch ($filter) {
                 case 'zero_credits':
-                    $query->whereHas('profile', function ($q) {
-                        $q->where('credits', 0);
-                    });
+                    $studentsQuery->whereHas('profile', fn($q) => $q->where('credits', 0));
                     break;
+    
                 case 'expiring_credits':
                     $twoWeeksFromNow = Carbon::now()->addWeeks(2);
-                    $query->whereHas('profile', function ($q) use ($twoWeeksFromNow) {
-                        $q->where('valid_date', '<=', $twoWeeksFromNow);
-                    });
+                    $studentsQuery->whereHas('profile', fn($q) => $q->where('valid_date', '<=', $twoWeeksFromNow));
                     break;
             }
         }
-        $students = $query->paginate(10)->withQueryString();
-
-        return view('students.list', compact('students', 'search', 'filter'));
+    
+        $students = $studentsQuery->paginate(10)->withQueryString();
+    
+        // ---------- TEACHERS ----------
+        $teachers = (clone $base)
+            ->where('role', 'teacher')
+            ->paginate(10, ['*'], 'teachers_page')
+            ->withQueryString();
+    
+        return view('students.list', compact('students', 'teachers', 'search', 'filter'));
     }
-
+    
     public function updateCredits(Request $request, $id)
     {
         $request->validate([
@@ -110,4 +121,25 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('error', 'You do not have permission to delete this account.');
     }
+
+    // Role assignment feature
+    public function updateRole(Request $request, $id)
+    {
+        $request->validate([
+            'role' => 'required|in:student,teacher,admin',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        // Prevent admin from removing their own admin role
+        if ($user->id === auth()->id() && $request->role !== 'admin') {
+            return back()->with('error', 'You cannot remove your own admin role.');
+        }
+
+        $user->role = $request->role;
+        $user->save();
+
+        return back()->with('success', "Role updated for {$user->name}.");
+    }
+
 }

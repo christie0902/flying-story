@@ -39,6 +39,9 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
     route::put('/students/{id}/extend-valid-date', [StudentController::class, 'extendValidDate'])->name('students.extendValidDate');
     Route::delete('/students/delete/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::put('/students/{id}/role', [StudentController::class, 'updateRole'])
+    ->middleware('can:admin')
+    ->name('users.updateRole');
 
 
     //Payment

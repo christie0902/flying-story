@@ -14,7 +14,7 @@
     </div>
     @endif
 
-    <h2 class="page-title">Students Management</h1>
+    <h2 class="page-title">Students</h2>
 
         <form method="GET" action="{{ route('students.index') }}" class="row g-3 mb-3">
             <div class="col-md-6 col-lg-4">
@@ -51,8 +51,9 @@
                     @if ($student->profile)
                     <td>
                         <a href="#" class="student-name" 
-                           data-id={{$student->id}}
+                        data-id="{{ $student->id }}"
                            data-name="{{ $student->name }}"
+                           data-role="{{ $student->role }}"
                            data-email="{{ $student->email }}"
                            data-credits="{{ $student->profile->credits ?? 'N/A' }}"
                            data-credits-purchased="{{ $student->profile->credits_purchased_date ? \Carbon\Carbon::parse($student->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}"
@@ -78,7 +79,7 @@
                     @endif
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">No students found</td>
+                    <td colspan="7" class="text-center">No students found</td>
                 </tr>
             @endforelse
         </tbody>
@@ -114,6 +115,49 @@
     <div class="text-center mt-3">
         Page {{ $students->currentPage() }} of {{ $students->lastPage() }}
     </div>
+
+
+
+    <hr class="my-5">
+    <h2 class="page-title">Teachers</h2>
+
+    <table class="table">
+    <tbody>
+        @forelse ($teachers as $teacher)
+        @if ($teacher->profile)
+            <tr>
+            <td>
+                <a href="#" class="student-name"
+                data-id="{{ $teacher->id }}"
+                data-role="{{ $teacher->role }}"
+                data-name="{{ $teacher->name }}"
+                data-email="{{ $teacher->email }}"
+                data-credits="{{ $teacher->profile->credits ?? 'N/A' }}"
+                data-credits-purchased="{{ $teacher->profile->credits_purchased_date ? \Carbon\Carbon::parse($teacher->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}"
+                data-valid-date="{{ $teacher->profile->valid_date ? \Carbon\Carbon::parse($teacher->profile->valid_date)->format('Y-m-d') : 'N/A' }}"
+                data-payment-variable="{{ $teacher->profile->payment_variable ?? 'N/A' }}"
+                data-recent-classes='@json($teacher->classRegistrations->map(function($registration) {
+                    return [
+                        "lesson_name" => $registration->lesson->title ?? "Unknown Class",
+                        "lesson_schedule" => $registration->lesson->formatted_schedule ?? "No Schedule",
+                        "lesson_id" => $registration->lesson->id
+                    ];
+                }))'>
+                {{ $teacher->name }}
+                </a>
+            </td>
+            <td>{{ $teacher->email }}</td>
+            <td>{{ $teacher->profile->credits ?? 0 }}</td>
+            <td>{{ $teacher->profile->credits_purchased_date ? \Carbon\Carbon::parse($teacher->profile->credits_purchased_date)->format('Y-m-d') : 'N/A' }}</td>
+            <td>{{ $teacher->profile->valid_date ? \Carbon\Carbon::parse($teacher->profile->valid_date)->format('Y-m-d') : 'N/A' }}</td>
+            <td>{{ $teacher->profile->payment_variable }}</td>
+            </tr>
+        @endif
+        @empty
+        <tr><td colspan="6" class="text-center">No teachers found</td></tr>
+        @endforelse
+    </tbody>
+    </table>
 </div>
 
 <!-- Modal for displaying student details -->
@@ -121,7 +165,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="studentModalLabel">Student Details</h5>
+                <h5 class="modal-title" id="studentModalLabel">User Details</h5>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
@@ -130,6 +174,21 @@
 
                 <div class="mb-3">
                     <p><strong>Email:</strong> <span id="modal-student-email"></span></p>
+                </div>
+
+                <div class="mb-3">
+                <p><strong>Role:</strong> <span id="modal-user-role-text"></span></p>
+                    <form id="update-role-form" method="POST" style="display:none;">
+                    @csrf
+                    @method('PUT')
+                    <select name="role" id="modal-role-select" class="form-control">
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Admin</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-primary mt-2">Update role</button>
+                    </form>
                 </div>
 
                 <!-- Credit Management -->
@@ -217,6 +276,7 @@
         const validDateSpan = document.getElementById('modal-valid-date');
         const editValidDateBtn = document.getElementById('edit-valid-date-btn');
         const editValidDateForm = document.getElementById('edit-valid-date-form');
+       
 
         const calculateValidDate = (purchaseDate) => {
             const date = new Date(purchaseDate);
@@ -238,11 +298,29 @@
                 const creditsPurchased = student.getAttribute('data-credits-purchased');
                 const validDate = student.getAttribute('data-valid-date');
                 const paymentVariable = student.getAttribute('data-payment-variable');
+                const role = student.getAttribute('data-role') || 'student';
                 const recentClasses = JSON.parse(student.getAttribute('data-recent-classes'));
+                
 
                 // Populate the modal with the student's details
                 document.getElementById('modal-student-name').textContent = name;
                 document.getElementById('modal-student-email').textContent = email;
+
+                // Set role
+                const roleText = document.getElementById('modal-user-role-text');
+                if (roleText) roleText.textContent = role;
+
+                // Update role form (admin)
+                const updateRoleForm = document.getElementById('update-role-form');
+                const roleSelect = document.getElementById('modal-role-select');
+
+                if (updateRoleForm && roleSelect) {
+                    updateRoleForm.style.display = 'block';
+                    updateRoleForm.action = `/admin/students/${id}/role`;
+                    roleSelect.value = role;
+}
+
+
                 creditsDisplay.textContent = credits;
                 validDateSpan.textContent = validDate;
                 validDateInput.value = validDate;
@@ -304,6 +382,15 @@
                  event.preventDefault();
             }
         });
+
+        // Confirm changes in role
+        const updateRoleForm = document.getElementById('update-role-form');
+        if (updateRoleForm) {
+            updateRoleForm.addEventListener('submit', (event) => {
+                const confirmed = confirm("Are you sure you want to change this user's role?");
+                if (!confirmed) event.preventDefault();
+            });
+}
 
         editCreditsBtn.addEventListener('click', () => {
             form.style.display = 'block';
