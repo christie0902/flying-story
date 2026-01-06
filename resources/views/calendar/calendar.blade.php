@@ -102,11 +102,35 @@
 
                  {{-- Cancellation and Payment Policies Section --}}
                  <div class="mt-4" style="display: none;" id="class-policy">
-                    <!-- Button to toggle the policies section -->
-                    <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover policy-link" data-bs-toggle="collapse" data-bs-target="#policiesCollapse" aria-expanded="false" aria-controls="policiesCollapse">
-                        See Class Policies
-                    </a>
+                    
                 
+                    <!-- Registration List -->
+                    @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'teacher']))
+                    <div class="mt-3" style="display:none;" id="class-registrations">
+                        <a href="#"
+                        class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover text-info"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#registrationsCollapse"
+                        aria-expanded="false"
+                        aria-controls="registrationsCollapse">
+                            See Students List
+                        </a>
+
+                        <div class="collapse mt-3 mb-3" id="registrationsCollapse">
+                            <div class="bg-light border rounded p-3">
+                                <h6 class="fw-bold sub-title mb-2">Registered Students</h6>
+                                <ul class="list-group" id="registrationsList"></ul>
+                                <p class="text-muted mb-0 mt-2" id="registrationsEmpty" style="display:none;">
+                                    No registrations yet.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    <!-- Button to toggle the policies section -->
+                    <a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover policy-link mt-3" data-bs-toggle="collapse" data-bs-target="#policiesCollapse" aria-expanded="false" aria-controls="policiesCollapse">
+                                            See Class Policies
+                     </a>
                     <!-- Policies section -->
                     <div class="collapse mt-3" id="policiesCollapse">
                         <div class="bg-light border rounded p-3">

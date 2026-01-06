@@ -128,7 +128,41 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                         // Lesson Cover Img
                         const coverImgElement = document.getElementById('class-coverImg');
-                        coverImgElement.src = lesson.img_url; //can also set default image here
+                        coverImgElement.src = lesson.img_url; 
+
+                        // Display student list for admin/teacher
+                        const registrationsContainer = document.getElementById("class-registrations");
+                        const registrationsList = document.getElementById("registrationsList");
+                        const registrationsEmpty = document.getElementById("registrationsEmpty");
+
+                        if (registrationsContainer && registrationsList && registrationsEmpty) {
+                            registrationsContainer.style.display = "block";
+                            // Reset
+                            registrationsList.innerHTML = "";
+                            registrationsEmpty.style.display = "none";
+
+                            const regs = data.registrations || [];
+
+                            if (regs.length === 0) {
+                                registrationsEmpty.style.display = "block";
+                            } else {
+                                regs.forEach((r) => {
+                                    const li = document.createElement("li");
+                                    li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                                    li.innerHTML = `
+                                        <div>
+                                            <div class="fw-semibold">${r.name}</div>
+                                            <div class="small text-muted">Email: ${r.email}</div>
+                                        </div>
+                                        <span class="badge bg-secondary">${r.status}</span>
+                                    `;
+
+                                    registrationsList.appendChild(li);
+                                });
+                            }
+                        }
+
 
                         // Display Policies
                         const policyContainer = document.getElementById(

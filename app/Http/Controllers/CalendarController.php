@@ -88,6 +88,25 @@ class CalendarController extends Controller
             $userIsRegistered = $userRegistration && $userRegistration->confirmation_status === 'Confirmed';
         }
 
+        //load student list for teacher/admin
+        $role = $user?->role;
+
+        $registrations = [];
+        if ($user && in_array($role, ['admin', 'teacher'], true)) {
+            $registrations = $lesson->registrations()
+                ->with('user:id,name,email') 
+                ->orderBy('confirmation_status')
+                ->get()
+                ->map(function ($r) {
+                    return [
+                        'name' => $r->user->name,
+                        'email' => $r->user->email,
+                        'status' => $r->confirmation_status,
+                    ];
+                })
+                ->values();
+        }
+
         return response()->json([
             'lesson' => [
                 'id' => $lesson->id,
@@ -113,13 +132,15 @@ class CalendarController extends Controller
                 'status' => $lesson->status,
                 'description' => $lesson->description,
                 'user_is_registered' => $userIsRegistered,
-                'img_url' => $lesson->category->img_url ?? 'detail-cover.jfif', 
+                'img_url' => $lesson->category->img_url ?? 'detail-cover.jfif',
             ],
             'user' => $userProfile ? [
                 'credits' => $userProfile->credits,
                 'valid_date' => $userProfile->valid_date,
                 'role' => $user->role,
             ] : null,
+
+            'registrations' => $registrations,
         ]);
     }
 }
