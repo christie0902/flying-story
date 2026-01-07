@@ -181,13 +181,13 @@
                     <form id="update-role-form" method="POST" style="display:none;">
                     @csrf
                     @method('PUT')
-                    <select name="role" id="modal-role-select" class="form-control">
+                    <select name="role" id="modal-role-select" class="form-control" style="max-width: 70%">
                         <option value="student">Student</option>
                         <option value="teacher">Teacher</option>
                         <option value="admin">Admin</option>
                     </select>
 
-                    <button type="submit" class="btn btn-primary mt-2">Update role</button>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 20px;">Update role</button>
                     </form>
                 </div>
 
@@ -315,7 +315,7 @@
                 const roleSelect = document.getElementById('modal-role-select');
 
                 if (updateRoleForm && roleSelect) {
-                    updateRoleForm.style.display = 'block';
+                    updateRoleForm.style.display = 'flex';
                     updateRoleForm.action = `/admin/students/${id}/role`;
                     roleSelect.value = role;
 }

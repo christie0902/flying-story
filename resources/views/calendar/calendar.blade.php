@@ -113,7 +113,7 @@
                         data-bs-target="#registrationsCollapse"
                         aria-expanded="false"
                         aria-controls="registrationsCollapse">
-                            See Students List
+                            Registered Student List
                         </a>
 
                         <div class="collapse mt-3 mb-3" id="registrationsCollapse">
