@@ -41,6 +41,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="credits_cost" class="form-label">Credits required</label>
+                    <input type="number"
+                        id="credits_cost"
+                        name="credits_cost"
+                        class="form-control"
+                        min="1"
+                        value="{{ old('credits_cost', 1) }}"
+                        required>
+                </div>
+
+
+                <div class="form-group">
                     <label class="form-label">Title</label>
                     <input name="title" class="form-control" required>
                 </div>

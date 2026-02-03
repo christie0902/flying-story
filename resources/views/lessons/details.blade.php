@@ -38,6 +38,12 @@
                 <p class="border p-3 rounded shadow-sm">{{ \Carbon\Carbon::parse($lesson->schedule)->format('Y-m-d H:i') }}</p>
             </div>
 
+            <!-- Credit cost -->
+            <div class="mb-3">
+                <h5 class="fw-bold">Credit cost</h5>
+                <p class="border p-3 rounded shadow-sm">{{ $lesson->credits_cost }}</p>
+            </div>
+
             <!-- Duration -->
             <div class="mb-3">
                 <h5 class="fw-bold">Duration</h5>

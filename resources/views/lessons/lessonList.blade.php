@@ -83,6 +83,7 @@
                     <th>Title</th>
                     <th>Category</th>
                     <th>Schedule</th>
+                    <th>Credit Cost</th>
                     <th>Confirmed Students</th>
                     <th>Pending Students</th>
                     <th>Status</th>
@@ -101,6 +102,7 @@
                     <td><a href="{{ route('lessons.details', $lesson->id) }}">{{ $lesson->title }}</a></td>
                     <td>{{ $lesson->category->name ?? 'No Category' }}</td>
                     <td>{{ $lesson->formatted_schedule }}</td>
+                    <td>{{ $lesson->credits_cost }}</td>
                     <td class="text-center">{{ $lesson->confirmed_students_count }} / {{ $lesson->capacity }}</td> <!-- Confirmed Students -->
                     <td class="text-center">
                         <span style="{{ $lesson->pending_students_count > 0 ? 'color: red;' : '' }}">

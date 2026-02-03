@@ -19,6 +19,7 @@ class Lesson extends Model
         'description',
         'schedule',
         'payment_type',
+        'credits_cost',
         'duration',
         'capacity',
         'registered_students',

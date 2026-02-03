@@ -76,6 +76,16 @@
                 </div>
                 @endif
 
+                <div class="mb-3">
+                    <label for="credits_cost" class="form-label">Credits required</label>
+                    <input type="number"
+                        id="credits_cost"
+                        name="credits_cost"
+                        class="form-control"
+                        min="1"
+                        value="{{ old('credits_cost', $lesson->credits_cost ?? 1) }}"
+                        required>
+                </div>
                 <div class="form-group">
                     <label class="form-label" for="capacity">Capacity</label>
                     <input type="number" name="capacity" id="capacity" class="form-control" value="{{ old('capacity', $lesson->capacity) }}" required>
