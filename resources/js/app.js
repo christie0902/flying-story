@@ -119,7 +119,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                     if (
                                         lesson.payment_info.type === "credits"
                                     ) {
-                                        price.textContent = 'By credit';
+                                        const cost = Number(lesson.credits_cost ?? 1);
+                                        price.textContent = `By credits - ${cost} ${cost === 1 ? "credit" : "credits"}`;
                                         
                                     } else {
                                         price.textContent =

@@ -118,6 +118,7 @@ class CalendarController extends Controller
                 //     ->copy()
                 //     ->timezone('Europe/Prague')
                 //     ->format('ga M j, Y'),
+                'credits_cost' => $lesson->credits_cost ?? 1,
                 'duration' => $lesson->duration,
                 'payment_type' => $lesson->payment_type,
                 'payment_info' => $paymentInfo ? [
