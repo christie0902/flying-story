@@ -233,6 +233,34 @@ document.addEventListener("DOMContentLoaded", function () {
                                 ? "block"
                                 : "none";
 
+                        // Not enough credits
+                        const notEnoughCreditsWarning = document.getElementById("notEnoughCreditsWarning");
+                        const joinBtn = joinForm ? joinForm.querySelector("button[type='submit']") : null;
+
+                        if (notEnoughCreditsWarning) notEnoughCreditsWarning.style.display = "none";
+
+                        const isCreditsClass = lesson.payment_info && lesson.payment_info.type === "credits";
+                        const cost = Number(lesson.credits_cost || 1);
+                        const userCredits = data.user ? Number(data.user.credits || 0) : 0;
+
+                        if (isCreditsClass && joinBtn) {
+                        
+                            if (userCredits < cost) {
+                                joinBtn.disabled = true;
+                                joinBtn.classList.add("disabled");
+                                if (notEnoughCreditsWarning) {
+                                    notEnoughCreditsWarning.textContent = `Not enough credits. This class requires ${cost} credits, you have ${userCredits}.`;
+                                    notEnoughCreditsWarning.style.display = "block";
+                                }
+                            } else {
+                                joinBtn.disabled = false;
+                                joinBtn.classList.remove("disabled");
+                                joinBtn.onclick = () => confirm(`Do you want to use ${cost} credit(s) to join this class?`);
+                            }
+                        }
+
+
+
                         //Disable cancelation 8 hours before starting time
                         if (cancelForm) {
                             const cancelButton = cancelForm.querySelector(

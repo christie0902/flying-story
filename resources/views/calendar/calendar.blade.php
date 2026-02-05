@@ -197,7 +197,13 @@
                          <p id="joinWarning" style="display: none;" class="text-info">
                             This class is full. Please register another class or contact us for more information.
                         </p>
-                         <form id="joinForm" action="" method="POST">
+                    <!-- Not enough credits warning -->
+                    <p id="notEnoughCreditsWarning" style="display:none;" class="text-danger text-center">
+                        You don’t have enough credits for this class.
+                    </p>
+                         
+                    <!-- buttons -->
+                        <form id="joinForm" action="" method="POST">
                             @csrf
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                             <input type="hidden" name="lesson_id" id="joinLessonId">
@@ -219,6 +225,7 @@
                                 You can't cancel this class 8 hours before the class starts. Please contact us if you have any questions.
                             </p>
                         </div>
+
 
                 {{-- NO CREDITS --}}
                     @elseif($credits <= 0)
