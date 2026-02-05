@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (userCredits < cost) {
                                 joinBtn.disabled = true;
                                 joinBtn.classList.add("disabled");
-                                if (notEnoughCreditsWarning) {
+                                if (notEnoughCreditsWarning && !lesson.user_is_registered) {
                                     notEnoughCreditsWarning.textContent = `Not enough credits. This class requires ${cost} credits, you have ${userCredits}.`;
                                     notEnoughCreditsWarning.style.display = "block";
                                 }
