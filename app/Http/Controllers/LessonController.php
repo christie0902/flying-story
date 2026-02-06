@@ -396,18 +396,70 @@ class LessonController extends Controller
     }
 
     //CANCEL & ACTIVATE LESSON
+
+
     public function cancel(Request $request, $id)
     {
-        $lesson = Lesson::findOrFail($id);
-        $lesson->status = 'canceled';
-        $lesson->save();
-
         $redirectTo = $request->input('redirect_to');
 
+        DB::transaction(function () use ($id) {
+            // Lock the lesson row so two cancels can't run at the same time
+            $lesson = Lesson::where('id', $id)->lockForUpdate()->firstOrFail();
+
+            if ($lesson->status === 'canceled') {
+                return;
+            }
+
+            // Mark lesson canceled
+            $lesson->status = 'canceled';
+            $lesson->save();
+
+            // Only refund if this lesson is credit-based
+            if ($lesson->payment_type !== 'credits') {
+                LessonRegistration::where('lesson_id', $lesson->id)
+                    ->whereIn('confirmation_status', ['Confirmed', 'Pending'])
+                    ->update(['confirmation_status' => 'Canceled']);
+
+                $lesson->registered_students = 0;
+                $lesson->save();
+
+                return;
+            }
+
+            $cost = (int) ($lesson->credits_cost ?? 1);
+
+            // Get only CONFIRMED registrations
+            $registrations = LessonRegistration::where('lesson_id', $lesson->id)
+                ->where('confirmation_status', 'Confirmed')
+                ->lockForUpdate()
+                ->get();
+
+            // Refund each confirmed student
+            foreach ($registrations as $reg) {
+                $profile = $reg->user()->first()->profile()->lockForUpdate()->first();
+
+                if ($profile) {
+                    $profile->credits += $cost;
+                    $profile->save();
+                }
+
+                $reg->confirmation_status = 'Canceled';
+                $reg->save();
+            }
+
+            // Also cancel any pending ones (no refund needed)
+            LessonRegistration::where('lesson_id', $lesson->id)
+                ->where('confirmation_status', 'Pending')
+                ->update(['confirmation_status' => 'Canceled']);
+
+            $lesson->registered_students = 0;
+            $lesson->save();
+        });
+
         return $redirectTo
-            ? redirect()->to($redirectTo)->with('success', 'Lesson canceled successfully.')
-            : redirect()->route('lesson.list')->with('success', 'Lesson canceled successfully.');
-}
+            ? redirect()->to($redirectTo)->with('success', 'Lesson canceled. Credits refunded (if applicable).')
+            : redirect()->route('lesson.list')->with('success', 'Lesson canceled. Credits refunded (if applicable).');
+    }
 
     public function activate($id)
     {
