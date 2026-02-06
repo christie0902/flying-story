@@ -45,13 +45,17 @@ class RegistrationController extends Controller
     
         $cost = (int) ($lesson->credits_cost ?? 1);
     
-        if ($confirmationStatus === 'Confirmed' && $registration->confirmation_status !== 'Confirmed') {
+        if ($confirmationStatus === 'Confirmed'&& $registration->confirmation_status !== 'Confirmed') {
+            if ($user->profile->credits < $cost) {
+                return "Cannot confirm registration. Student has {$user->profile->credits} credit(s), but this class requires {$cost}.";
+            }
+    
             $user->profile->credits -= $cost;
             $user->profile->save();
+    
             return null;
         }
     
-        // If moving AWAY from Confirmed => refund (but only if it WAS confirmed)
         if ($confirmationStatus === "Canceled" && $registration->confirmation_status === 'Confirmed') {
             $user->profile->credits += $cost;
             $user->profile->save();
