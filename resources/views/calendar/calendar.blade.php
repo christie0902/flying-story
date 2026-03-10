@@ -215,7 +215,7 @@
                             @method('POST')
                             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                             <input type="hidden" name="lesson_id" id="cancelLessonId">
-                            <button type="submit" class="btn btn-warning px-5 text-dark" onclick="return confirm('Are you sure you want to cancel? You will receive 1 credit back.')">Cancel Registration</button>
+                            <button type="submit" class="btn btn-warning px-5 text-dark" onclick="return confirm('Are you sure you want to cancel? You will receive your credits back.')">Cancel Registration</button>
                         </form>
 
                 {{-- CANNOT CANCEL --}}
